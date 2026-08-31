@@ -3,8 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#f0efec" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#141518" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f0efec" id="metaTheme">
+<script>
+  /* aplica o tema antes de pintar a tela (evita piscar branco no escuro) */
+  (function(){try{
+    var p=localStorage.getItem("ifinance:theme")||"auto";
+    var dark = p==="dark" || (p==="auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark?"dark":"light");
+  }catch(e){ document.documentElement.setAttribute("data-theme","light"); }})();
+</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Finanças">
@@ -13,7 +20,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23111'/%3E%3Ctext x='90' y='122' font-family='-apple-system,Helvetica,Arial' font-size='96' font-weight='600' fill='white' text-anchor='middle'%3ER%24%3C/text%3E%3C/svg%3E">
 <style>
   :root{
-    color-scheme:light dark;
+    color-scheme:light;
     /* ---- Light: off-white quente, nada de branco puro ---- */
     --bg:#f0efec;          /* fundo da página, papel suave */
     --surface:#faf9f6;     /* cartões, off-white (não #fff) */
@@ -34,8 +41,8 @@
     --safe-b:env(safe-area-inset-bottom, 0px);
     --safe-t:env(safe-area-inset-top, 0px);
   }
-  @media (prefers-color-scheme: dark){
-    :root{
+  :root[data-theme="dark"]{
+      color-scheme:dark;
       --bg:#141518;        /* quase-preto quente, sem OLED puro */
       --surface:#1c1e22;
       --surface-2:#212429;
@@ -51,8 +58,22 @@
       --seg-on:#34373d;
       --nav-bg:rgba(20,21,24,.82);
       --shadow:0 1px 2px rgba(0,0,0,.35);
-    }
   }
+
+  /* ---------- Motion ---------- */
+  /* transição suave só no instante da troca de tema (não atrasa toques) */
+  html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after{
+    transition: background-color .42s ease, color .42s ease, border-color .42s ease,
+                fill .42s ease, stroke .42s ease, box-shadow .42s ease !important;
+  }
+  /* barras coloridas crescem ao abrir a tela */
+  .bar > i{transform-origin:left center;animation:growbar .55s cubic-bezier(.22,.8,.28,1) both}
+  @keyframes growbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  @media (prefers-reduced-motion: reduce){
+    html.theme-anim, html.theme-anim *{transition:none !important}
+    .bar > i{animation:none}
+  }
+
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
@@ -123,6 +144,12 @@
   .bar > i{display:block;height:100%;border-radius:6px;background:var(--ink)}
   .catrow{padding:12px 0;border-bottom:1px solid var(--line-2)}
   .catrow:last-child{border-bottom:none}
+  .catrow.tap{cursor:pointer;margin:0 -16px;padding-left:16px;padding-right:16px;border-radius:8px}
+  .catrow.tap:active{background:var(--line-2)}
+  .catrow .chev{width:15px;height:15px;stroke:var(--ink-3);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;margin-left:7px;flex:none}
+  .backbar{display:flex;align-items:center;gap:4px;padding:14px 0 2px;margin-left:-8px}
+  .backbar button{background:none;border:none;display:flex;align-items:center;gap:3px;color:var(--accent);font-weight:600;font-size:15.5px;padding:6px 8px}
+  .backbar button svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
   .catrow .row .l{display:flex;align-items:center;gap:9px;font-size:14.5px}
   .catrow .row .r{font-weight:600}
   .catrow .pct{font-size:12px;color:var(--ink-3)}
@@ -308,6 +335,28 @@
     <button class="btn ghost" id="addFixedInc" style="margin-top:12px">+ Renda recorrente</button>
   </section>
 
+  <!-- ============ CATEGORIA (drill-down) ============ -->
+  <section id="view-cat" class="view">
+    <div class="backbar">
+      <button id="catBack"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Mês</button>
+    </div>
+    <header class="top" style="padding:2px 0 6px">
+      <div class="kicker num" id="cat-kicker">—</div>
+      <h1 id="cat-title">Categoria</h1>
+    </header>
+
+    <div class="card">
+      <div class="hero">
+        <div class="lbl">Total na categoria</div>
+        <div class="big num" id="cat-total">R$ 0</div>
+        <div class="sub" id="cat-sub">—</div>
+      </div>
+    </div>
+
+    <div class="section-label">Lançamentos</div>
+    <div id="cat-list"></div>
+  </section>
+
   <!-- ============ CARTEIRA ============ -->
   <section id="view-invest" class="view">
     <header class="top" style="padding-left:0;padding-right:0">
@@ -348,7 +397,17 @@
       <h1>Ajustes</h1>
     </header>
 
-    <div class="section-label" style="margin-top:6px">Categorias</div>
+    <div class="section-label" style="margin-top:6px">Aparência</div>
+    <div class="card">
+      <div class="seg" id="themeSeg" style="margin:0">
+        <button data-theme-opt="auto">Automático</button>
+        <button data-theme-opt="light">Claro</button>
+        <button data-theme-opt="dark">Escuro</button>
+      </div>
+      <p class="muted tiny" id="themeHint" style="margin:11px 2px 0">No automático, segue o tema do iPhone.</p>
+    </div>
+
+    <div class="section-label">Categorias</div>
     <div id="catList"></div>
     <button class="btn ghost" id="addCat" style="margin-top:12px">+ Categoria</button>
 
@@ -565,15 +624,17 @@ function renderMonth(){
     bd.innerHTML=cats.map(([id,v])=>{
       const c=catById(id)||{name:"—",color:"#888"};
       const pct=d.expense>0?(v/d.expense*100):0;
-      return `<div class="catrow">
+      return `<div class="catrow tap" data-catrow="${id}">
         <div class="row">
           <div class="l"><span class="dot" style="background:${c.color}"></span>${esc(c.name)}</div>
-          <div class="r num">${money(v)}</div>
+          <div class="r num" style="display:flex;align-items:center">${money(v)}
+            <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
         </div>
         <div class="bar"><i style="width:${(v/max*100).toFixed(1)}%;background:${c.color}"></i></div>
         <div class="pct num">${pct.toFixed(0)}% dos gastos</div>
       </div>`;
     }).join("");
+    $$("#breakdown .catrow[data-catrow]").forEach(el=>el.onclick=()=>openCat(el.dataset.catrow));
   }
 
   // essential vs superfluous
@@ -583,12 +644,16 @@ function renderMonth(){
   else{
     const seg=(k,label)=>{
       const v=d.byKind[k], p=v/tot*100;
-      return `<div class="catrow" style="border:none;padding:8px 0">
-        <div class="row"><div class="l">${label}</div><div class="r num">${money(v)}</div></div>
+      const tappable=v>0;
+      return `<div class="catrow ${tappable?"tap":""}" ${tappable?`data-kindrow="${k}"`:""} style="border:none;padding:8px ${tappable?"16px":"0"}">
+        <div class="row"><div class="l">${label}</div>
+          <div class="r num" style="display:flex;align-items:center${v?"":";color:var(--ink-3)"}">${money(v)}<!-- zero fica discreto -->
+            ${tappable?`<svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`:`<span style="width:22px"></span>`}</div></div>
         <div class="bar"><i style="width:${p.toFixed(1)}%"></i></div>
         <div class="pct num">${p.toFixed(0)}%</div></div>`;
     };
     ev.innerHTML = seg("essential","Essencial")+seg("superfluous","Supérfluo")+seg("investment","Investimento");
+    $$("#essvs .catrow[data-kindrow]").forEach(el=>el.onclick=()=>openKind(el.dataset.kindrow));
   }
 
   // transactions list (variable only, newest first) + fixed summary
@@ -601,7 +666,7 @@ function renderMonth(){
     html+=`<div class="list" style="margin-bottom:12px"><div class="item">
       <span class="dot" style="background:var(--ink-3)"></span>
       <div class="grow"><div class="t1">Fixos do mês</div><div class="t2">${fSub}</div></div>
-      <div class="val num">−${money(fSum)}</div></div></div>`;
+      <div class="val neg num">−${money(fSum)}</div></div></div>`;
   }
   const sorted=[...d.txs].sort((a,b)=> b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
   if(sorted.length===0 && !d.fixedItems.length){
@@ -717,7 +782,7 @@ function fixedRow(f){
     <span class="dot" style="background:${f.type==='income'?'var(--accent)':(c?.color||'#888')}"></span>
     <div class="grow"><div class="t1">${esc(f.name)}</div>
       <div class="t2">${f.type==='income'?'Renda':esc(c?.name||'—')}${off?' · pausado':''}</div></div>
-    <div class="val num">${f.type==='income'?'+':'−'}${money(f.amount)}</div></div>`;
+    <div class="val ${f.type==='income'?'pos':'neg'} num">${f.type==='income'?'+':'−'}${money(f.amount)}</div></div>`;
 }
 function editFixed(id){
   const f=DB.fixed.find(x=>x.id===id);
@@ -804,6 +869,77 @@ function openCatSheet(existing){
     };
   }
   setTimeout(()=>$("#c-name").focus(),250);
+}
+
+/* ============================================================
+   DRILL-DOWN por categoria
+   ============================================================ */
+let drill={mode:"cat",key:null};   // mode: "cat" (uma categoria) | "kind" (essencial/supérfluo/investimento)
+
+function openCat(id){  drill={mode:"cat",key:id};  go("cat"); }
+function openKind(k){  drill={mode:"kind",key:k};  go("cat"); }
+
+function renderCat(){
+  const y=cursor.getFullYear(), m=cursor.getMonth();
+  const d=monthData(y,m);
+  const isKind=drill.mode==="kind";
+
+  // título, total e filtro dependem do modo
+  let title, total, matches;
+  if(isKind){
+    if(!KINDS[drill.key]){ go("month"); return; }
+    title = KINDS[drill.key].label;
+    total = d.byKind[drill.key]||0;
+    matches = t => (catById(t.categoryId)?.kind||"essential")===drill.key;
+  }else{
+    const c=catById(drill.key);
+    if(!c){ go("month"); return; }
+    title = c.name;
+    total = d.byCat[drill.key]||0;
+    matches = t => t.categoryId===drill.key;
+  }
+
+  $("#cat-title").textContent=title;
+  $("#cat-kicker").textContent=monthName(y,m);
+  $("#cat-total").textContent=money(total);
+  const pct=d.expense>0?(total/d.expense*100):0;
+  $("#cat-sub").textContent = total>0
+    ? (isKind ? `${pct.toFixed(0)}% dos gastos do mês`
+              : `${pct.toFixed(0)}% dos gastos do mês · ${KINDS[catById(drill.key).kind]?.label||""}`)
+    : `Nada gasto aqui neste mês.`;
+
+  // fixos + avulsos (o total do gráfico soma os dois)
+  const fixed=d.fixedItems.filter(f=>f.type==="expense" && matches(f));
+  const vars =d.txs.filter(t=>t.type==="expense" && matches(t))
+                   .sort((a,b)=> b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+
+  const dotOf=t=>catById(t.categoryId)?.color||"#888";
+  let html="";
+  if(!fixed.length && !vars.length){
+    html=`<div class="empty">Nenhum lançamento de <b>${esc(title)}</b> neste mês.</div>`;
+  }else{
+    html=`<div class="list">`;
+    html+=fixed.map(f=>`<div class="item" data-cfix="${f.id}">
+      <span class="dot" style="background:${dotOf(f)}"></span>
+      <div class="grow"><div class="t1">${esc(f.name)}</div>
+        <div class="t2">Fixo · todo mês${isKind?` · ${esc(catById(f.categoryId)?.name||"—")}`:""}</div></div>
+      <div class="val neg num">−${money(f.amount)}</div></div>`).join("");
+    html+=vars.map(t=>{
+      const dd=t.date.slice(8,10)+"/"+t.date.slice(5,7);
+      const cn=catById(t.categoryId)?.name||"—";
+      return `<div class="item" data-ctx="${t.id}">
+        <span class="dot" style="background:${dotOf(t)}"></span>
+        <div class="grow"><div class="t1">${esc(t.note||cn)}</div>
+          <div class="t2">${isKind?esc(cn)+" · ":""}${dd}</div></div>
+        <div class="val neg num">−${money(t.amount)}</div></div>`;
+    }).join("");
+    html+=`</div>`;
+    const n=fixed.length+vars.length;
+    html+=`<p class="muted tiny" style="margin:10px 2px 0">${n} lançamento${n>1?"s":""} · média ${money(total/n)} cada</p>`;
+  }
+  $("#cat-list").innerHTML=html;
+  $$("#cat-list .item[data-ctx]").forEach(el=>el.onclick=()=>editTx(el.dataset.ctx));
+  $$("#cat-list .item[data-cfix]").forEach(el=>el.onclick=()=>editFixed(el.dataset.cfix));
 }
 
 /* ============================================================
@@ -1097,6 +1233,51 @@ function importData(){
 }
 
 /* ============================================================
+   TEMA (claro / escuro / automático)
+   ============================================================ */
+const THEME_KEY="ifinance:theme";
+const sysDark=()=>matchMedia("(prefers-color-scheme: dark)");
+
+let themeMode=(function(){ try{ return localStorage.getItem(THEME_KEY)||"auto"; }catch(e){ return "auto"; } })();
+function themePref(){ return themeMode; }
+function resolvedTheme(){
+  const p=themePref();
+  return p==="auto" ? (sysDark().matches?"dark":"light") : p;
+}
+function applyTheme(animate){
+  const t=resolvedTheme();
+  const root=document.documentElement;
+  if(root.getAttribute("data-theme")===t && !animate){ renderThemeSeg(); return; }
+  if(animate){
+    root.classList.add("theme-anim");
+    clearTimeout(applyTheme._t);
+    applyTheme._t=setTimeout(()=>root.classList.remove("theme-anim"),460);
+  }
+  root.setAttribute("data-theme",t);
+  // barra de status do iPhone acompanha o tema
+  const meta=$("#metaTheme");
+  if(meta) meta.setAttribute("content", t==="dark" ? "#141518" : "#f0efec");
+  renderThemeSeg();
+}
+function setTheme(p){
+  themeMode=p;                                    /* vale mesmo se o armazenamento falhar */
+  try{ localStorage.setItem(THEME_KEY,p); }catch(e){}
+  applyTheme(true);
+}
+function renderThemeSeg(){
+  const p=themePref();
+  $$("#themeSeg button").forEach(b=>b.classList.toggle("on", b.dataset.themeOpt===p));
+  const h=$("#themeHint");
+  if(h) h.textContent = p==="auto"
+    ? `No automático, segue o tema do iPhone (agora: ${resolvedTheme()==="dark"?"escuro":"claro"}).`
+    : (p==="dark" ? "Sempre escuro, mesmo se o iPhone estiver no claro."
+                  : "Sempre claro, mesmo se o iPhone estiver no escuro.");
+}
+$$("#themeSeg button").forEach(b=>b.onclick=()=>setTheme(b.dataset.themeOpt));
+// se estiver no automático, acompanha a mudança do sistema em tempo real
+sysDark().addEventListener("change",()=>{ if(themePref()==="auto") applyTheme(true); });
+
+/* ============================================================
    UI plumbing: nav, sheet, toast
    ============================================================ */
 function esc(s){ return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
@@ -1104,9 +1285,11 @@ function esc(s){ return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&
 function go(tab){
   $$(".view").forEach(v=>v.classList.remove("active"));
   $("#view-"+tab).classList.add("active");
-  $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===tab));
-  $(".top").style.display = tab==="month" ? "block":"none"; // main header only on month
+  const navTab = tab==="cat" ? "month" : tab;   // drill-down mantém "Mês" aceso
+  $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===navTab));
+  $(".top").style.display = tab==="month" ? "block":"none"; // header principal só no Mês
   window.scrollTo(0,0);
+  if(tab==="cat") renderCat();
   if(tab==="month") renderMonth();
   if(tab==="add") resetAdd();
   if(tab==="fixed") renderFixed();
@@ -1126,6 +1309,7 @@ let toastT;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),1700); }
 
 /* ---------- wire buttons ---------- */
+$("#catBack").onclick=()=>go("month");
 $("#pfLine").onclick=()=>go("invest");
 $("#prevM").onclick=()=>{ cursor.setMonth(cursor.getMonth()-1); renderMonth(); };
 $("#nextM").onclick=()=>{ cursor.setMonth(cursor.getMonth()+1); renderMonth(); };
@@ -1155,7 +1339,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 }
 
 /* ---------- init ---------- */
-function renderAll(){ renderMonth(); renderFixed(); renderInvest(); renderCats(); }
+function renderAll(){ applyTheme(false); renderMonth(); renderFixed(); renderInvest(); renderCats(); }
 resetAdd();
 renderAll();
 go("month");
