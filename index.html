@@ -116,9 +116,10 @@
     border-top:1px solid var(--line);
     padding-bottom:var(--safe-b);
     display:flex;max-width:560px;margin:0 auto}
-  nav.tabs button{flex:1;background:none;border:none;padding:9px 0 8px;color:var(--ink-3);
-    display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;letter-spacing:.01em}
-  nav.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  nav.tabs button{flex:1;min-width:0;background:none;border:none;padding:9px 1px 8px;color:var(--ink-3);
+    display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;font-weight:600;letter-spacing:-.01em}
+  nav.tabs button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  nav.tabs button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
   nav.tabs button.on{color:var(--accent)}
 
   /* ---------- Cards / rows ---------- */
@@ -249,6 +250,24 @@
     background:var(--accent-soft);color:var(--accent);border-radius:5px;padding:1px 6px;margin-right:2px}
   .statline{display:flex;align-items:center;justify-content:space-between;padding:9px 2px;border-bottom:1px solid var(--line-2)}
   .statline:last-of-type{border-bottom:none}
+
+  /* ---------- Extrato (OFX) ---------- */
+  .filebtn{display:block;width:100%;background:var(--accent);color:#17140e;border-radius:13px;padding:16px;
+    font-size:16px;font-weight:700;text-align:center;margin-top:20px;cursor:pointer}
+  .filebtn:active{opacity:.85}
+  .filebtn input{display:none}
+  select.mini{-webkit-appearance:none;appearance:none;background:var(--field);border:1px solid var(--line);
+    border-radius:8px;padding:3px 22px 3px 8px;font-size:12px;font-weight:600;color:var(--ink);max-width:150px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23908b83' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 6px center}
+  .item.ofx{align-items:flex-start;gap:10px}
+  .item.ofx .ck{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--accent)}
+  .item.ofx.off{opacity:.42}
+  .item.ofx .t1{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.3;font-size:14.5px}
+  .item.ofx .t2{margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .item.ofx .val{margin-top:1px}
+  .dupbadge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;
+    background:var(--field);color:var(--ink-3);border-radius:5px;padding:1px 6px}
 </style>
 </head>
 <body>
@@ -474,6 +493,15 @@
     <p class="muted tiny" style="text-align:center;margin:26px 0 6px">Controle Financeiro · Gestão &amp; Planejamento<br>roda 100% offline no seu aparelho</p>
   </section>
 
+  <!-- ============ EXTRATO (importar OFX) ============ -->
+  <section id="view-ofx" class="view">
+    <header class="top" style="padding-left:0;padding-right:0">
+      <div class="kicker">Importar do banco</div>
+      <h1>Extrato</h1>
+    </header>
+    <div id="ofxBody"></div>
+  </section>
+
   <!-- ============ RELATÓRIO ============ -->
   <section id="view-report" class="view">
     <header class="top" style="padding-left:0;padding-right:0">
@@ -503,27 +531,31 @@
 <nav class="tabs" id="tabs">
   <button data-tab="month" class="on">
     <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
-    Mês
+    <span>Mês</span>
   </button>
   <button data-tab="fixed">
     <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M12 7v5l3 2"/><path d="M18 4l3 3-3 3"/></svg>
-    Fixos
+    <span>Fixos</span>
   </button>
   <button data-tab="add" id="fabTab">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
-    Lançar
+    <span>Lançar</span>
+  </button>
+  <button data-tab="ofx">
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/></svg>
+    <span>Extrato</span>
   </button>
   <button data-tab="saved">
     <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="3.4"/><path d="M12 8.6V6M7 20v1.5M17 20v1.5"/></svg>
-    Guardado
+    <span>Guardado</span>
   </button>
   <button data-tab="report">
     <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-3"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M8 12h8M8 16h5"/></svg>
-    Relatório
+    <span>Relatório</span>
   </button>
   <button data-tab="set">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.1A1.6 1.6 0 0 0 6.8 19l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 5 13.4H5a2 2 0 0 1 0-4h.1A1.6 1.6 0 0 0 6 6.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 11 5V5a2 2 0 0 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8"/></svg>
-    Ajustes
+    <span>Ajustes</span>
   </button>
 </nav>
 
@@ -584,6 +616,8 @@ function seed(){
     transactions:[],   // {id,type,amount,categoryId,date,note}
     fixed:[],          // {id,type,name,amount,categoryId,active}
     reserves:[],       // ver normReserve()
+    imported:[],       // chaves dos lançamentos que vieram de OFX (evita importar duas vezes)
+    rules:{},          // palavra do extrato -> categoria, aprendido com as suas correções
   };
 }
 
@@ -606,6 +640,8 @@ function normalize(d){
   d.transactions = Array.isArray(d.transactions) ? d.transactions : [];
   d.fixed        = Array.isArray(d.fixed)        ? d.fixed        : [];
   d.reserves     = Array.isArray(d.reserves)     ? d.reserves     : [];
+  d.imported     = Array.isArray(d.imported)     ? d.imported     : [];   // chaves de extrato já lido
+  d.rules        = (d.rules && typeof d.rules==="object") ? d.rules : {};  // categorização aprendida
   d.settings     = Object.assign({}, s.settings, d.settings||{});
 
   // iFinance v1: assets:[{name,cls,moves,vals}] -> reservas sem rendimento declarado
@@ -1401,6 +1437,315 @@ function openReserveBalance(r){
 }
 
 /* ============================================================
+   EXTRATO — importação de arquivo OFX do banco
+   ------------------------------------------------------------
+   OFX é o extrato que todo banco brasileiro deixa baixar pelo
+   app. O arquivo é lido aqui mesmo, no navegador: nada sai do
+   aparelho, nenhuma senha, nenhuma conexão com o banco.
+   ============================================================ */
+
+/* palavras que costumam identificar cada tipo de gasto */
+const OFX_HINTS = [
+  [/mercado(?! ?livre)|supermerc|atacad|carrefour|assa[ií]|p[ãa]o de a|hortifrut|sacol[ãa]o|big |extra |mambo|zona sul|pref |verdemar/i, "Mercado"],
+  [/uber|99 ?(pop|app|tecnolog)|cabify|t[áa]xi|posto |combust|gasolina|ipiranga|shell|petrobr|metr[ôo]|bilhete [úu]nico|estacionamento|autopass|sem parar|pedagio|ped[áa]gio/i, "Transporte"],
+  [/ifood|rappi|restaur|lanchon|padaria|pizza|burger|mc ?donald|bk |subway|starbuck|caf[ée]|doceria|a[çc]a[íi]|delivery/i, "Comer fora"],
+  [/aluguel|condom[íi]n|imobili[áa]r|iptu/i, "Moradia"],
+  [/energia|enel|cemig|copel|light |eletrop|sabesp|cagece|[áa]gua|vivo|claro|tim |oi s\.?a|internet|banda larga|g[áa]s|comgas|telefon/i, "Contas"],
+  [/farm[áa]c|drogar|drogasil|pacheco|raia|pague menos|hospital|cl[íi]nic|laborat[óo]ri|unimed|amil|bradesco sa[úu]de|dentist|psic[óo]log/i, "Saúde"],
+  [/netflix|spotify|disney|hbo|globoplay|prime video|deezer|cinema|ingresso|cinemark|show |teatro|bar |cervej|pub |balada|academia|smart ?fit|bio ?ritmo|gympass/i, "Lazer"],
+  [/shopee|mercado ?livre|mercadolivre|amazon|magalu|magazine luiza|americanas|aliexpress|shein|renner|riachuelo|zara|c&a|centauro|leroy|kalunga/i, "Compras"],
+  [/aplica[çc]|resgate|tesouro|cdb|lci|lca|poupan|investim|corretora|xp inv|rico inv|clear |nuinvest|btg/i, "Investimento"],
+];
+
+let ofxRows = [];      // linhas lidas do arquivo, aguardando revisão
+let ofxInfo = null;    // {total, novos, dups, de, ate, banco}
+
+/* acentos fora, minúsculas — para comparar textos de banco */
+function norm(s){
+  return String(s||"").toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim();
+}
+/* palavras que valem como "assinatura" do lançamento */
+function tokensOf(s){
+  return norm(s).split(" ").filter(w => w.length>=4 && !/^\d+$/.test(w));
+}
+
+/* OFX brasileiro costuma vir em windows-1252; UTF-8 falha nos acentos */
+function decodeOFX(buffer){
+  const bytes=new Uint8Array(buffer);
+  try{ return new TextDecoder("utf-8",{fatal:true}).decode(bytes); }
+  catch(e){ return new TextDecoder("windows-1252").decode(bytes); }
+}
+
+/* OFX 1.x é SGML (tags sem fechamento); OFX 2.x é XML. Os dois caem aqui. */
+function parseOFX(text){
+  const body=String(text).replace(/\r/g,"");
+  const chunks=body.split(/<STMTTRN>/i).slice(1).map(c=>c.split(/<\/STMTTRN>/i)[0]);
+  const rows=[];
+  for(const c of chunks){
+    const tag=name=>{
+      const m=c.match(new RegExp("<"+name+">([^<\\n]*)","i"));
+      return m?m[1].trim():"";
+    };
+    const amt=parseFloat(tag("TRNAMT").replace(",","."));
+    if(!isFinite(amt)||amt===0) continue;
+    const dt=tag("DTPOSTED").replace(/[^\d]/g,"").slice(0,8);
+    const date=/^\d{8}$/.test(dt) ? `${dt.slice(0,4)}-${dt.slice(4,6)}-${dt.slice(6,8)}` : todayISO();
+    const memo=(tag("MEMO")||tag("NAME")||"Lançamento").replace(/\s+/g," ").trim();
+    rows.push({
+      fitid: tag("FITID"),
+      date, memo,
+      amount: Math.abs(Math.round(amt*100)/100),
+      type: amt<0 ? "expense" : "income",
+    });
+  }
+  const bank=(body.match(/<ORG>([^<\n]*)/i)||[])[1];
+  return {rows, bank: bank?bank.trim():""};
+}
+
+/* chave de deduplicação: FITID quando existe, senão data+valor+texto */
+function ofxKey(r){
+  return r.fitid ? "f:"+r.fitid : `k:${r.date}|${r.amount.toFixed(2)}|${norm(r.memo).slice(0,40)}`;
+}
+
+/* adivinha a categoria: regra aprendida > histórico > palavra-chave */
+function guessCategory(memo){
+  const toks=tokensOf(memo);
+
+  // 1. regra que você mesmo ensinou ao corrigir uma importação
+  for(const t of toks){
+    const id=DB.rules[t];
+    if(id && catById(id)) return id;
+  }
+
+  // 2. algo parecido já foi lançado antes?
+  const score={};
+  for(const tx of DB.transactions){
+    if(tx.type!=="expense"||!tx.categoryId||!tx.note) continue;
+    const shared=tokensOf(tx.note).filter(w=>toks.includes(w)).length;
+    if(shared) score[tx.categoryId]=(score[tx.categoryId]||0)+shared;
+  }
+  const best=Object.entries(score).sort((a,b)=>b[1]-a[1])[0];
+  if(best && catById(best[0])) return best[0];
+
+  // 3. palavras típicas de mercado, posto, farmácia…
+  for(const [re,name] of OFX_HINTS){
+    if(re.test(memo)){
+      const c=DB.categories.find(c=>norm(c.name)===norm(name));
+      if(c) return c.id;
+    }
+  }
+  return DB.categories.find(c=>c.kind==="essential")?.id || DB.categories[0]?.id || null;
+}
+
+/* guarda o que você corrigiu, para acertar sozinho na próxima vez */
+function learnRule(memo, catId){
+  const toks=tokensOf(memo);
+  if(!toks.length||!catId) return;
+  // a palavra mais longa costuma ser o nome do estabelecimento
+  const key=toks.slice().sort((a,b)=>b.length-a.length)[0];
+  DB.rules[key]=catId;
+}
+
+/* ---------- telas ---------- */
+function renderOfx(){
+  ofxRows.length ? renderOfxReview() : renderOfxStart();
+}
+
+function renderOfxStart(){
+  $("#ofxBody").innerHTML=`
+    <p class="muted tiny" style="margin:0 2px 4px">
+      Baixe o extrato em <b>OFX</b> no app do seu banco e abra aqui. O arquivo é lido dentro do
+      aparelho — nenhuma senha, nenhum acesso à sua conta, nada enviado pra internet.
+    </p>
+
+    <label class="filebtn">Escolher arquivo .ofx
+      <input type="file" id="ofxFile" accept=".ofx,.OFX,.qfx,text/plain,application/x-ofx">
+    </label>
+
+    <div class="section-label">Onde achar o OFX</div>
+    <div class="card">
+      <p class="muted tiny" style="margin:0">
+        <b>Nubank:</b> conta → ⋮ → Exportar extrato → OFX<br>
+        <b>Itaú / Bradesco / Santander:</b> extrato → exportar / salvar → formato OFX ou “Money”<br>
+        <b>Inter / C6 / PicPay:</b> extrato → compartilhar → OFX<br>
+        <b>Caixa / BB:</b> extrato por período → salvar em OFX
+      </p>
+    </div>
+
+    <div class="section-label">Ou cole o conteúdo</div>
+    <div class="card">
+      <p class="muted tiny" style="margin:0 0 10px">Se o seletor de arquivos não abrir o OFX, abra o arquivo num editor de texto e cole aqui.</p>
+      <textarea class="report" id="ofxPaste" style="height:130px" placeholder="&lt;OFX&gt;…"></textarea>
+      <button class="btn-sm" id="ofxPasteGo" style="margin-top:10px">Ler texto colado</button>
+    </div>
+
+    <div class="section-label">Como funciona</div>
+    <div class="card">
+      <p class="muted tiny" style="margin:0">
+        O app separa entradas de saídas, ignora o que já foi importado antes e <b>chuta a categoria</b>
+        de cada lançamento aprendendo com o que você já categorizou. Você revisa tudo antes de confirmar —
+        e cada correção sua ensina o app para a próxima vez.
+      </p>
+    </div>
+    ${DB.imported.length?`<p class="muted tiny" style="margin:16px 2px 0">${DB.imported.length} lançamentos já vieram de extratos importados.</p>`:""}
+  `;
+
+  $("#ofxFile").onchange=e=>{
+    const f=e.target.files&&e.target.files[0];
+    if(!f) return;
+    const rd=new FileReader();
+    rd.onload=()=>{ loadOfxText(decodeOFX(rd.result), f.name); };
+    rd.onerror=()=>toast("Não consegui ler o arquivo.");
+    rd.readAsArrayBuffer(f);
+  };
+  $("#ofxPasteGo").onclick=()=>{
+    const t=$("#ofxPaste").value.trim();
+    if(!t){ toast("Cole o conteúdo do arquivo."); return; }
+    loadOfxText(t, "texto colado");
+  };
+}
+
+function loadOfxText(text, origem){
+  const {rows, bank}=parseOFX(text);
+  if(!rows.length){
+    toast("Nenhum lançamento encontrado no arquivo.");
+    return;
+  }
+  const seen=new Set(DB.imported);
+  let dups=0;
+  ofxRows=rows.map(r=>{
+    const key=ofxKey(r);
+    const dup=seen.has(key);
+    if(dup) dups++;
+    return {...r, key, dup,
+      include: !dup,
+      catId: r.type==="expense" ? guessCategory(r.memo) : null,
+      guessed: true};
+  }).sort((a,b)=>a.date.localeCompare(b.date));
+
+  const datas=ofxRows.map(r=>r.date).sort();
+  ofxInfo={ total:ofxRows.length, dups, novos:ofxRows.length-dups,
+            de:datas[0], ate:datas[datas.length-1], banco:bank, origem };
+  renderOfxReview();
+  window.scrollTo(0,0);
+}
+
+function renderOfxReview(){
+  const inc=ofxRows.filter(r=>r.include);
+  const gasto=inc.filter(r=>r.type==="expense").reduce((a,r)=>a+r.amount,0);
+  const renda=inc.filter(r=>r.type==="income").reduce((a,r)=>a+r.amount,0);
+
+  const catOpts=(sel)=>DB.categories.map(c=>
+    `<option value="${c.id}" ${c.id===sel?"selected":""}>${esc(c.name)}</option>`).join("");
+
+  $("#ofxBody").innerHTML=`
+    <div class="card gold">
+      <div class="row"><span class="muted tiny" style="font-weight:600">Encontrado no arquivo</span>
+        <b class="num">${ofxInfo.total} lançamentos</b></div>
+      <p class="muted tiny" style="margin:9px 2px 0">
+        ${ofxInfo.banco?`${esc(ofxInfo.banco)} · `:""}${dmy(ofxInfo.de)} a ${dmy(ofxInfo.ate)}<br>
+        ${ofxInfo.dups?`${ofxInfo.dups} já tinham sido importados e vêm desmarcados.`:"Nenhum repetido — tudo novo."}
+      </p>
+    </div>
+
+    <div class="split" style="margin-top:12px">
+      <div class="card stat"><div class="k">Vai entrar</div><div class="v num" style="color:var(--pos)">${money(renda,true)}</div></div>
+      <div class="card stat"><div class="k">Vai sair</div><div class="v num">${money(gasto,true)}</div></div>
+    </div>
+
+    <div class="row" style="margin:20px 2px 9px">
+      <span class="section-label" style="margin:0">Revise antes de importar</span>
+      <button class="btn-sm" id="ofxToggleAll">${inc.length?"Desmarcar tudo":"Marcar tudo"}</button>
+    </div>
+
+    <div class="list">${ofxRows.map((r,i)=>`
+      <div class="item ofx ${r.include?"":"off"}" data-i="${i}">
+        <input type="checkbox" class="ck" data-ck="${i}" ${r.include?"checked":""}>
+        <div class="grow">
+          <div class="t1">${esc(r.memo)}</div>
+          <div class="t2">
+            <span class="num">${dmy(r.date)}</span>
+            ${r.dup?`<span class="dupbadge">repetido</span>`:""}
+            ${r.type==="expense"
+              ? `<select class="mini" data-cat="${i}">${catOpts(r.catId)}</select>`
+              : `<span style="color:var(--pos);font-weight:600">Renda</span>`}
+          </div>
+        </div>
+        <div class="val ${r.type==="income"?"pos":"neg"} num">${r.type==="income"?"+":"−"}${money(r.amount)}</div>
+      </div>`).join("")}</div>
+
+    <button class="btn" id="ofxImport" ${inc.length?"":"disabled"}>
+      Importar ${inc.length} lançamento${inc.length===1?"":"s"}</button>
+    <button class="btn ghost" id="ofxCancel" style="margin-top:10px">Cancelar</button>
+    <p class="muted tiny" style="margin:14px 2px 0">
+      As categorias foram chutadas pelo app. Corrija o que estiver errado — ele guarda a correção e
+      acerta sozinho no próximo extrato.
+    </p>
+  `;
+
+  $$("#ofxBody [data-ck]").forEach(ck=>ck.onchange=()=>{
+    const i=+ck.dataset.ck;
+    ofxRows[i].include=ck.checked;
+    ck.closest(".item").classList.toggle("off",!ck.checked);
+    refreshOfxTotals();
+  });
+  $$("#ofxBody [data-cat]").forEach(sel=>sel.onchange=()=>{
+    const i=+sel.dataset.cat;
+    ofxRows[i].catId=sel.value;
+    ofxRows[i].guessed=false;          // você escolheu: vira regra na importação
+  });
+  $("#ofxToggleAll").onclick=()=>{
+    const marcar=!ofxRows.some(r=>r.include);
+    ofxRows.forEach(r=>r.include=marcar);
+    renderOfxReview();
+  };
+  $("#ofxCancel").onclick=()=>{ ofxRows=[]; ofxInfo=null; renderOfxStart(); window.scrollTo(0,0); };
+  $("#ofxImport").onclick=importOfx;
+}
+
+/* atualiza só os números, sem redesenhar a lista (não perde a rolagem) */
+function refreshOfxTotals(){
+  const inc=ofxRows.filter(r=>r.include);
+  const gasto=inc.filter(r=>r.type==="expense").reduce((a,r)=>a+r.amount,0);
+  const renda=inc.filter(r=>r.type==="income").reduce((a,r)=>a+r.amount,0);
+  const stats=$$("#ofxBody .stat .v");
+  if(stats[0]) stats[0].textContent=money(renda,true);
+  if(stats[1]) stats[1].textContent=money(gasto,true);
+  const b=$("#ofxImport");
+  if(b){
+    b.textContent=`Importar ${inc.length} lançamento${inc.length===1?"":"s"}`;
+    b.disabled=!inc.length;
+  }
+}
+
+function importOfx(){
+  const inc=ofxRows.filter(r=>r.include);
+  if(!inc.length){ toast("Marque ao menos um lançamento."); return; }
+  const repetidos=inc.filter(r=>r.dup).length;
+  if(repetidos && !confirm(`${repetidos} lançamento(s) marcado(s) já foram importados antes. Importar mesmo assim (vão ficar duplicados)?`)) return;
+
+  for(const r of inc){
+    DB.transactions.push({
+      id:uid(), type:r.type, amount:r.amount,
+      categoryId: r.type==="expense" ? r.catId : null,
+      date:r.date, note:r.memo,
+    });
+    if(!DB.imported.includes(r.key)) DB.imported.push(r.key);
+    if(r.type==="expense" && !r.guessed) learnRule(r.memo, r.catId);
+  }
+  save();
+
+  const ultimo=inc[inc.length-1].date;
+  cursor=new Date(ultimo+"T00:00:00"); cursor.setDate(1);
+  ofxRows=[]; ofxInfo=null;
+  renderAll();
+  go("month");
+  toast(`${inc.length} lançamentos importados ✓`);
+}
+
+/* ============================================================
    RELATÓRIO (markdown para colar numa IA)
    ============================================================ */
 function buildReport(nMonths){
@@ -1608,6 +1953,7 @@ function go(tab){
   if(tab==="add")   resetAdd();
   if(tab==="fixed") renderFixed();
   if(tab==="saved") renderSaved();
+  if(tab==="ofx")   renderOfx();
   if(tab==="set")   renderCats();
 }
 $$("#tabs button").forEach(b=>b.onclick=()=>go(b.dataset.tab));
