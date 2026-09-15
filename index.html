@@ -32,10 +32,10 @@
     --ink-3:#5b6474;
     --line:#2a313d;
     --line-2:#222834;
-    --accent:#e0a95c;
-    --accent-2:#f2cd97;
-    --accent-ink:#1a1206;
-    --accent-soft:#2b2317;
+    --accent:#5b9cf0;
+    --accent-2:#9cc4f8;
+    --accent-ink:#06162b;
+    --accent-soft:#16253b;
     --pos:#5fd39a;
     --neg:#ef8074;
     --seg-on:#303847;
@@ -57,10 +57,10 @@
     --ink-3:#9aa0aa;
     --line:#e4e1da;
     --line-2:#eeebe5;
-    --accent:#9a6a20;
-    --accent-2:#b98a3c;
-    --accent-ink:#fffaf2;
-    --accent-soft:#f6eede;
+    --accent:#1f62b0;
+    --accent-2:#3b82c9;
+    --accent-ink:#f5f9ff;
+    --accent-soft:#e5eefb;
     --pos:#1d8a62;
     --neg:#c0524a;
     --seg-on:#ffffff;
@@ -592,7 +592,7 @@ const KINDS = {
   investment:  {label:"Investimento"},
 };
 
-const PALETTE = ["#e0a95c","#5b9cf0","#ef8074","#5fd39a","#a78bfa","#3fc0cc","#f472b6","#8b94a3"];
+const PALETTE = ["#e0a95c","#fb923c","#ef8074","#f472b6","#a78bfa","#3fc0cc","#5fd39a","#8b94a3"];
 
 /* formas de pagamento */
 const PAYS = {
@@ -625,15 +625,15 @@ function seed(){
     settings:{ cdi:14.9, ipca:4.5, emergencyMonths:6 },
     accounts:[],
     categories:[
-      c("Moradia","essential","#5b9cf0"),
+      c("Moradia","essential","#e0a95c"),
       c("Mercado","essential","#5fd39a"),
       c("Transporte","essential","#8b94a3"),
       c("Contas","essential","#3fc0cc"),
-      c("Comer fora","superfluous","#e0a95c"),
+      c("Comer fora","superfluous","#fb923c"),
       c("Lazer","superfluous","#a78bfa"),
       c("Compras","superfluous","#f472b6"),
       c("Saúde","essential","#ef8074"),
-      c("Investimento","investment","#5fd39a"),
+      c("Investimento","investment","#2dd4bf"),
     ],
     transactions:[],   // {id,type,amount,categoryId,date,note,accountId,pay}
     fixed:[],          // {id,type,name,amount,categoryId,active}
@@ -1760,7 +1760,7 @@ function openReserveMove(r, type){
 
     if(isIn && $("#mv-tx")?.checked){
       let cat=DB.categories.find(c=>c.kind==="investment");
-      if(!cat){ cat={id:uid(),name:"Investimento",kind:"investment",color:"#5bbd8e"}; DB.categories.push(cat); }
+      if(!cat){ cat={id:uid(),name:"Investimento",kind:"investment",color:"#2dd4bf"}; DB.categories.push(cat); }
       DB.transactions.push({id:uid(),type:"expense",amount:v,categoryId:cat.id,date,note:`Guardado · ${r.name}`});
     }
     save(); closeSheet(); renderSaved(); renderResumo(); renderCats();
