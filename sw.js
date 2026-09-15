@@ -1,11 +1,11 @@
-/* Finanças — service worker
+/* Controle Financeiro — service worker
    Estratégia:
    - A página (index.html): REDE PRIMEIRO. Com internet, sempre pega a versão mais nova.
      Sem internet, serve a última cópia salva. Assim o app se atualiza sozinho,
      sem precisar mexer neste arquivo nunca mais.
    - Demais arquivos: cache primeiro (são estáticos).                                   */
 
-const CACHE = "ifinance";
+const CACHE = "controle-financeiro-v1";
 const FILES = ["./", "./index.html", "./manifest.webmanifest"];
 
 self.addEventListener("install", e => {
