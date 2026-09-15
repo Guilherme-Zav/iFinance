@@ -17,6 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Controle Financeiro">
 <link rel="manifest" href="manifest.webmanifest">
 <title>Controle Financeiro</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20180%20180%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%27.15%27%20y1%3D%270%27%20x2%3D%27.85%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23f6dcb4%27%2F%3E%3Cstop%20offset%3D%27.38%27%20stop-color%3D%27%23e0ae76%27%2F%3E%3Cstop%20offset%3D%27.72%27%20stop-color%3D%27%23c98f57%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239c6a3c%27%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%27180%27%20height%3D%27180%27%20rx%3D%2740%27%20fill%3D%27%2317181c%27%2F%3E%3Ccircle%20cx%3D%2790%27%20cy%3D%2783%27%20r%3D%2772%27%20fill%3D%27none%27%20stroke%3D%27%2326282e%27%20stroke-width%3D%271%27%2F%3E%3Ccircle%20cx%3D%2790%27%20cy%3D%2783%27%20r%3D%2759%27%20fill%3D%27none%27%20stroke%3D%27%2333353c%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2790%27%20y%3D%27140%27%20font-family%3D%27Georgia%2CTimes%20New%20Roman%2Cserif%27%20font-size%3D%27118%27%20font-weight%3D%27700%27%20fill%3D%27url%28%23g%29%27%20text-anchor%3D%27middle%27%3E%24%3C%2Ftext%3E%3C%2Fsvg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20180%20180%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%27.15%27%20y1%3D%270%27%20x2%3D%27.85%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23f6dcb4%27%2F%3E%3Cstop%20offset%3D%27.38%27%20stop-color%3D%27%23e0ae76%27%2F%3E%3Cstop%20offset%3D%27.72%27%20stop-color%3D%27%23c98f57%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239c6a3c%27%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%27180%27%20height%3D%27180%27%20rx%3D%2740%27%20fill%3D%27%2317181c%27%2F%3E%3Ccircle%20cx%3D%2790%27%20cy%3D%2783%27%20r%3D%2772%27%20fill%3D%27none%27%20stroke%3D%27%2326282e%27%20stroke-width%3D%271%27%2F%3E%3Ccircle%20cx%3D%2790%27%20cy%3D%2783%27%20r%3D%2759%27%20fill%3D%27none%27%20stroke%3D%27%2333353c%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2790%27%20y%3D%27140%27%20font-family%3D%27Georgia%2CTimes%20New%20Roman%2Cserif%27%20font-size%3D%27118%27%20font-weight%3D%27700%27%20fill%3D%27url%28%23g%29%27%20text-anchor%3D%27middle%27%3E%24%3C%2Ftext%3E%3C%2Fsvg%3E">
 <style>
   :root{
@@ -56,7 +57,7 @@
     --line-2:#edebe5;
     --accent:#96681f;        /* dourado escurecido p/ contraste no claro */
     --accent-2:#b98a3c;
-    --accent-soft:#f6eeddff;
+    --accent-soft:#f6eedd;
     --pos:#1f7a5a;
     --neg:#b23b3b;
     --seg-on:#ffffff;
@@ -175,7 +176,8 @@
     display:flex;align-items:center;justify-content:center}
   .monthbar button:active{background:var(--line)}
   .monthbar button svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .monthbar .m{font-size:16px;font-weight:600;text-transform:capitalize}
+  .monthbar .m{font-size:16px;font-weight:600}
+  .monthbar .m::first-letter{text-transform:uppercase}
 
   .seg{display:flex;background:var(--field);border-radius:12px;padding:3px;gap:3px;margin:2px 0}
   .seg button{flex:1;border:none;background:none;padding:9px 0;border-radius:9px;font-weight:600;font-size:14px;color:var(--ink-2)}
@@ -222,7 +224,9 @@
     max-width:560px;margin:0 auto;padding:8px 20px calc(24px + var(--safe-b));box-shadow:0 -8px 30px rgba(0,0,0,.4);
     transform:translateY(102%);transition:transform .26s cubic-bezier(.32,.72,0,1);max-height:92vh;overflow:auto}
   .sheet.show{transform:none}
-  .grab{width:38px;height:5px;border-radius:3px;background:var(--line);margin:8px auto 6px}
+  .grabwrap{display:block;width:100%;border:none;background:none;padding:6px 0 4px;margin:0}
+  .grab{width:38px;height:5px;border-radius:3px;background:var(--line);margin:0 auto}
+  .grabwrap:active .grab{background:var(--ink-3)}
   .sheet h2{font-size:19px;margin:6px 2px 4px}
   .sheet .sub{color:var(--ink-2);font-size:13.5px;margin:0 2px 8px}
 
@@ -241,8 +245,8 @@
 
   .del{color:var(--neg);background:none;border:none;font-weight:600;font-size:13.5px;padding:6px 4px}
   .link{color:var(--accent);font-weight:600}
-  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
-    background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:2px 7px;vertical-align:1px}
+  .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+    background:var(--accent-soft);color:var(--accent);border-radius:5px;padding:1px 6px;margin-right:2px}
   .statline{display:flex;align-items:center;justify-content:space-between;padding:9px 2px;border-bottom:1px solid var(--line-2)}
   .statline:last-of-type{border-bottom:none}
 </style>
@@ -524,7 +528,7 @@
 </nav>
 
 <div class="scrim" id="scrim"></div>
-<div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+<div class="sheet" id="sheet"><button class="grabwrap" id="sheetClose" aria-label="Fechar"><div class="grab"></div></button><div id="sheetBody"></div></div>
 
 <div class="toast" id="toast"></div>
 
@@ -1130,7 +1134,10 @@ function essentialMonthlyCost(){
   }
   if(n>0) return tot/n;
   // sem histórico: usa os gastos fixos cadastrados
-  return DB.fixed.filter(f=>f.type==="expense"&&f.active!==false).reduce((a,f)=>a+f.amount,0);
+  const fix=DB.fixed.filter(f=>f.type==="expense"&&f.active!==false).reduce((a,f)=>a+f.amount,0);
+  if(fix>0) return fix;
+  // primeiro mês de uso: usa o que já foi lançado como essencial neste mês
+  return monthData(now.getFullYear(), now.getMonth()).byKind.essential;
 }
 
 function renderSaved(){
@@ -1158,8 +1165,8 @@ function renderSaved(){
       const sub=[yieldLabel(r), r.place].filter(Boolean).join(" · ");
       return `<div class="item" data-res="${r.id}">
         <span class="dot" style="background:${r.yType==='none'?'var(--ink-3)':'var(--accent)'}"></span>
-        <div class="grow"><div class="t1">${esc(r.name)}${r.emergency?` <span class="tag">emerg.</span>`:""}</div>
-          <div class="t2">${esc(sub)}</div></div>
+        <div class="grow"><div class="t1">${esc(r.name)}</div>
+          <div class="t2">${r.emergency?`<span class="tag">emergência</span> `:""}${esc(sub)}</div></div>
         <div style="text-align:right">
           <div class="val num">${money(r.amount)}</div>
           <div class="tiny num" style="color:${my>0?"var(--pos)":"var(--ink-3)"}">${my>0?"+"+money(my)+"/mês":"—"}</div>
@@ -1210,7 +1217,7 @@ function rateFieldHTML(yType, yRate){
 }
 
 function openReserveSheet(existing){
-  const r = existing || normReserve({since:todayISO()});
+  const r = existing || normReserve({since:todayISO(), yType:"cdi", yRate:100});
   const isNew = !existing;
   const opts = Object.entries(YTYPES).map(([k,v])=>
     `<option value="${k}" ${k===r.yType?"selected":""}>${v.label}</option>`).join("");
@@ -1314,7 +1321,7 @@ function openReserveDetail(id){
     ${line("Guardado hoje", money(r.amount))}
     ${line("Rendimento bruto", g>0?`${num(g)}% a.a.`:"—")}
     ${r.fee>0?line("Taxa de administração", `− ${num(r.fee)}% a.a.`, "var(--neg)"):""}
-    ${line("IR estimado", ir>0?`${(ir*100).toFixed(1)}% sobre o ganho`:"isento", ir>0?"var(--neg)":"var(--pos)")}
+    ${line("IR estimado", ir>0?`${num(ir*100)}% sobre o ganho`:"isento", ir>0?"var(--neg)":"var(--pos)")}
     ${line("Rendimento líquido", n>0?`${num(n)}% a.a.`:"—", n>0?"var(--pos)":"")}
     ${line("Rende por mês", my>0?"+"+money(my):"—", my>0?"var(--pos)":"")}
     ${line("Rende em 12 meses", yy>0?"+"+money(yy):"—", yy>0?"var(--pos)":"")}
@@ -1469,7 +1476,7 @@ function buildReport(nMonths){
     for(const r of DB.reserves){
       const bits=[`${yieldLabel(r)}`];
       if(r.fee>0) bits.push(`taxa ${num(r.fee)}% a.a.`);
-      bits.push(isTaxFree(r)?`isento de IR`:`IR ${(irOf(r)*100).toFixed(1)}%`);
+      bits.push(isTaxFree(r)?`isento de IR`:`IR ${num(irOf(r)*100)}%`);
       L.push(`- ${r.name}${r.place?` (${r.place})`:""}: ${money(r.amount)} — ${bits.join(" · ")} → líquido ${num(netRate(r))}% a.a. (+${money(monthYield(r))}/mês)${r.emergency?" [reserva de emergência]":""}${r.goal>0?` · meta ${money(r.goal)}`:""}`);
     }
     L.push(`- **Total guardado**: ${money(t.amount)} rendendo ${num(t.effRate)}% a.a. líquido (~${num(t.cdiPct,0)}% do CDI) = +${money(t.perMonth)}/mês, +${money(t.perYear)}/ano`);
@@ -1608,6 +1615,8 @@ $$("#tabs button").forEach(b=>b.onclick=()=>go(b.dataset.tab));
 function sheet(html){ $("#sheetBody").innerHTML=html; $("#scrim").classList.add("show"); $("#sheet").classList.add("show"); $("#sheet").scrollTop=0; }
 function closeSheet(){ $("#scrim").classList.remove("show"); $("#sheet").classList.remove("show"); }
 $("#scrim").onclick=closeSheet;
+$("#sheetClose").onclick=closeSheet;
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeSheet(); });
 
 let toastT;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),1700); }
