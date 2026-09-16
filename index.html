@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#12161d" id="metaTheme">
+<meta name="theme-color" content="#000000" id="metaTheme">
 <script>
   /* aplica o tema antes de pintar a tela (evita piscar branco no escuro) */
   (function(){try{
@@ -23,24 +23,24 @@
   :root{
     color-scheme:dark;
     /* ---- Dark: grafite azulado + dourado ---- */
-    --bg:#12161d;
-    --surface:#1a1f28;
-    --surface-2:#212733;
-    --field:#252c38;
-    --ink:#eef1f6;
-    --ink-2:#8b94a3;
-    --ink-3:#5b6474;
-    --line:#2a313d;
-    --line-2:#222834;
-    --accent:#5b9cf0;
-    --accent-2:#9cc4f8;
-    --accent-ink:#06162b;
-    --accent-soft:#16253b;
-    --pos:#5fd39a;
-    --neg:#ef8074;
-    --seg-on:#303847;
-    --nav-bg:rgba(18,22,29,.86);
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.26);
+    --bg:#000000;          /* preto de verdade: OLED descansa */
+    --surface:#111214;
+    --surface-2:#18191c;
+    --field:#1c1d21;
+    --ink:#dfe1e5;         /* branco quebrado, sem ofuscar */
+    --ink-2:#8e9199;
+    --ink-3:#5d6068;
+    --line:#232428;
+    --line-2:#1a1b1f;
+    --accent:#5a95dd;      /* azul menos saturado */
+    --accent-2:#8cb8ea;
+    --accent-ink:#07131f;
+    --accent-soft:#111c2c;
+    --pos:#4fbd8b;
+    --neg:#dd7a70;
+    --seg-on:#26272c;
+    --nav-bg:rgba(0,0,0,.88);
+    --shadow:none;
     --radius:16px;
     --safe-b:env(safe-area-inset-bottom, 0px);
     --safe-t:env(safe-area-inset-top, 0px);
@@ -473,6 +473,27 @@
   .hello .k{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
   .hello h2{font-size:22px;margin-top:4px}
   .hidden{display:none!important}
+
+  /* ---------- transações / gráficos ---------- */
+  .item.txrow{padding:0;gap:0}
+  .item.txrow > .grow.tap{display:flex;align-items:center;gap:12px;padding:12px 15px;background:none;border:none;text-align:left;color:inherit;min-width:0}
+  .item.txrow > .grow.tap > .grow{display:block;min-width:0}
+  .item.txrow .t1,.item.txrow .t2{display:block}
+  .item.txrow .val.muted{color:var(--ink-2)}
+  .xdel{flex:none;width:40px;align-self:stretch;border:none;border-left:1px solid var(--line-2);background:none;color:var(--ink-3);font-size:20px;line-height:1}
+  .xdel:active{color:var(--neg);background:var(--surface-2)}
+  .chart{display:flex;gap:8px;align-items:stretch;height:132px;margin-top:10px}
+  .chart .cb{flex:1;background:none;border:none;padding:0;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;min-width:0}
+  .chart .cb .grp{display:flex;gap:2px;align-items:flex-end;justify-content:center;height:100%}
+  .chart .cb .grp i{display:block;width:100%;max-width:26px;min-height:2px;border-radius:4px 4px 0 0;opacity:.45;transition:opacity .15s}
+  .chart .cb.on .grp i{opacity:1}
+  .chart .cb .lb{font-size:10.5px;color:var(--ink-3);font-weight:600;text-align:center}
+  .chart .cb.on .lb{color:var(--ink)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:9px;height:9px;border-radius:50%}
+  .stack{display:flex;height:10px;border-radius:6px;overflow:hidden;gap:2px;background:var(--line)}
+  .stack i{display:block;height:100%}
 </style>
 </head>
 <body>
@@ -604,7 +625,8 @@
 
   <!-- ============ GUARDADO ============ -->
   <section id="view-saved" class="view">
-    <div class="vhead">
+    <div class="backbar"><button data-back="more"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Mais</button></div>
+    <div class="vhead" style="padding-top:8px">
       <h1>Guardado</h1>
       <p>Seu patrimônio e quanto ele rende.</p>
     </div>
@@ -657,6 +679,18 @@
       <p>Tudo que não precisa ficar na barra de baixo.</p>
     </div>
 
+    <div class="sec"><span class="t">patrimônio e futuro</span></div>
+    <div class="list">
+      <button class="item" data-goto="saved">
+        <div class="grow"><div class="t1">Guardado</div><div class="t2" id="moreSavedSub">Reservas e quanto rendem</div></div>
+        <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="item" data-goto="next">
+        <div class="grow"><div class="t1">Próximos meses</div><div class="t2">Fixos, parcelas e lançamentos futuros</div></div>
+        <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
     <div class="sec"><span class="t">no dia a dia</span></div>
     <div class="list">
       <button class="item" data-goto="fixed">
@@ -690,6 +724,34 @@
     </div>
 
     <p class="muted tiny" style="text-align:center;margin:26px 0 0">Controle Financeiro · Gestão &amp; Planejamento<br>roda 100% offline no seu aparelho</p>
+  </section>
+
+  <!-- ============ TRANSAÇÕES ============ -->
+  <section id="view-txs" class="view">
+    <div class="monthbar">
+      <button id="txPrevM" aria-label="Mês anterior"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="m num" id="txMonthLabel">—</div>
+      <button id="txNextM" aria-label="Próximo mês"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+    <div class="seg" id="txFilter">
+      <button data-f="all" class="on">Tudo</button><button data-f="in">Entradas</button><button data-f="out">Saídas</button><button data-f="tr">Transf.</button>
+    </div>
+    <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="txSearch" placeholder="Buscar por nome, categoria ou conta"></div>
+    <div id="txList"></div>
+    <div class="card" id="txTotals" style="margin-top:16px"></div>
+  </section>
+
+  <!-- ============ DASHBOARD ============ -->
+  <section id="view-dash" class="view">
+    <div class="vhead"><h1>Dashboard</h1><p>Seis meses de uma olhada. Toque numa barra para ver o mês.</p></div>
+    <div id="dashBody"></div>
+  </section>
+
+  <!-- ============ PRÓXIMOS MESES ============ -->
+  <section id="view-next" class="view">
+    <div class="backbar"><button data-back="more"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Mais</button></div>
+    <div class="vhead" style="padding-top:8px"><h1>Próximos meses</h1><p>Contas fixas, parcelas do cartão e o que já está lançado pra frente.</p></div>
+    <div id="nextBody"></div>
   </section>
 
   <!-- ============ CATEGORIA (drill-down) ============ -->
@@ -897,13 +959,17 @@
     <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
     Resumo
   </button>
+  <button data-tab="txs">
+    <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><path d="m3 6 1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2"/></svg>
+    Transações
+  </button>
+  <button data-tab="dash">
+    <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+    Dashboard
+  </button>
   <button data-tab="accounts">
     <svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19"/><path d="M6 15h4"/></svg>
     Contas
-  </button>
-  <button data-tab="saved">
-    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="12" cy="12" r="3.2"/><path d="M12 8.8V6"/></svg>
-    Guardado
   </button>
   <button data-tab="more">
     <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>
@@ -1041,6 +1107,8 @@ function normalize(d){
     delete d.assets;
   }
   d.reserves = d.reserves.map(normReserve);
+  d.categories.forEach(c=>{ c.budget=+c.budget||0; });
+  d.fixed.forEach(f=>{ f.day=+f.day||null; });
   d.accounts = d.accounts.map(normAccount);
   d.version  = 4;
   return d;
@@ -1115,6 +1183,7 @@ function monthData(year,month){
   let income=0, expense=0;
   const byCat={}, byKind={essential:0,superfluous:0,investment:0};
   for(const t of all){
+    if(t.type==="transfer") continue;                 // só muda de lugar
     if(t.type==="income"){ income+=t.amount; continue; }
     expense+=t.amount;
     byCat[t.categoryId]=(byCat[t.categoryId]||0)+t.amount;
@@ -1129,8 +1198,10 @@ function monthData(year,month){
 
 /* saldo de uma conta: parte do valor informado e se move com o que foi lançado */
 function accBalance(a){
-  let v=a.opening||0;
+  let v=a.opening||0, hoje=todayISO();
   for(const t of DB.transactions){
+    if(t.date>hoje) continue;                       // parcelas e agendados só contam quando chegam
+    if(t.type==="transfer"){ if(t.accountId===a.id) v-=t.amount; if(t.toAccountId===a.id) v+=t.amount; continue; }
     if(t.accountId!==a.id) continue;
     v += t.type==="income" ? t.amount : -t.amount;
   }
@@ -1296,7 +1367,7 @@ function openAccDetail(id){
   const a=accById(id); if(!a) return;
   const cred=a.type==="credit";
   const v=cred?cardInvoice(a):accBalance(a);
-  const movs=DB.transactions.filter(t=>t.accountId===a.id)
+  const movs=DB.transactions.filter(t=>t.accountId===a.id||t.toAccountId===a.id)
     .sort((x,y)=>y.date.localeCompare(x.date)).slice(0,8);
 
   sheet(`
@@ -1319,12 +1390,12 @@ function openAccDetail(id){
         return `<div class="item" style="padding:11px 14px">
           <div class="grow"><div class="t1">${esc(t.note||c?.name||"Lançamento")}</div>
             <div class="t2">${dmy(t.date)}${t.pay&&PAYS[t.pay]?` · ${PAYS[t.pay].label}`:""}</div></div>
-          <div class="val num ${t.type==="income"?"pos":"neg"}">${t.type==="income"?"+":"−"}${money(t.amount)}</div>
+          <div class="val num ${t.type==="income"||(t.type==="transfer"&&t.toAccountId===a.id)?"pos":"neg"}">${t.type==="income"||(t.type==="transfer"&&t.toAccountId===a.id)?"+":"−"}${money(t.amount)}</div>
         </div>`;}).join("")}</div>`
       :`<p class="muted tiny" style="margin:14px 2px 0">Nada lançado nesta conta ainda.</p>`}
 
     ${cred?"":`<button class="btn ghost" id="ad-bal" style="margin-top:16px">Corrigir saldo pelo extrato</button>`}
-    ${cred&&v>0?`<button class="btn ghost" id="ad-pay" style="margin-top:16px">Marcar fatura como paga</button>`:""}
+    ${cred&&v>0?`<button class="btn ghost" id="ad-pay" style="margin-top:16px">Pagar fatura</button>`:""}
     <div class="row" style="margin-top:16px">
       <button class="del" id="ad-del">Apagar</button>
       <button class="btn-sm" id="ad-edit">Editar</button>
@@ -1332,11 +1403,7 @@ function openAccDetail(id){
   `);
   $("#ad-edit").onclick=()=>openAccSheet(a);
   if($("#ad-bal")) $("#ad-bal").onclick=()=>openAccBalance(a);
-  if($("#ad-pay")) $("#ad-pay").onclick=()=>{
-    if(!confirm(`Zerar a fatura de ${a.name}? Os lançamentos ficam no histórico; só a fatura volta a zero.`)) return;
-    a.opening += v;
-    save(); closeSheet(); renderAll(); toast("Fatura zerada ✓");
-  };
+  if($("#ad-pay")) $("#ad-pay").onclick=()=>openPayInvoice(a);
   $("#ad-del").onclick=()=>{
     const usados=DB.transactions.filter(t=>t.accountId===a.id).length;
     if(!confirm(usados?`${usados} lançamentos estão nesta conta. Apagar a conta? Eles ficam sem conta.`
@@ -1405,13 +1472,14 @@ function renderResumo(){
     bd.innerHTML=cats.map(([id,v])=>{
       const c=catById(id)||{name:"—",color:"#8b94a3"};
       const pct=d.expense>0?(v/d.expense*100):0;
+      const orc=c.budget>0, po=orc?v/c.budget*100:0;
       return `<div class="catrow tap" data-catrow="${id}">
         <div class="row">
           <div class="l"><span class="dot" style="background:${c.color}"></span>${esc(c.name)}</div>
-          <div class="r num">${money(v)}<svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div class="r num" style="${orc&&po>100?"color:var(--neg)":""}">${money(v)}<svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
         </div>
-        <div class="bar"><i style="width:${(v/max*100).toFixed(1)}%;background:${c.color}"></i></div>
-        <div class="pct num">${pct.toFixed(0)}% dos gastos</div>
+        <div class="bar"><i style="width:${(orc?Math.min(100,po):v/max*100).toFixed(1)}%;background:${orc&&po>100?"var(--neg)":c.color}"></i></div>
+        <div class="pct num">${orc?`${po.toFixed(0)}% do orçamento de ${money(c.budget,true)}`:`${pct.toFixed(0)}% dos gastos`}</div>
       </div>`;
     }).join("");
     $$("#breakdown .catrow[data-catrow]").forEach(el=>el.onclick=()=>openCat(el.dataset.catrow));
@@ -1454,90 +1522,120 @@ function renderResumo(){
   }else if(!sorted.length){
     html+=`<div class="empty tiny">Sem transações avulsas neste mês.</div>`;
   }else{
-    html+=`<div class="list">`+sorted.map(t=>{
-      const c=catById(t.categoryId)||{name:"—",color:"#8b94a3"};
-      const a=accById(t.accountId);
-      const meio=[t.type==="income"?"Renda":c.name, PAYS[t.pay]?.label, a?.name].filter(Boolean).join(" · ");
-      return `<button class="item" data-tx="${t.id}">
-        <span class="dot" style="background:${t.type==='income'?'var(--pos)':c.color}"></span>
-        <div class="grow"><div class="t1">${esc(t.note|| (t.type==='income'?'Renda':c.name))}</div>
-          <div class="t2">${esc(meio)} · ${dmy(t.date)}</div></div>
-        <div class="val ${t.type==='income'?'pos':'neg'} num">${t.type==='income'?'+':'−'}${money(t.amount)}</div>
-      </button>`;
-    }).join("")+`</div>`;
+    html+=`<div class="list">`+sorted.slice(0,8).map(t=>txRowHTML(t)).join("")+`</div>`;
+    if(sorted.length>8) html+=`<button class="btn ghost" id="goAllTx" style="margin-top:10px">ver todas as ${sorted.length} transações</button>`;
   }
   tl.innerHTML=html;
   $$("#txlist [data-tx]").forEach(el=>el.onclick=()=>openTxSheet(el.dataset.tx));
+  if($("#goAllTx")) $("#goAllTx").onclick=()=>go("txs");
   if($("#goFixedFromList")) $("#goFixedFromList").onclick=()=>go("fixed");
 }
 
 /* ============================================================
-   NOVA TRANSAÇÃO (o botão +)
+   NOVA TRANSAÇÃO (o botão +) — saída, entrada, investimento,
+   transferência entre contas e parcelamento no cartão
    ============================================================ */
-function openTxSheet(editId){
-  const t = editId ? DB.transactions.find(x=>x.id===editId) : null;
-  let tipo = t ? (t.type==="income" ? "income" : (catById(t.categoryId)?.kind==="investment" ? "invest" : "expense")) : "expense";
-  let pay  = t?.pay && PAYS[t.pay] ? t.pay : "pix";
-  let accPick = t ? (t.accountId||"") : undefined;   // undefined = ainda não escolheu
+function addMonthsISO(iso,n){
+  const [y,m,d]=iso.split("-").map(Number);
+  const dt=new Date(y,m-1+n,1);
+  const dim=new Date(dt.getFullYear(),dt.getMonth()+1,0).getDate();
+  dt.setDate(Math.min(d,dim));
+  return isoOf(dt);
+}
+function txTitle(t){
+  const c=catById(t.categoryId);
+  return t.note || (t.type==="transfer"?"Transferência": t.type==="income"?"Renda": (c?.name||"Gasto"));
+}
+/* linha de transação usada no Resumo e na aba Transações */
+function txRowHTML(t, opts={}){
+  const isT=t.type==="transfer", isI=t.type==="income";
+  const c=catById(t.categoryId)||{name:"—",color:"#8b94a3"};
+  const a=accById(t.accountId), to=accById(t.toAccountId);
+  const meio = isT ? `${a?.name||"—"} → ${to?.name||"—"}`
+             : [isI?"Renda":c.name, PAYS[t.pay]?.label, a?.name, t.installment?`${t.installment.k}/${t.installment.n}`:null].filter(Boolean).join(" · ");
+  const val = isT ? money(t.amount) : (isI?"+":"−")+money(t.amount);
+  return `<div class="item txrow">
+    <button class="grow tap" data-tx="${t.id}">
+      <span class="dot" style="background:${isT?"var(--ink-3)":isI?"var(--pos)":c.color}"></span>
+      <span class="grow"><span class="t1">${esc(txTitle(t))}</span>
+        <span class="t2">${esc(meio)}${opts.date!==false?` · ${dmy(t.date)}`:""}</span></span>
+      <span class="val ${isI?"pos":isT?"muted":"neg"} num">${val}</span>
+    </button>
+    ${opts.del?`<button class="xdel" data-txdel="${t.id}" aria-label="Apagar">×</button>`:""}
+  </div>`;
+}
+function deleteTx(t, after){
+  const grupo=t.groupId ? DB.transactions.filter(x=>x.groupId===t.groupId) : [];
+  if(grupo.length>1){
+    if(confirm(`Esta é a parcela ${t.installment?.k||"?"} de ${grupo.length}. Apagar TODAS as ${grupo.length} parcelas?`)){
+      DB.transactions=DB.transactions.filter(x=>x.groupId!==t.groupId);
+    }else if(confirm("Apagar só esta parcela?")){
+      DB.transactions=DB.transactions.filter(x=>x.id!==t.id);
+    }else return;
+  }else{
+    if(!confirm("Apagar esta transação?")) return;
+    DB.transactions=DB.transactions.filter(x=>x.id!==t.id);
+  }
+  save(); toast("Apagada"); if(after) after();
+}
 
-  const contas = ()=>DB.accounts.filter(a=> pay==="credit" ? a.type==="credit" : a.type!=="credit");
+function openTxSheet(editId, preset){
+  const t = editId ? DB.transactions.find(x=>x.id===editId) : null;
+  let tipo = t ? (t.type==="income"?"income": t.type==="transfer"?"transfer" : (catById(t.categoryId)?.kind==="investment"?"invest":"expense")) : (preset?.tipo||"expense");
+  let pay  = t?.pay && PAYS[t.pay] ? t.pay : "pix";
+  let accPick = t ? (t.accountId||"") : undefined;
+  let toPick  = t ? (t.toAccountId||"") : undefined;
+  const contas = ()=>DB.accounts.filter(a=> (tipo!=="transfer" && pay==="credit") ? a.type==="credit" : a.type!=="credit");
   const cats   = ()=>tipo==="invest" ? DB.categories.filter(c=>c.kind==="investment") : DB.categories;
 
-  sheet(`
-    <h2>${t?"Editar transação":"Nova transação"}</h2>
-    <p>${t?"Ajuste o que estiver errado.":"Onde o dinheiro entrou ou saiu."}</p>
-  `,`
+  sheet(`<h2>${t?"Editar transação":"Nova transação"}</h2><p>${t?"Ajuste o que estiver errado.":"Onde o dinheiro entrou, saiu ou mudou de lugar."}</p>`,`
     <div class="seg" id="tx-seg" style="margin-top:4px">
       <button data-type="expense" class="${tipo==="expense"?"on":""}">Saída</button>
       <button data-type="income"  class="${tipo==="income" ?"on":""}">Entrada</button>
-      <button data-type="invest"  class="${tipo==="invest" ?"on":""}">Investimento</button>
+      <button data-type="invest"  class="${tipo==="invest" ?"on":""}">Invest.</button>
+      <button data-type="transfer" class="${tipo==="transfer"?"on":""}">Transf.</button>
     </div>
-
     <div class="field"><label>Valor</label>
       <input id="tx-amt" class="input num" inputmode="decimal" placeholder="0,00" value="${t?String(t.amount).replace(".",","):""}"></div>
-
-    <div class="field"><label>Local</label>
+    <div class="field"><label id="tx-notelbl">Local</label>
       <input id="tx-note" class="input" placeholder="Ex: Supermercado Extra" value="${esc(t?.note||"")}"></div>
-
-    <div class="field"><label>Forma de pagamento</label>
-      <div class="picks" id="tx-pay">
-        ${Object.entries(PAYS).map(([k,v])=>
-          `<button class="pick ${k===pay?"on":""}" data-pay="${k}">${icon(v.icon)}${v.label}</button>`).join("")}
-      </div>
-    </div>
-
-    ${t?"":`<label class="check" style="margin-top:15px">
-      <input type="checkbox" id="tx-fixed">
-      <span>Conta fixa <span class="muted tiny">(repete todo mês, sem precisar lançar de novo)</span></span>
-    </label>`}
-
     <div id="tx-dyn"></div>
-
     <div class="field"><label>Observação (opcional)</label>
       <input id="tx-obs" class="input" placeholder="Detalhes adicionais" value="${esc(t?.obs||"")}"></div>
-
     <div class="field"><label>Data</label>
       <input id="tx-date" class="input num" type="date" value="${t?.date||todayISO()}"></div>
-
     <button class="btn" id="tx-save">${t?"Salvar alterações":"Salvar transação"}</button>
     ${t?`<button class="btn ghost" id="tx-del" style="margin-top:10px;color:var(--neg)">Apagar transação</button>`:""}
   `);
 
-  /* categoria, conta e destino do investimento mudam conforme o tipo */
   function dyn(){
     const lista=cats(), cs=contas();
     const catSel = t?.categoryId || lista[0]?.id;
-    // sem escolha explícita, já vem na primeira conta compatível
-    const accSel = accPick!==undefined && cs.some(a=>a.id===accPick) ? accPick
-                 : (accPick==="" ? "" : (cs[0]?.id||""));
-    $("#tx-dyn").innerHTML = `
-      ${tipo==="income" ? "" : `
-      <div class="field"><label>Categoria</label>
-        <select id="tx-cat" class="input">
-          ${lista.map(c=>`<option value="${c.id}" ${c.id===catSel?"selected":""}>${esc(c.name)}</option>`).join("")
-            || `<option value="">(crie uma categoria de investimento)</option>`}
-        </select></div>`}
-
+    const accSel = accPick!==undefined && cs.some(a=>a.id===accPick) ? accPick : (accPick==="" ? "" : (cs[0]?.id||""));
+    $("#tx-notelbl").textContent = tipo==="transfer" ? "Descrição" : "Local";
+    if(tipo==="transfer"){
+      const all=DB.accounts;
+      const from = accPick!==undefined && all.some(a=>a.id===accPick) ? accPick : (all.find(a=>a.type!=="credit")?.id||"");
+      const toSel = toPick!==undefined && all.some(a=>a.id===toPick) ? toPick : (all.find(a=>a.id!==from)?.id||"");
+      $("#tx-dyn").innerHTML=`
+        <div class="grid2" style="margin-top:15px">
+          <div class="field" style="margin:0"><label>De</label><select id="tx-from" class="input">
+            ${all.map(a=>`<option value="${a.id}" ${a.id===from?"selected":""}>${esc(a.name)}</option>`).join("")||`<option value="">nenhuma conta</option>`}</select></div>
+          <div class="field" style="margin:0"><label>Para</label><select id="tx-to" class="input">
+            ${all.map(a=>`<option value="${a.id}" ${a.id===toSel?"selected":""}>${esc(a.name)}${a.type==="credit"?" (fatura)":""}</option>`).join("")||`<option value="">nenhuma conta</option>`}</select></div>
+        </div>
+        <p class="muted tiny" style="margin:8px 2px 0">Transferência não conta como gasto nem renda — só muda o dinheiro de lugar. Para um cartão, abate a fatura.</p>`;
+      $("#tx-from").onchange=()=>{ accPick=$("#tx-from").value; };
+      $("#tx-to").onchange=()=>{ toPick=$("#tx-to").value; };
+      return;
+    }
+    $("#tx-dyn").innerHTML=`
+      <div class="field"><label>Forma de pagamento</label>
+        <div class="picks" id="tx-pay">${Object.entries(PAYS).map(([k,v])=>`<button class="pick ${k===pay?"on":""}" data-pay="${k}">${icon(v.icon)}${v.label}</button>`).join("")}</div></div>
+      ${t?"":`<label class="check" style="margin-top:15px"><input type="checkbox" id="tx-fixed">
+        <span>Conta fixa <span class="muted tiny">(repete todo mês, sem precisar lançar de novo)</span></span></label>`}
+      ${tipo==="income"?"":`<div class="field"><label>Categoria</label>
+        <select id="tx-cat" class="input">${lista.map(c=>`<option value="${c.id}" ${c.id===catSel?"selected":""}>${esc(c.name)}</option>`).join("")||`<option value="">(crie uma categoria de investimento)</option>`}</select></div>`}
       <div class="field"><label>${pay==="credit"?"Cartão":"Conta"}</label>
         <select id="tx-acc" class="input">
           <option value="">${cs.length?"— sem conta —":"nenhuma conta cadastrada"}</option>
@@ -1545,30 +1643,17 @@ function openTxSheet(editId){
         </select>
         ${pay==="credit"&&!cs.length?`<p class="muted tiny" style="margin:8px 2px 0">Cadastre um cartão de crédito na aba Contas.</p>`:""}
       </div>
-
-      ${tipo==="invest"&&DB.reserves.length&&!t ? `
-      <div class="field"><label>Somar em qual reserva? (opcional)</label>
-        <select id="tx-res" class="input">
-          <option value="">— não somar —</option>
-          ${DB.reserves.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join("")}
-        </select>
-        <p class="muted tiny" style="margin:8px 2px 0">O valor entra no seu patrimônio guardado.</p>
-      </div>`:""}
-    `;
+      ${pay==="credit"&&!t?`<div class="field"><label>Parcelar em</label>
+        <select id="tx-parc" class="input">${Array.from({length:24},(_,i)=>i+1).map(n=>`<option value="${n}">${n===1?"À vista (1×)":n+"× — uma por mês"}</option>`).join("")}</select>
+        <p class="muted tiny" style="margin:8px 2px 0">Cada parcela vira uma transação no mês certo, e aparece em Próximos meses.</p></div>`:""}
+      ${tipo==="invest"&&DB.reserves.length&&!t?`<div class="field"><label>Somar em qual reserva? (opcional)</label>
+        <select id="tx-res" class="input"><option value="">— não somar —</option>${DB.reserves.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join("")}</select>
+        <p class="muted tiny" style="margin:8px 2px 0">O valor entra no seu patrimônio guardado.</p></div>`:""}`;
+    $$("#tx-pay [data-pay]").forEach(b=>b.onclick=()=>{ pay=b.dataset.pay; dyn(); });
     if($("#tx-acc")) $("#tx-acc").onchange=()=>{ accPick=$("#tx-acc").value; };
   }
   dyn();
-
-  $$("#tx-seg button").forEach(b=>b.onclick=()=>{
-    tipo=b.dataset.type;
-    $$("#tx-seg button").forEach(x=>x.classList.toggle("on",x===b));
-    dyn();
-  });
-  $$("#tx-pay [data-pay]").forEach(b=>b.onclick=()=>{
-    pay=b.dataset.pay;
-    $$("#tx-pay [data-pay]").forEach(x=>x.classList.toggle("on",x===b));
-    dyn();
-  });
+  $$("#tx-seg button").forEach(b=>b.onclick=()=>{ tipo=b.dataset.type; $$("#tx-seg button").forEach(x=>x.classList.toggle("on",x===b)); dyn(); });
 
   $("#tx-save").onclick=()=>{
     const amount=parseAmount($("#tx-amt").value);
@@ -1576,48 +1661,192 @@ function openTxSheet(editId){
     const date=$("#tx-date").value||todayISO();
     const note=$("#tx-note").value.trim();
     const obs =$("#tx-obs").value.trim();
+
+    if(tipo==="transfer"){
+      const from=$("#tx-from")?.value, to=$("#tx-to")?.value;
+      if(!from||!to){ toast("Escolha as duas contas."); return; }
+      if(from===to){ toast("As contas precisam ser diferentes."); return; }
+      if(t) Object.assign(t,{type:"transfer",amount,date,note,obs,accountId:from,toAccountId:to,pay:null,categoryId:null});
+      else DB.transactions.push({id:uid(),type:"transfer",amount,date,note,obs,accountId:from,toAccountId:to,pay:null,categoryId:null});
+      save(); closeSheet(); cursor=new Date(date+"T00:00:00"); cursor.setDate(1); renderAll(); go(finTab==="txs"?"txs":"resumo"); toast("Transferido ✓"); return;
+    }
+
     const catId=tipo==="income" ? null : ($("#tx-cat")?.value||null);
     if(tipo!=="income" && !catId){ toast("Escolha uma categoria."); return; }
     const accId=$("#tx-acc")?.value||null;
 
-    // conta fixa: vira item recorrente, não transação do mês
     if(!t && $("#tx-fixed")?.checked){
-      DB.fixed.push({id:uid(), type: tipo==="income"?"income":"expense",
-        name: note||(tipo==="income"?"Renda":"Gasto fixo"), amount,
-        categoryId: tipo==="income"?null:catId, active:true});
-      save(); closeSheet(); renderAll(); go("fixed");
-      toast("Conta fixa criada ✓");
-      return;
+      DB.fixed.push({id:uid(), type: tipo==="income"?"income":"expense", name: note||(tipo==="income"?"Renda":"Gasto fixo"), amount,
+        categoryId: tipo==="income"?null:catId, active:true, day:+date.slice(8,10)});
+      save(); closeSheet(); renderAll(); go("fixed"); toast("Conta fixa criada ✓"); return;
     }
 
-    if(t){
-      Object.assign(t,{type:tipo==="income"?"income":"expense", amount,
-        categoryId:catId, date, note, obs, accountId:accId, pay});
-      toast("Atualizado ✓");
-    }else{
-      DB.transactions.push({id:uid(), type:tipo==="income"?"income":"expense", amount,
-        categoryId:catId, date, note, obs, accountId:accId, pay});
-      const resId=$("#tx-res")?.value;
-      if(resId){
-        const r=DB.reserves.find(x=>x.id===resId);
-        if(r){ r.amount=Math.round((r.amount+amount)*100)/100; r.moves.push({id:uid(),type:"in",amount,date}); }
+    const base={type:tipo==="income"?"income":"expense", categoryId:catId, note, obs, accountId:accId, pay};
+    if(t){ Object.assign(t,base,{amount,date,toAccountId:null}); toast("Atualizado ✓"); }
+    else{
+      const n=Math.max(1, parseInt($("#tx-parc")?.value)||1);
+      if(n>1){
+        const gid=uid(), parcela=Math.floor(amount/n*100)/100, ultima=Math.round((amount-parcela*(n-1))*100)/100;
+        for(let k=1;k<=n;k++){
+          DB.transactions.push({id:uid(),...base,amount:k===n?ultima:parcela,date:addMonthsISO(date,k-1),
+            note:`${note||catById(catId)?.name||"Compra"} (${k}/${n})`, groupId:gid, installment:{k,n}});
+        }
+        toast(`${n} parcelas de ${money(parcela)} lançadas ✓`);
+      }else{
+        DB.transactions.push({id:uid(),...base,amount,date});
+        const resId=$("#tx-res")?.value;
+        if(resId){ const r=DB.reserves.find(x=>x.id===resId); if(r){ r.amount=Math.round((r.amount+amount)*100)/100; r.moves.push({id:uid(),type:"in",amount,date}); } }
+        toast("Lançado ✓");
       }
-      toast("Lançado ✓");
     }
     save(); closeSheet();
     cursor=new Date(date+"T00:00:00"); cursor.setDate(1);
-    renderAll(); go("resumo");
+    renderAll(); go(finTab==="txs"?"txs":"resumo");
   };
-
-  if(t) $("#tx-del").onclick=()=>{
-    if(!confirm("Apagar esta transação?")) return;
-    DB.transactions=DB.transactions.filter(x=>x.id!==t.id);
-    save(); closeSheet(); renderAll(); go("resumo"); toast("Apagada");
-  };
-
+  if(t) $("#tx-del").onclick=()=>deleteTx(t,()=>{ closeSheet(); renderAll(); go(finTab==="txs"?"txs":"resumo"); });
   setTimeout(()=>$("#tx-amt")?.focus(),250);
 }
-const editTx = openTxSheet;   // as telas antigas chamam por este nome
+const editTx = openTxSheet;
+
+/* ============================================================
+   TRANSAÇÕES (aba): tudo do mês, agrupado por dia
+   ============================================================ */
+let txFilter="all", txQuery="";
+function renderTxs(){
+  const y=cursor.getFullYear(), m=cursor.getMonth();
+  $("#txMonthLabel").textContent=monthName(y,m);
+  const d=monthData(y,m);
+  $$("#txFilter button").forEach(b=>b.classList.toggle("on",b.dataset.f===txFilter));
+  const q=norm(txQuery);
+  let list=[...d.txs];
+  if(txFilter==="in")  list=list.filter(t=>t.type==="income");
+  if(txFilter==="out") list=list.filter(t=>t.type==="expense");
+  if(txFilter==="tr")  list=list.filter(t=>t.type==="transfer");
+  if(q) list=list.filter(t=>norm(txTitle(t)+" "+(t.obs||"")+" "+(catById(t.categoryId)?.name||"")+" "+(accById(t.accountId)?.name||"")).includes(q));
+  list.sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+  const byDay={}; for(const t of list){ (byDay[t.date]=byDay[t.date]||[]).push(t); }
+  const dias=Object.keys(byDay).sort().reverse();
+  $("#txList").innerHTML = dias.length ? dias.map(dia=>{
+      const tot=byDay[dia].reduce((a,t)=>a+(t.type==="income"?t.amount:t.type==="expense"?-t.amount:0),0);
+      return `<div class="sec" style="margin:16px 2px 8px"><span class="t">${fmtDay(dia).toLowerCase()}</span><span class="t num" style="color:${tot<0?"var(--neg)":tot>0?"var(--pos)":"var(--ink-3)"}">${tot?signMoney(tot):""}</span></div>
+        <div class="list">${byDay[dia].map(t=>txRowHTML(t,{del:true,date:false})).join("")}</div>`;}).join("")
+    : `<div class="empty">${q||txFilter!=="all"?"Nada encontrado com esse filtro.":"Nenhuma transação neste mês.<br><span class='tiny'>Toque no <b>+</b> para lançar."}</span></div>`;
+  $("#txTotals").innerHTML=`
+    <div class="statline"><span class="muted">entradas</span><b class="num" style="color:var(--pos)">+${money(d.income)}</b></div>
+    <div class="statline"><span class="muted">saídas</span><b class="num" style="color:var(--neg)">−${money(d.expense)}</b></div>
+    <div class="statline"><span class="muted">total do mês</span><b class="num" style="color:${d.balance<0?"var(--neg)":"var(--pos)"}">${signMoney(d.balance)}</b></div>`;
+  $$("#txList [data-tx]").forEach(el=>el.onclick=()=>openTxSheet(el.dataset.tx));
+  $$("#txList [data-txdel]").forEach(el=>el.onclick=()=>{ const t=DB.transactions.find(x=>x.id===el.dataset.txdel); if(t) deleteTx(t,()=>{ renderAll(); renderTxs(); }); });
+}
+$$("#txFilter button").forEach(b=>b.onclick=()=>{ txFilter=b.dataset.f; renderTxs(); });
+$("#txSearch").oninput=()=>{ txQuery=$("#txSearch").value; renderTxs(); };
+$("#txPrevM").onclick=()=>{ cursor.setMonth(cursor.getMonth()-1); renderTxs(); };
+$("#txNextM").onclick=()=>{ cursor.setMonth(cursor.getMonth()+1); renderTxs(); };
+
+/* ============================================================
+   DASHBOARD: gráficos de 6 meses
+   ============================================================ */
+let dashSel=null;
+function lastMonths(n){
+  const out=[], now=new Date();
+  for(let i=n-1;i>=0;i--){ const d=new Date(now.getFullYear(),now.getMonth()-i,1); const md=monthData(d.getFullYear(),d.getMonth());
+    out.push({ym:md.ym, label:d.toLocaleDateString("pt-BR",{month:"short"}).replace(".",""), d:md, y:d.getFullYear(), m:d.getMonth()}); }
+  return out;
+}
+/* barras finas; a selecionada mostra o valor (toque) */
+function barsHTML(rows, series, sel){
+  const max=Math.max(1,...rows.flatMap(r=>series.map(s=>s.v(r))));
+  return `<div class="chart">${rows.map(r=>`<button class="cb ${r.ym===sel?"on":""}" data-bar="${r.ym}" aria-label="${r.label}">
+      <span class="grp">${series.map(s=>`<i style="height:${(s.v(r)/max*100).toFixed(1)}%;background:${s.color}"></i>`).join("")}</span>
+      <span class="lb">${r.label}</span></button>`).join("")}</div>`;
+}
+function renderDash(){
+  const rows=lastMonths(6);
+  if(!dashSel || !rows.some(r=>r.ym===dashSel)) dashSel=rows[rows.length-1].ym;
+  const S=rows.find(r=>r.ym===dashSel);
+  const aportes=r=>Object.entries(r.d.byCat).reduce((a,[id,v])=>a+(catById(id)?.kind==="investment"?v:0),0);
+  const st=savedTotals();
+  const orc=DB.categories.filter(c=>c.budget>0).map(c=>({c, v:S.d.byCat[c.id]||0}));
+  $("#dashBody").innerHTML=`
+    <div class="sec" style="margin-top:16px"><span class="t">gastos, mês a mês</span><span class="t">${S.label}</span></div>
+    <div class="card">
+      <div class="total" style="padding:0 0 6px;text-align:left"><div class="v num" style="font-size:32px">${money(S.d.expense)}</div>
+        <div class="k">${S.d.income?`${pct(S.d.expense,S.d.income).toFixed(0)}% do que entrou`:"sem renda registrada"}</div></div>
+      ${barsHTML(rows,[{v:r=>r.d.expense,color:"var(--neg)"}],dashSel)}
+    </div>
+    <div class="sec"><span class="t">entradas × saídas</span></div>
+    <div class="card">
+      <div class="legend"><span><i style="background:var(--pos)"></i>entradas ${money(S.d.income)}</span><span><i style="background:var(--neg)"></i>saídas ${money(S.d.expense)}</span></div>
+      ${barsHTML(rows,[{v:r=>r.d.income,color:"var(--pos)"},{v:r=>r.d.expense,color:"var(--neg)"}],dashSel)}
+      <p class="muted tiny" style="margin:10px 2px 0">${S.d.balance>=0?`Sobrou ${money(S.d.balance)} em ${S.label}.`:`Faltou ${money(-S.d.balance)} em ${S.label}.`}</p>
+    </div>
+    <div class="sec"><span class="t">orçamentos</span><button data-goto="set">definir</button></div>
+    <div class="card">${orc.length?orc.map(({c,v})=>{const p=v/c.budget*100;return `<div class="catrow">
+        <div class="row"><div class="l"><span class="dot" style="background:${c.color}"></span>${esc(c.name)}</div><div class="r num" style="${p>100?"color:var(--neg)":""}">${money(v)} <span class="muted" style="font-weight:400">/ ${money(c.budget,true)}</span></div></div>
+        <div class="bar"><i style="width:${Math.min(100,p).toFixed(0)}%;background:${p>100?"var(--neg)":p>80?"#e0a95c":c.color}"></i></div>
+        <div class="pct num">${p.toFixed(0)}% do orçamento${p>100?` · estourou ${money(v-c.budget)}`:` · sobram ${money(c.budget-v)}`}</div></div>`;}).join("")
+      :`<p class="muted tiny" style="margin:0">Defina um limite mensal por categoria em Ajustes → categorias. O Conselheiro avisa quando chegar perto.</p>`}</div>
+    <div class="sec"><span class="t">investimentos</span><button id="dashAporte">lançar aporte</button></div>
+    <div class="card">
+      <div class="total" style="padding:0 0 6px;text-align:left"><div class="v num" style="font-size:32px">${money(st.amount)}</div>
+        <div class="k">total guardado · ${aportes(S)>0?`+${money(aportes(S))} em ${S.label}`:`nada aportado em ${S.label}`}${st.perMonth>0?` · rende ${money(st.perMonth,true)}/mês`:""}</div></div>
+      ${barsHTML(rows,[{v:aportes,color:"var(--accent)"}],dashSel)}
+      <p class="muted tiny" style="margin:10px 2px 0">Aportes = gastos na categoria Investimento de cada mês.</p>
+    </div>
+    <div class="sec"><span class="t">essencial × supérfluo em ${S.label}</span></div>
+    <div class="card">${(()=>{const k=S.d.byKind, tot=k.essential+k.superfluous+k.investment; if(!tot) return `<p class="muted tiny" style="margin:0">Sem gastos.</p>`;
+      return `<div class="stack">${[["essential","var(--pos)"],["superfluous","var(--neg)"],["investment","var(--accent)"]].map(([kk,col])=>`<i style="width:${(k[kk]/tot*100).toFixed(1)}%;background:${col}"></i>`).join("")}</div>
+      <div class="legend" style="margin-top:10px">${[["essential","var(--pos)"],["superfluous","var(--neg)"],["investment","var(--accent)"]].map(([kk,col])=>`<span><i style="background:${col}"></i>${KINDS[kk].label} ${(k[kk]/tot*100).toFixed(0)}%</span>`).join("")}</div>`;})()}</div>`;
+  $$("#dashBody [data-bar]").forEach(b=>b.onclick=()=>{ dashSel=b.dataset.bar; renderDash(); });
+  $$("#dashBody [data-goto]").forEach(b=>b.onclick=()=>go(b.dataset.goto));
+  $("#dashAporte").onclick=()=>openTxSheet(null,{tipo:"invest"});
+}
+
+/* ============================================================
+   PRÓXIMOS MESES: fixos, parcelas e lançamentos futuros
+   ============================================================ */
+function renderNext(){
+  const now=new Date(); const hoje=todayISO();
+  const fx=DB.fixed.filter(f=>f.active!==false);
+  const fInc=fx.filter(f=>f.type==="income").reduce((a,f)=>a+f.amount,0);
+  let html="";
+  for(let i=0;i<=6;i++){
+    const d=new Date(now.getFullYear(),now.getMonth()+i,1); const ym=`${d.getFullYear()}-${pad(d.getMonth()+1)}`;
+    const fixos=fx.filter(f=>f.type==="expense").filter(f=>i>0 || !f.day || f.day>=+hoje.slice(8,10));
+    const futuros=DB.transactions.filter(t=>t.type==="expense"&&ymOf(t.date)===ym&&(i>0||t.date>hoje)).sort((a,b)=>a.date.localeCompare(b.date));
+    const tot=fixos.reduce((a,f)=>a+f.amount,0)+futuros.reduce((a,t)=>a+t.amount,0);
+    if(i>0 && !fixos.length && !futuros.length) continue;
+    html+=`<div class="sec"><span class="t">${i===0?"resto deste mês":monthName(d.getFullYear(),d.getMonth())}</span><span class="t num" style="color:var(--neg)">−${money(tot)}</span></div>
+      <div class="list">
+        ${fixos.map(f=>`<div class="item"><span class="dot" style="background:${catById(f.categoryId)?.color||"#8b94a3"}"></span><div class="grow"><div class="t1">${esc(f.name)}</div><div class="t2">fixo${f.day?` · dia ${f.day}`:""}</div></div><div class="val neg num">−${money(f.amount)}</div></div>`).join("")}
+        ${futuros.map(t=>`<button class="item" data-tx="${t.id}"><span class="dot" style="background:${catById(t.categoryId)?.color||"#8b94a3"}"></span><div class="grow"><div class="t1">${esc(txTitle(t))}</div><div class="t2">${t.installment?`parcela ${t.installment.k}/${t.installment.n} · `:""}${accById(t.accountId)?.name||"—"} · ${dmy(t.date)}</div></div><div class="val neg num">−${money(t.amount)}</div></button>`).join("")}
+        ${!fixos.length&&!futuros.length?`<div class="empty tiny" style="padding:16px">Nada previsto.</div>`:""}
+      </div>
+      ${fInc?`<p class="muted tiny" style="margin:8px 2px 0">Renda fixa prevista: ${money(fInc)} → ${tot<=fInc?`sobram ${money(fInc-tot)}`:`faltam ${money(tot-fInc)}`}.</p>`:""}`;
+  }
+  $("#nextBody").innerHTML=html||`<div class="empty">Nada previsto.<br><span class="tiny">Fixos com dia de vencimento e compras parceladas aparecem aqui.</span></div>`;
+  $$("#nextBody [data-tx]").forEach(el=>el.onclick=()=>openTxSheet(el.dataset.tx));
+}
+
+/* pagar a fatura: transferência da conta para o cartão */
+function openPayInvoice(card){
+  const v=cardInvoice(card), contas=DB.accounts.filter(a=>a.type!=="credit");
+  if(!contas.length){
+    if(confirm(`Sem conta cadastrada para pagar. Zerar a fatura de ${card.name} mesmo assim?`)){ card.opening+=v; save(); closeSheet(); renderAll(); toast("Fatura zerada ✓"); }
+    return;
+  }
+  sheet(`<h2>Pagar fatura</h2><p>${esc(card.name)} · em aberto ${money(v)}</p>`,`
+    <div class="field" style="margin-top:4px"><label>Valor pago</label><input id="pf-amt" class="input num" inputmode="decimal" value="${String(v).replace(".",",")}"></div>
+    <div class="field"><label>Sai de qual conta?</label><select id="pf-acc" class="input">${contas.map(a=>`<option value="${a.id}">${esc(a.name)} · ${money(accBalance(a))}</option>`).join("")}</select></div>
+    <div class="field"><label>Data</label><input id="pf-date" class="input num" type="date" value="${todayISO()}"></div>
+    <button class="btn" id="pf-ok">Registrar pagamento</button>`);
+  $("#pf-ok").onclick=()=>{
+    const amt=parseAmount($("#pf-amt").value); if(amt<=0){ toast("Digite o valor."); return; }
+    DB.transactions.push({id:uid(),type:"transfer",amount:amt,date:$("#pf-date").value||todayISO(),note:`Pagamento fatura ${card.name}`,obs:"",accountId:$("#pf-acc").value,toAccountId:card.id,pay:null,categoryId:null});
+    save(); closeSheet(); renderAll(); toast("Fatura paga ✓");
+  };
+}
+
 /* ============================================================
    FIXOS
    ============================================================ */
@@ -1638,7 +1867,7 @@ function fixedRow(f){
   return `<div class="item" data-fix="${f.id}" style="opacity:${off?.45:1}">
     <span class="dot" style="background:${f.type==='income'?'var(--pos)':(c?.color||'#888')}"></span>
     <div class="grow"><div class="t1">${esc(f.name)}</div>
-      <div class="t2">${f.type==='income'?'Renda':esc(c?.name||'—')}${off?' · pausado':''}</div></div>
+      <div class="t2">${f.type==='income'?'Renda':esc(c?.name||'—')}${f.day?` · dia ${f.day}`:""}${off?' · pausado':''}</div></div>
     <div class="val ${f.type==='income'?'pos':'neg'} num">${f.type==='income'?'+':'−'}${money(f.amount)}</div></div>`;
 }
 function editFixed(id){
@@ -1655,6 +1884,8 @@ function openFixedSheet(type, existing){
     <div class="field"><label>Nome</label><input id="f-name" class="input" placeholder="${isInc?'ex: Salário':'ex: Aluguel, Netflix'}" value="${esc(f.name)}"></div>
     <div class="field"><label>Valor mensal</label><input id="f-amt" class="input num" inputmode="decimal" placeholder="0,00" value="${f.amount?String(f.amount).replace('.',','):''}"></div>
     ${isInc?"":`<div class="field"><label>Categoria</label><select id="f-cat" class="input">${catOpts}</select></div>`}
+    <div class="field"><label>Dia do mês (opcional)</label><input id="f-day" class="input num" inputmode="numeric" placeholder="ex: 10" value="${f.day||""}">
+      <p class="muted tiny" style="margin:8px 2px 0">Serve para a tela Próximos meses saber o que ainda vem.</p></div>
     <button class="btn" id="f-save">${existing?'Salvar':'Adicionar'}</button>
     ${existing?`<div class="row" style="margin-top:14px">
         <button class="del" id="f-del">Apagar</button>
@@ -1666,8 +1897,9 @@ function openFixedSheet(type, existing){
     const amount=parseAmount($("#f-amt").value);
     if(amount<=0){ toast("Digite um valor."); return; }
     const cat=isInc?null:$("#f-cat").value;
-    if(existing){ Object.assign(f,{name,amount,categoryId:cat}); }
-    else{ DB.fixed.push({id:uid(),type,name,amount,categoryId:cat,active:true}); }
+    const day=Math.min(31,Math.max(0,parseInt($("#f-day").value)||0))||null;
+    if(existing){ Object.assign(f,{name,amount,categoryId:cat,day}); }
+    else{ DB.fixed.push({id:uid(),type,name,amount,categoryId:cat,active:true,day}); }
     save(); closeSheet(); renderFixed(); renderResumo(); renderSaved(); toast("Salvo ✓");
   };
   if(existing){
@@ -1685,7 +1917,7 @@ function renderCats(){
   el.innerHTML=`<div class="list">`+DB.categories.map(c=>
     `<div class="item" data-cat="${c.id}">
       <span class="dot" style="background:${c.color}"></span>
-      <div class="grow"><div class="t1">${esc(c.name)}</div><div class="t2">${KINDS[c.kind]?.label||''}</div></div>
+      <div class="grow"><div class="t1">${esc(c.name)}</div><div class="t2">${KINDS[c.kind]?.label||''}${c.budget>0?` · orçamento ${money(c.budget,true)}/mês`:""}</div></div>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ink-3)" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
     </div>`).join("")+`</div>`;
   $$("#catList .item").forEach(el=>el.onclick=()=>openCatSheet(catById(el.dataset.cat)));
@@ -1706,6 +1938,8 @@ function openCatSheet(existing){
     <div class="field"><label>Cor</label><div class="swatches" id="c-sw">
       ${PALETTE.map(p=>`<button class="sw ${p===c.color?'on':''}" data-c="${p}" style="background:${p}"></button>`).join("")}
     </div></div>
+    <div class="field"><label>Orçamento mensal (opcional)</label><input id="c-budget" class="input num" inputmode="decimal" placeholder="0,00" value="${c.budget?String(c.budget).replace('.',','):''}">
+      <p class="muted tiny" style="margin:8px 2px 0">Um teto para o mês. Aparece no Resumo e no Dashboard; o Conselheiro avisa quando chegar em 80%.</p></div>
     <button class="btn" id="c-save">${existing?'Salvar':'Adicionar'}</button>
     ${existing?`<button class="del" id="c-del" style="display:block;margin:14px auto 0">Apagar categoria</button>`:""}
   `);
@@ -1714,8 +1948,9 @@ function openCatSheet(existing){
   $$("#c-sw .sw").forEach(b=>b.onclick=()=>{color=b.dataset.c;$$("#c-sw .sw").forEach(x=>x.classList.toggle("on",x===b));});
   $("#c-save").onclick=()=>{
     const name=$("#c-name").value.trim(); if(!name){ toast("Dê um nome."); return; }
-    if(existing){ Object.assign(c,{name,kind,color}); }
-    else{ DB.categories.push({id:uid(),name,kind,color}); }
+    const budget=parseAmount($("#c-budget").value);
+    if(existing){ Object.assign(c,{name,kind,color,budget}); }
+    else{ DB.categories.push({id:uid(),name,kind,color,budget}); }
     save(); closeSheet(); renderCats();  renderResumo(); toast("Salvo ✓");
   };
   if(existing){
@@ -2657,7 +2892,7 @@ function applyTheme(animate){
   }
   root.setAttribute("data-theme",t);
   const meta=$("#metaTheme");
-  if(meta) meta.setAttribute("content", t==="dark" ? "#12161d" : "#f4f2ee");
+  if(meta) meta.setAttribute("content", t==="dark" ? "#000000" : "#f4f2ee");
   renderThemeSeg();
 }
 function setTheme(p){
@@ -3292,6 +3527,17 @@ function advisorInsights(){
     for(const [id,v] of Object.entries(m.byCat)){ const antes=p.byCat[id]||0; if(antes>=100 && v>=antes*1.3 && v-antes>=100 && (!worst||v-antes>worst.d)) worst={id,d:v-antes,v,antes}; }
     if(worst) out.push({mod:"fin",kind:"warn",h:"Categoria disparou",text:`${catById(worst.id)?.name||"Uma categoria"} subiu de ${money(worst.antes)} para ${money(worst.v)} em relação ao mês passado (+${money(worst.d)}).`});
   }
+  for(const c of DB.categories.filter(c=>c.budget>0)){
+    const v=m.byCat[c.id]||0, p=v/c.budget;
+    if(p>=1) out.push({mod:"fin",kind:"warn",h:"Orçamento estourado",text:`${c.name} já passou do teto de ${money(c.budget)}: ${money(v)} (${(p*100).toFixed(0)}%).`,go:{mod:"fin",tab:"dash"}});
+    else if(p>=0.8) out.push({mod:"fin",kind:"info",h:"Orçamento no limite",text:`${c.name} está em ${(p*100).toFixed(0)}% do teto de ${money(c.budget)} — sobram ${money(c.budget-v)} até o fim do mês.`,go:{mod:"fin",tab:"dash"}});
+  }
+  {
+    const prox=new Date(); prox.setMonth(prox.getMonth()+1); const ymP=`${prox.getFullYear()}-${pad(prox.getMonth()+1)}`;
+    const parc=DB.transactions.filter(x=>x.type==="expense"&&x.installment&&ymOf(x.date)===ymP).reduce((a,x)=>a+x.amount,0);
+    const fixP=DB.fixed.filter(f=>f.active!==false&&f.type==="expense").reduce((a,f)=>a+f.amount,0);
+    if(m.income>0 && parc>0 && parc+fixP>m.income*0.6) out.push({mod:"fin",kind:"warn",h:"Mês que vem já pesado",text:`Fixos (${money(fixP)}) + parcelas (${money(parc)}) somam ${pct(parc+fixP,m.income).toFixed(0)}% da sua renda no mês que vem. Não parcele mais nada.`,go:{mod:"fin",tab:"next"}});
+  }
   const ta=totalsAccounts();
   if(m.income>0 && ta.fatura>m.income*0.4)
     out.push({mod:"fin",kind:"warn",h:"Fatura alta",text:`As faturas em aberto somam ${money(ta.fatura)} — ${pct(ta.fatura,m.income).toFixed(0)}% da sua renda do mês. Evite parcelar mais nada até quitar.`,go:{mod:"fin",tab:"accounts"}});
@@ -3451,7 +3697,7 @@ $("#resetAll").onclick=()=>{
 };
 
 /* ---------- finanças: abas de baixo e sub-telas ---------- */
-const SUBVIEWS = { cat:"resumo", fixed:"more", ofx:"more", report:"more", set:"more" };
+const SUBVIEWS = { cat:"resumo", fixed:"more", ofx:"more", report:"more", set:"more", saved:"more", next:"more" };
 function go(tab){
   const view=$("#view-"+tab);
   if(!view) return;
@@ -3465,6 +3711,9 @@ function go(tab){
   if(tab==="resumo")   renderResumo();
   if(tab==="accounts") renderAccounts();
   if(tab==="saved")    renderSaved();
+  if(tab==="txs")      renderTxs();
+  if(tab==="dash")     renderDash();
+  if(tab==="next")     renderNext();
   if(tab==="more")     renderMore();
   if(tab==="cat")      renderCat();
   if(tab==="fixed")    renderFixed();
@@ -3482,6 +3731,8 @@ function renderMore(){
   $("#moreFixedSub").textContent = f.length ? `${f.length} ${f.length===1?"item":"itens"} · ${money(exp)}/mês de gastos` : "Nenhum cadastrado ainda";
   $("#moreOfxSub").textContent = DB.imported.length ? `${DB.imported.length} lançamentos já importados` : "Arquivo OFX, lido no aparelho";
   $("#moreSetSub").textContent = `${DB.categories.length} categorias`;
+  const st=savedTotals();
+  $("#moreSavedSub").textContent = DB.reserves.length ? `${money(st.amount,true)} guardados${st.perMonth>0?` · rende ${money(st.perMonth,true)}/mês`:""}` : "Reservas e quanto rendem";
 }
 
 /* ---------- sheet e toast ---------- */
