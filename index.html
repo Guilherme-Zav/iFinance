@@ -282,11 +282,247 @@
   .item.ofx .t2{margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;white-space:normal;overflow:visible}
   .dupbadge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;
     background:var(--field);color:var(--ink-3);border-radius:5px;padding:1px 6px}
+
+  /* ============ CASCA DO APP: barra superior, menu lateral, módulos ============ */
+  .appbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:8px 8px 6px;background:var(--nav-bg);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px);
+    border-bottom:1px solid var(--line);max-width:560px;margin:0 auto}
+  .appbar .ib{width:42px;height:42px;border-radius:12px;border:none;background:none;color:var(--ink);display:flex;align-items:center;justify-content:center}
+  .appbar .ib:active{background:var(--field)}
+  .appbar .ib svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .appbar .ttl{font-size:16px;font-weight:600;letter-spacing:-.01em}
+  .appbar .ib.ghost{visibility:hidden}
+
+  .dscrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:80;opacity:0;pointer-events:none;transition:opacity .2s}
+  .dscrim.show{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;bottom:0;left:0;width:min(300px,84vw);z-index:85;background:var(--surface);border-right:1px solid var(--line);
+    transform:translateX(-102%);transition:transform .26s cubic-bezier(.32,.72,0,1);overflow:auto;
+    padding:calc(16px + var(--safe-t)) 12px calc(20px + var(--safe-b))}
+  .drawer.show{transform:none}
+  .drawer .who{display:flex;align-items:center;gap:12px;padding:6px 8px 14px;border:none;background:none;width:100%;text-align:left}
+  .drawer .ava{width:46px;height:46px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:19px;color:var(--accent);flex:none}
+  .drawer .who .n{font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+  .drawer .who .s{font-size:12px;color:var(--ink-3);background:var(--field);border-radius:999px;padding:2px 9px;display:inline-block;margin-top:3px}
+  .drawer .grp{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:16px 14px 6px}
+  .drawer .mi{display:flex;align-items:center;gap:13px;width:100%;border:none;background:none;border-radius:12px;padding:12px 12px;
+    font-size:15px;color:var(--ink-2);text-align:left}
+  .drawer .mi svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .drawer .mi.on{background:var(--field);color:var(--ink);font-weight:600}
+  .drawer .mi.adv{border:1px solid var(--line);color:var(--ink)}
+
+  .mod{display:none}
+  .mod.active{display:block}
+  #app.notabs{padding-bottom:calc(40px + var(--safe-b))}
+
+  /* ============ COMPONENTES NOVOS ============ */
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .tile{border-radius:14px;padding:13px 14px;min-height:86px;position:relative;color:#fff;border:none;text-align:left;display:flex;flex-direction:column;justify-content:space-between}
+  .tile .ic{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center}
+  .tile .ic svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .tile .n{position:absolute;right:14px;top:9px;font-size:26px;font-weight:700}
+  .tile .l{font-size:13px;font-weight:600;opacity:.92}
+  .tile.blue{background:#2f6fe4}.tile.red{background:#d63a5f}.tile.green{background:#1fa866}
+  .tile.gray{background:var(--field);color:var(--ink)}
+  .tile.gray .ic{background:var(--surface-2)}.tile.gray .ic svg{stroke:var(--ink)}
+
+  .vsw{display:flex;justify-content:center;gap:8px;margin:16px 0 2px}
+  .vsw button{width:46px;height:40px;border-radius:12px;border:none;background:none;color:var(--ink-3);display:flex;align-items:center;justify-content:center}
+  .vsw button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .vsw button.on{background:var(--accent-soft);color:var(--accent)}
+
+  .cal{margin-top:8px}
+  .cal .hd{display:flex;align-items:center;justify-content:space-between;padding:4px 0 8px}
+  .cal .hd b{font-size:16px}
+  .cal .hd b::first-letter{text-transform:uppercase}
+  .cal .hd button{background:none;border:none;color:var(--accent);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+  .cal .hd button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .cal .g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px 0;text-align:center}
+  .cal .w{font-size:11px;color:var(--ink-3);font-weight:600;padding:4px 0}
+  .cal .d{position:relative;height:40px;display:flex;align-items:center;justify-content:center;border:none;background:none;
+    color:var(--ink);font-size:14.5px;font-weight:500;border-radius:50%;isolation:isolate}
+  .cal .d.out{color:var(--ink-3);font-weight:400}
+  .cal .d.sel{background:var(--accent);color:var(--accent-ink);font-weight:700}
+  .cal .d.today:not(.sel){box-shadow:inset 0 0 0 1.5px var(--accent)}
+  .cal .d i{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--accent)}
+  .cal .d.sel i{background:var(--accent-ink)}
+  .cal .d .hm{position:absolute;inset:5px;border-radius:50%;background:var(--pos);opacity:var(--o,0);z-index:-1}
+
+  .kan{display:flex;gap:10px;overflow-x:auto;padding:4px 18px 8px 0;margin-right:-18px;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .kan::-webkit-scrollbar{display:none}
+  .kcol{flex:0 0 80%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;min-height:220px}
+  .kcol .kh{display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:14px;margin-bottom:10px}
+  .kcol .kh span{background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px}
+  .kcard{background:var(--field);border-radius:11px;padding:10px 12px;margin-bottom:8px;font-size:14px;display:flex;align-items:center;gap:8px}
+  .kcard .kt{flex:1;min-width:0}
+  .kcard .mv{background:none;border:none;color:var(--ink-3);padding:4px;flex:none}
+  .kcard .mv svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .kempty{text-align:center;color:var(--ink-3);font-size:13px;padding:40px 0}
+  .pri{width:8px;height:8px;border-radius:50%;flex:none}
+  .pri.low{background:var(--ink-3)}.pri.med{background:#e0a95c}.pri.high{background:var(--neg)}
+
+  .rem{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;background:var(--surface);border-bottom:1px solid var(--line-2)}
+  .rem:last-child{border-bottom:none}
+  .rem .ck{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--accent)}
+  .rem .g{flex:1;min-width:0;border:none;background:none;text-align:left;padding:0;color:inherit}
+  .rem .t{font-size:15px}
+  .rem.done .t{text-decoration:line-through;color:var(--ink-3)}
+  .rem .m{font-size:12px;color:var(--ink-3);margin-top:2px;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+  .rem.late .m .when{color:var(--neg);font-weight:600}
+
+  .hcards{display:flex;gap:11px;overflow-x:auto;padding:2px 18px 6px 0;margin-right:-18px;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .hcards::-webkit-scrollbar{display:none}
+  .hcard{flex:0 0 88%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;min-height:200px}
+  .hcard .k{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+  .ring{width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p,0)*1%), var(--line) 0);
+    display:flex;align-items:center;justify-content:center;flex:none}
+  .ring b{width:50px;height:50px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:12.5px}
+  .ring.big{width:124px;height:124px}
+  .ring.big b{width:100px;height:100px;flex-direction:column;font-size:26px;line-height:1}
+  .ring.big b small{font-size:11px;color:var(--ink-3);font-weight:500;margin-top:4px}
+  .bars7{display:flex;gap:6px;align-items:flex-end;height:72px;margin-top:14px}
+  .bars7 div{flex:1;background:var(--field);border-radius:6px;position:relative;overflow:hidden;height:100%}
+  .bars7 div i{position:absolute;left:0;right:0;bottom:0;background:var(--accent);border-radius:6px}
+  .bars7l{display:flex;gap:6px;margin-top:5px}
+  .bars7l span{flex:1;text-align:center;font-size:10px;color:var(--ink-3);font-weight:600}
+  .hab{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--surface);border-bottom:1px solid var(--line-2)}
+  .hab:last-child{border-bottom:none}
+  .hab .em{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;border:none}
+  .hab .g{flex:1;min-width:0;border:none;background:none;text-align:left;padding:0;color:inherit}
+  .hab .t{font-size:15px;font-weight:500}
+  .hab .s{font-size:12px;color:var(--ink-3);margin-top:1px}
+  .hab .do{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:none;display:flex;align-items:center;justify-content:center;color:transparent;flex:none}
+  .hab .do svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  .hab.done .do{background:var(--pos);border-color:var(--pos);color:#062016}
+  .hab .qty{display:flex;align-items:center;gap:6px}
+  .hab .qty button{width:30px;height:30px;border-radius:8px;border:none;background:var(--field);color:var(--ink);font-weight:700;font-size:16px}
+  .hab .qty b{min-width:44px;text-align:center;font-size:13px}
+  .sugs{display:flex;gap:9px;overflow-x:auto;padding:2px 18px 6px 0;margin-right:-18px;scrollbar-width:none}
+  .sugs::-webkit-scrollbar{display:none}
+  .sug{flex:0 0 auto;width:96px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;font-size:12px;font-weight:600;color:var(--ink)}
+  .sug .em{font-size:22px;margin-bottom:6px}
+  .emojis{display:flex;flex-wrap:wrap;gap:8px}
+  .emojis button{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--field);font-size:20px}
+  .emojis button.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+  .toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px;cursor:pointer}
+  .toggle .tt{font-size:14.5px;font-weight:600}
+  .toggle .ts{font-size:12px;color:var(--ink-3)}
+  .sw2{position:relative;width:48px;height:28px;border-radius:14px;background:var(--line);border:none;flex:none;transition:.2s}
+  .sw2::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+  .sw2.on{background:var(--accent)}
+  .sw2.on::after{left:23px}
+
+  .macro{margin-top:9px}
+  .macro .r{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-2)}
+  .macro .r b{color:var(--ink)}
+  .macro .bar{margin-top:5px;height:5px}
+  .meal{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px}
+  .meal .mh{display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:15px}
+  .meal .mh .kc{font-size:12.5px;color:var(--ink-3);font-weight:500}
+  .meal .fi{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:7px 0;border-top:1px solid var(--line-2);color:var(--ink-2);
+    width:100%;background:none;border-left:none;border-right:none;border-bottom:none;text-align:left}
+  .meal .fi b{color:var(--ink);font-weight:500}
+  .meal .fi span{white-space:nowrap}
+  .meal .addf{background:none;border:none;color:var(--accent);font-weight:600;font-size:13.5px;padding:9px 0 0}
+  .inrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .inrow button{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 8px;font-size:12.5px;font-weight:600;color:var(--ink-2);display:flex;flex-direction:column;align-items:center;gap:5px}
+  .inrow button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .foodres{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:10px}
+  .foodres button{display:flex;justify-content:space-between;gap:10px;width:100%;background:var(--surface);border:none;border-bottom:1px solid var(--line-2);padding:11px 13px;text-align:left;font-size:14px}
+  .foodres button small{color:var(--ink-3);white-space:nowrap}
+  .foodres button:last-child{border-bottom:none}
+
+  .composer{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+  .composer textarea{width:100%;border:none;background:none;outline:none;resize:none;min-height:72px;font-size:15.5px;line-height:1.45;padding:0}
+  .composer .cb{display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:8px}
+  .composer .send{width:42px;height:42px;border-radius:50%;border:none;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;flex:none}
+  .composer .send:disabled{opacity:.35}
+  .composer .send svg,.composer .mic svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .composer .mic{background:none;border:none;color:var(--ink-3);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px}
+  .composer .mic.rec{color:var(--neg);background:var(--field)}
+  .moods{display:flex;gap:4px}
+  .moods button{background:none;border:none;font-size:20px;padding:4px 5px;border-radius:8px;opacity:.4}
+  .moods button.on{opacity:1;background:var(--field)}
+  .entry{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px;width:100%;text-align:left;color:inherit}
+  .entry .eh{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-3);margin-bottom:6px;gap:8px}
+  .entry .et{font-size:14.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+  .entry .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .tagc{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px}
+  .pills{display:flex;gap:8px;overflow-x:auto;padding:2px 18px 6px 0;margin-right:-18px;scrollbar-width:none}
+  .pills::-webkit-scrollbar{display:none}
+  .pill{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 13px;font-size:13px;color:var(--ink-2)}
+  .pill.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+  .search{display:flex;align-items:center;gap:8px;background:var(--field);border-radius:12px;padding:0 12px;margin-top:12px}
+  .search svg{width:17px;height:17px;stroke:var(--ink-3);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .search input{flex:1;background:none;border:none;outline:none;padding:11px 0;font-size:15px}
+
+  .chat{display:flex;flex-direction:column;gap:10px;padding:6px 0 8px}
+  .bub{max-width:90%;padding:11px 14px;border-radius:16px;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+  .bub.adv{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:6px}
+  .bub.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:6px}
+  .bub .h{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+  .bub.warn{border-color:color-mix(in srgb,var(--neg) 50%,var(--line))}
+  .bub.warn .h{color:var(--neg)}
+  .bub.good{border-color:color-mix(in srgb,var(--pos) 50%,var(--line))}
+  .bub.good .h{color:var(--pos)}
+  .bub .go{display:inline-block;margin-top:8px;color:var(--accent);font-weight:600;background:none;border:none;padding:0;font-size:13.5px}
+  .qs{display:flex;gap:8px;overflow-x:auto;padding:8px 18px 10px 0;margin-right:-18px;scrollbar-width:none}
+  .qs::-webkit-scrollbar{display:none}
+  .qs button{flex:0 0 auto;background:var(--field);border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-size:13px;color:var(--ink)}
+  .hello{text-align:center;padding:26px 0 14px}
+  .hello .k{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .hello h2{font-size:22px;margin-top:4px}
+  .hidden{display:none!important}
 </style>
 </head>
 <body>
 
+<header class="appbar">
+  <button class="ib" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <div class="ttl" id="barTitle">Finanças</div>
+  <button class="ib" id="barAction" aria-label="Ação"><svg viewBox="0 0 24 24" id="barActionIcon"></svg></button>
+</header>
+
+<div class="dscrim" id="dscrim"></div>
+<aside class="drawer" id="drawer">
+  <button class="who" data-mod="acct">
+    <div class="ava" id="dAva">?</div>
+    <div style="min-width:0"><div class="n" id="dName">Seu nome</div><span class="s">Minha conta ›</span></div>
+  </button>
+
+  <button class="mi adv" data-mod="adv">
+    <svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/><path d="M9 11h6M9 14h3"/></svg>
+    Falar com o Conselheiro
+  </button>
+
+  <div class="grp">Produtividade</div>
+  <button class="mi" data-mod="rem">
+    <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>Lembretes
+  </button>
+  <button class="mi" data-mod="hab">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/></svg>Hábitos
+  </button>
+
+  <div class="grp">Vida</div>
+  <button class="mi on" data-mod="fin">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5c0-1-1-1.8-2.5-1.8s-2.5.8-2.5 1.8 1 1.6 2.5 1.8 2.5.8 2.5 2-1 1.8-2.5 1.8-2.5-.8-2.5-1.8"/></svg>Finanças
+  </button>
+  <button class="mi" data-mod="diet">
+    <svg viewBox="0 0 24 24"><path d="M12 3c2 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 0-5 1-8z"/></svg>Dieta
+  </button>
+  <button class="mi" data-mod="jour">
+    <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h6v18H6a2 2 0 0 1-2-2z"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></svg>Diário
+  </button>
+  <button class="mi" data-mod="ideas">
+    <svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>Ideias
+  </button>
+</aside>
+
 <div id="app">
+
+<!-- ================= FINANÇAS ================= -->
+<div class="mod active" id="mod-fin">
+
 
   <!-- ============ RESUMO ============ -->
   <section id="view-resumo" class="view active">
@@ -437,6 +673,14 @@
       </button>
     </div>
 
+    <div class="sec"><span class="t">conselheiro</span></div>
+    <div class="list">
+      <button class="item" data-openmod="adv">
+        <div class="grow"><div class="t1">Falar com o Conselheiro</div><div class="t2">Alertas e respostas calculadas dos seus dados, sem IA</div></div>
+        <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
     <div class="sec"><span class="t">ajustes</span></div>
     <div class="list">
       <button class="item" data-goto="set">
@@ -512,28 +756,11 @@
     <div class="backbar"><button data-back="more"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Mais</button></div>
     <div class="vhead" style="padding-top:8px">
       <h1>Ajustes</h1>
-      <p>Tudo editável.</p>
-    </div>
-
-    <div class="sec"><span class="t">aparência</span></div>
-    <div class="card">
-      <div class="seg" id="themeSeg">
-        <button data-theme-opt="auto">Automático</button>
-        <button data-theme-opt="light">Claro</button>
-        <button data-theme-opt="dark">Escuro</button>
-      </div>
-      <p class="muted tiny" id="themeHint" style="margin:11px 2px 0">No automático, segue o tema do aparelho.</p>
+      <p>Categorias do mês. Tema e backup ficam em <b>Minha conta</b>, no menu.</p>
     </div>
 
     <div class="sec"><span class="t">categorias</span><button id="addCat">adicionar</button></div>
     <div id="catList"></div>
-
-    <div class="sec"><span class="t">backup</span></div>
-    <div class="card">
-      <p class="muted tiny" style="margin:0 0 12px">Seus dados ficam só neste aparelho. Faça uma cópia de vez em quando.</p>
-      <button class="btn-sm" id="exportBtn" style="margin-right:8px">Exportar cópia</button>
-      <button class="btn-sm" id="importBtn">Importar cópia</button>
-    </div>
 
     <div class="sec"><span class="t">zerar</span></div>
     <div class="card">
@@ -542,9 +769,126 @@
     </div>
   </section>
 
+</div><!-- /mod-fin -->
+
+<!-- ================= LEMBRETES ================= -->
+<div class="mod" id="mod-rem">
+  <div class="seg" id="remSeg" style="margin-top:14px">
+    <button data-seg="all" class="on">Lembretes</button>
+    <button data-seg="rec">Recorrentes</button>
+  </div>
+  <div class="tiles" style="margin-top:14px">
+    <button class="tile blue" data-remfilter="pend"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><span class="n" id="rem-pend">0</span><div class="l">Pendentes</div></button>
+    <button class="tile red"  data-remfilter="late"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg></div><span class="n" id="rem-late">0</span><div class="l">Atrasadas</div></button>
+    <button class="tile gray" data-remfilter="today"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg></div><span class="n" id="rem-today">0</span><div class="l">Hoje</div></button>
+    <button class="tile green" data-remfilter="done"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg></div><span class="n" id="rem-done">0</span><div class="l">Concluídas</div></button>
+  </div>
+  <div class="vsw" id="remVsw">
+    <button data-v="cal" class="on" aria-label="Calendário"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></button>
+    <button data-v="list" aria-label="Lista"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+    <button data-v="kan" aria-label="Quadro"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/></svg></button>
+  </div>
+  <div id="remBody"></div>
 </div>
 
-<button class="fab" id="fab" aria-label="Nova transação">
+<!-- ================= HÁBITOS ================= -->
+<div class="mod" id="mod-hab">
+  <div style="text-align:center;margin-top:14px">
+    <span class="pill" id="habBanner">✨ Comece sua sequência hoje!</span>
+  </div>
+  <div class="hcards" id="habCards" style="margin-top:14px"></div>
+  <div class="sec"><span class="t">hoje</span><span class="t num" id="habTodayCount"></span></div>
+  <div id="habList"></div>
+  <div class="sec"><span class="t">sugestões</span></div>
+  <div class="sugs" id="habSugs"></div>
+  <button class="btn" id="addHabitBtn" style="margin-top:18px">+ Adicionar hábito</button>
+</div>
+
+<!-- ================= DIETA ================= -->
+<div class="mod" id="mod-diet">
+  <div class="seg" id="dietSeg" style="margin-top:14px">
+    <button data-seg="today" class="on">Hoje</button>
+    <button data-seg="hist">Histórico</button>
+  </div>
+  <div id="dietBody"></div>
+</div>
+
+<!-- ================= DIÁRIO ================= -->
+<div class="mod" id="mod-jour">
+  <div style="text-align:center;margin-top:14px"><span class="pill">📖 Registre seu dia. O Conselheiro acompanha.</span></div>
+  <div class="composer" style="margin-top:14px">
+    <textarea id="jourText" placeholder="Escreva sobre seu dia…"></textarea>
+    <div class="cb">
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="mic" id="jourMic" aria-label="Ditar"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+        <div class="moods" id="jourMood">
+          <button data-m="1">😞</button><button data-m="2">😕</button><button data-m="3">😐</button><button data-m="4">🙂</button><button data-m="5">😄</button>
+        </div>
+      </div>
+      <button class="send" id="jourSend" aria-label="Salvar"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+    </div>
+  </div>
+  <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="jourSearch" placeholder="Buscar no diário"></div>
+  <div id="jourList"></div>
+</div>
+
+<!-- ================= IDEIAS ================= -->
+<div class="mod" id="mod-ideas">
+  <div style="text-align:center;margin-top:14px"><span class="pill">💡 Despeje aqui. Use #tags para organizar.</span></div>
+  <div class="composer" style="margin-top:14px">
+    <textarea id="ideaText" placeholder="Despeje suas ideias aqui…"></textarea>
+    <div class="cb">
+      <button class="mic" id="ideaMic" aria-label="Ditar"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      <button class="send" id="ideaSend" aria-label="Salvar"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+    </div>
+  </div>
+  <div class="pills" id="ideaTags" style="margin-top:12px"></div>
+  <div id="ideaList"></div>
+</div>
+
+<!-- ================= CONSELHEIRO ================= -->
+<div class="mod" id="mod-adv">
+  <div class="hello"><div class="k" id="advHelloK">Olá</div><h2>Como posso te ajudar?</h2></div>
+  <div class="chat" id="advChat"></div>
+  <div class="sec" style="margin-top:8px"><span class="t">pergunte</span></div>
+  <div class="qs" id="advQs"></div>
+  <p class="muted tiny" style="text-align:center;margin:14px 0 0">O Conselheiro só faz contas com os seus dados, aqui no aparelho. Não usa internet nem IA.</p>
+</div>
+
+<!-- ================= MINHA CONTA ================= -->
+<div class="mod" id="mod-acct">
+  <div class="field" style="margin-top:16px"><label>Como quer ser chamado?</label>
+    <input id="acctName" class="input" placeholder="Seu nome" autocomplete="off"></div>
+
+  <div class="sec"><span class="t">aparência</span></div>
+  <div class="card">
+    <div class="seg" id="themeSeg">
+      <button data-theme-opt="auto">Automático</button>
+      <button data-theme-opt="light">Claro</button>
+      <button data-theme-opt="dark">Escuro</button>
+    </div>
+    <p class="muted tiny" id="themeHint" style="margin:11px 2px 0">No automático, segue o tema do aparelho.</p>
+  </div>
+
+  <div class="sec"><span class="t">seus dados</span></div>
+  <div class="card">
+    <p class="muted tiny" style="margin:0 0 12px">Tudo fica só neste aparelho. Faça uma cópia de vez em quando — o backup inclui finanças, lembretes, hábitos, dieta, diário e ideias.</p>
+    <button class="btn-sm" id="exportBtn" style="margin-right:8px">Exportar cópia</button>
+    <button class="btn-sm" id="importBtn">Importar cópia</button>
+  </div>
+
+  <div class="sec"><span class="t" style="color:var(--neg)">zona de perigo</span></div>
+  <div class="card">
+    <p class="muted tiny" style="margin:0 0 12px">Apaga tudo e recomeça do zero. Sem volta — exporte uma cópia antes.</p>
+    <button class="del" id="resetAll">Resetar o app…</button>
+  </div>
+
+  <p class="muted tiny" style="text-align:center;margin:26px 0 0">Controle Financeiro · Gestão &amp; Planejamento<br>roda 100% offline no seu aparelho</p>
+</div>
+
+</div><!-- /app -->
+
+<button class="fab" id="fab" aria-label="Adicionar">
   <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
 </button>
 
@@ -621,8 +965,9 @@ const YTYPES = {
 function seed(){
   const c=(name,kind,color)=>({id:uid(),name,kind,color});
   return {
-    version:3,
-    settings:{ cdi:14.9, ipca:4.5, emergencyMonths:6 },
+    version:4,
+    settings:{ cdi:14.9, ipca:4.5, emergencyMonths:6, hide:false },
+    profile:{ name:"" },
     accounts:[],
     categories:[
       c("Moradia","essential","#e0a95c"),
@@ -640,6 +985,12 @@ function seed(){
     reserves:[],
     imported:[],
     rules:{},
+    reminders:[],      // {id,text,priority,date,time,repeat,status,doneAt,createdAt}
+    habits:[],         // {id,name,icon,color,goal:{qty,unit}|null,createdAt,archived}
+    habitLogs:{},      // 'YYYY-MM-DD' -> { habitId: valor }
+    diet:{ goal:{kcal:2000,p:150,c:200,f:67}, meals:[], log:{}, custom:[] },
+    journal:[],        // {id,text,mood,createdAt}
+    ideas:[],          // {id,text,tags,status,createdAt}
   };
 }
 
@@ -664,6 +1015,15 @@ function normalize(d){
   d.imported     = Array.isArray(d.imported)     ? d.imported     : [];
   d.rules        = (d.rules && typeof d.rules==="object") ? d.rules : {};
   d.settings     = Object.assign({}, s.settings, d.settings||{});
+  d.profile      = Object.assign({}, s.profile,  d.profile||{});
+  d.reminders    = Array.isArray(d.reminders) ? d.reminders : [];
+  d.habits       = Array.isArray(d.habits)    ? d.habits    : [];
+  d.habitLogs    = (d.habitLogs && typeof d.habitLogs==="object") ? d.habitLogs : {};
+  d.journal      = Array.isArray(d.journal)   ? d.journal   : [];
+  d.ideas        = Array.isArray(d.ideas)     ? d.ideas     : [];
+  const dd = (d.diet && typeof d.diet==="object") ? d.diet : {};
+  d.diet = { goal:Object.assign({}, s.diet.goal, dd.goal||{}), meals:Array.isArray(dd.meals)?dd.meals:[],
+             log:(dd.log&&typeof dd.log==="object")?dd.log:{}, custom:Array.isArray(dd.custom)?dd.custom:[] };
 
   // iFinance v1: a Carteira de ativos vira reservas
   if(Array.isArray(d.assets) && d.assets.length && !d.reserves.length){
@@ -682,7 +1042,7 @@ function normalize(d){
   }
   d.reserves = d.reserves.map(normReserve);
   d.accounts = d.accounts.map(normAccount);
-  d.version  = 3;
+  d.version  = 4;
   return d;
 }
 
@@ -720,7 +1080,7 @@ function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(
 /* ---------- utilidades ---------- */
 const BRL = new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:2});
 const BRL0= new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});
-function money(n,round=false){ return (round?BRL0:BRL).format(n||0); }
+function money(n,round=false){ if(DB && DB.settings && DB.settings.hide) return "R$ ••••"; return (round?BRL0:BRL).format(n||0); }
 function signMoney(n){ return (n<0?"−":"+")+money(Math.abs(n)); }
 function num(n,d=1){ return (n||0).toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d}); }
 function catById(id){ return DB.categories.find(c=>c.id===id); }
@@ -2269,7 +2629,7 @@ function importData(){
       if(!d || typeof d!=="object" || !Array.isArray(d.categories)) throw 0;
     }catch(e){ toast("Backup inválido."); return; }
     if(!confirm("Isso apaga os dados atuais e coloca os do backup. Continuar?")) return;
-    DB=normalize(d); save(); closeSheet(); renderAll(); go("resumo"); toast("Importado ✓");
+    DB=normalize(d); save(); closeSheet(); renderAll(); openModule(curMod); toast("Importado ✓");
   };
 }
 
@@ -2317,18 +2677,790 @@ $$("#themeSeg button").forEach(b=>b.onclick=()=>setTheme(b.dataset.themeOpt));
 sysDark().addEventListener("change",()=>{ if(themeMode==="auto") applyTheme(true); });
 
 
-/* ============================================================
-   NAVEGAÇÃO, SHEET, TOAST
-   ============================================================ */
-const SUBVIEWS = { cat:"resumo", fixed:"more", ofx:"more", report:"more", set:"more" };
 
+/* ============================================================
+   UTILIDADES COMPARTILHADAS (calendário, datas, voz)
+   ============================================================ */
+function isoOf(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+function addDays(iso,n){ const d=new Date(iso+"T00:00:00"); d.setDate(d.getDate()+n); return isoOf(d); }
+function daysAgoISO(n){ return addDays(todayISO(),-n); }
+function fmtDay(iso){
+  const t=todayISO();
+  if(iso===t) return "Hoje";
+  if(iso===addDays(t,1)) return "Amanhã";
+  if(iso===addDays(t,-1)) return "Ontem";
+  const d=new Date(iso+"T00:00:00");
+  return d.toLocaleDateString("pt-BR",{weekday:"short",day:"numeric",month:"short"}).replace(".","");
+}
+const WD=["D","S","T","Q","Q","S","S"];
+
+/* grade de mês. mark(iso) -> {dot:bool, heat:0..1} ou null */
+function calHTML(cur, sel, mark){
+  const y=cur.getFullYear(), m=cur.getMonth();
+  const first=new Date(y,m,1).getDay();
+  const dim=new Date(y,m+1,0).getDate();
+  const prevDim=new Date(y,m,0).getDate();
+  const today=todayISO();
+  let cells="";
+  const total=Math.ceil((first+dim)/7)*7;     // só as semanas que o mês ocupa
+  for(let i=0;i<total;i++){
+    let day, mm=m, yy=y, out=false;
+    if(i<first){ day=prevDim-first+1+i; mm=m-1; out=true; }
+    else if(i-first<dim){ day=i-first+1; }
+    else { day=i-first-dim+1; mm=m+1; out=true; }
+    const d=new Date(yy,mm,day); const iso=isoOf(d);
+    const mk=mark?mark(iso):null;
+    cells+=`<button class="d ${out?"out":""} ${iso===sel?"sel":""} ${iso===today?"today":""}" data-day="${iso}" ${mk&&mk.heat!=null?`style="--o:${(mk.heat*0.85).toFixed(2)}"`:""}>
+      ${mk&&mk.heat!=null?`<span class="hm"></span>`:""}${day}${mk&&mk.dot?"<i></i>":""}</button>`;
+  }
+  return `<div class="cal">
+    <div class="hd"><button data-cal="-1" aria-label="Mês anterior"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <b>${monthName(y,m)}</b>
+      <button data-cal="1" aria-label="Próximo mês"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button></div>
+    <div class="g">${WD.map(w=>`<div class="w">${w}</div>`).join("")}${cells}</div></div>`;
+}
+
+/* ditado por voz (Web Speech API) — só aparece onde o aparelho suporta */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+function wireMic(btn, target){
+  if(!btn) return;
+  if(!SR){ btn.classList.add("hidden"); return; }
+  let rec=null;
+  btn.onclick=()=>{
+    if(rec){ rec.stop(); return; }
+    rec=new SR(); rec.lang="pt-BR"; rec.interimResults=false;
+    rec.onresult=e=>{ const t=e.results[0][0].transcript; target.value=(target.value?target.value+" ":"")+t; target.dispatchEvent(new Event("input")); };
+    rec.onend=()=>{ rec=null; btn.classList.remove("rec"); };
+    rec.onerror=()=>{ rec=null; btn.classList.remove("rec"); toast("Não consegui ouvir."); };
+    btn.classList.add("rec"); rec.start();
+  };
+}
+
+/* ============================================================
+   LEMBRETES
+   ============================================================ */
+const PRI = { low:{label:"Baixa"}, med:{label:"Média"}, high:{label:"Alta"} };
+const REPEATS = { "":"Não repete", daily:"Todo dia", weekly:"Toda semana", monthly:"Todo mês" };
+let remView="cal", remSeg="all", remFilter=null;
+let remDay=todayISO();
+let remCursor=new Date(); remCursor.setDate(1);
+
+function remIsLate(r){ return r.status!=="done" && !!r.date && r.date<todayISO(); }
+function remStats(){
+  const t=todayISO(), L=DB.reminders;
+  return {
+    pend:  L.filter(r=>r.status!=="done").length,
+    late:  L.filter(remIsLate).length,
+    today: L.filter(r=>r.status!=="done"&&r.date===t).length,
+    done:  L.filter(r=>r.status==="done").length,
+  };
+}
+function nextOccurrence(iso, rep){
+  const d=new Date(iso+"T00:00:00");
+  if(rep==="daily")   d.setDate(d.getDate()+1);
+  if(rep==="weekly")  d.setDate(d.getDate()+7);
+  if(rep==="monthly") d.setMonth(d.getMonth()+1);
+  return isoOf(d);
+}
+function remToggle(r){
+  if(r.status==="done"){ r.status="todo"; r.doneAt=null; }
+  else{
+    r.status="done"; r.doneAt=todayISO();
+    if(r.repeat){   // recorrente: a próxima ocorrência já nasce pendente
+      DB.reminders.push({...r, id:uid(), status:"todo", doneAt:null,
+        date: nextOccurrence(r.date||todayISO(), r.repeat), createdAt:todayISO()});
+    }
+  }
+  save(); renderReminders();
+}
+function remRow(r){
+  const late=remIsLate(r);
+  const when=r.date?`${fmtDay(r.date)}${r.time?" · "+r.time:""}`:"sem data";
+  return `<div class="rem ${r.status==="done"?"done":""} ${late?"late":""}">
+    <input type="checkbox" class="ck" data-remck="${r.id}" ${r.status==="done"?"checked":""} aria-label="Concluir">
+    <button class="g" data-remedit="${r.id}">
+      <div class="t">${esc(r.text)}</div>
+      <div class="m"><span class="pri ${r.priority}"></span><span class="when">${when}</span>
+        ${r.repeat?`<span>↻ ${REPEATS[r.repeat].toLowerCase()}</span>`:""}${r.status==="doing"?`<span class="tag">fazendo</span>`:""}</div>
+    </button></div>`;
+}
+function remList(list, emptyMsg){
+  return list.length ? `<div class="list">${list.map(remRow).join("")}</div>` : `<div class="empty tiny">${emptyMsg}</div>`;
+}
+function remSort(a,b){ return (a.date||"9999").localeCompare(b.date||"9999") || (a.time||"").localeCompare(b.time||"") || ({high:0,med:1,low:2}[a.priority]-{high:0,med:1,low:2}[b.priority]); }
+
+function renderReminders(){
+  const s=remStats();
+  $("#rem-pend").textContent=s.pend; $("#rem-late").textContent=s.late;
+  $("#rem-today").textContent=s.today; $("#rem-done").textContent=s.done;
+  $$("#remSeg button").forEach(b=>b.classList.toggle("on",b.dataset.seg===remSeg));
+  $$("#remVsw button").forEach(b=>b.classList.toggle("on",b.dataset.v===remView));
+  $("#remVsw").classList.toggle("hidden", remSeg==="rec");
+
+  const body=$("#remBody");
+  const t=todayISO();
+  const all=[...DB.reminders].sort(remSort);
+
+  if(remSeg==="rec"){
+    const rec=all.filter(r=>r.repeat && r.status!=="done");
+    body.innerHTML=`<div class="sec"><span class="t">se repetem</span></div>`+
+      (rec.length?remList(rec):`<div class="empty">Nenhuma recorrência.<br><span class="tiny">Crie lembretes que se repetem: conta de luz, academia, remédio…</span></div>`);
+  }
+  else if(remFilter){
+    const map={pend:[r=>r.status!=="done","pendentes"], late:[remIsLate,"atrasadas"],
+               today:[r=>r.status!=="done"&&r.date===t,"para hoje"], done:[r=>r.status==="done","concluídas"]};
+    const [fn,label]=map[remFilter];
+    body.innerHTML=`<div class="sec"><span class="t">${label}</span><button id="remClear">ver tudo</button></div>`+remList(all.filter(fn),"Nada aqui.");
+    $("#remClear").onclick=()=>{ remFilter=null; renderReminders(); };
+  }
+  else if(remView==="cal"){
+    const byDay={};
+    for(const r of DB.reminders){ if(r.date && r.status!=="done") byDay[r.date]=(byDay[r.date]||0)+1; }
+    const dayList=all.filter(r=>r.date===remDay);
+    body.innerHTML = calHTML(remCursor, remDay, iso=>byDay[iso]?{dot:true}:null)
+      + `<div class="sec"><span class="t">${fmtDay(remDay).toLowerCase()}</span><button id="remAddDay">adicionar</button></div>`
+      + remList(dayList, "Sem lembretes pra este dia.");
+    $("#remAddDay").onclick=()=>openRemSheet(null, remDay);
+  }
+  else if(remView==="list"){
+    const grp=(label,list)=>list.length?`<div class="sec"><span class="t">${label}</span><span class="t num">${list.length}</span></div>${remList(list)}`:"";
+    const open=all.filter(r=>r.status!=="done");
+    const html=grp("atrasadas",open.filter(remIsLate))+grp("hoje",open.filter(r=>r.date===t))
+      +grp("próximas",open.filter(r=>r.date&&r.date>t))+grp("sem data",open.filter(r=>!r.date))
+      +grp("concluídas",all.filter(r=>r.status==="done").sort((a,b)=>(b.doneAt||"").localeCompare(a.doneAt||"")).slice(0,15));
+    body.innerHTML=html||`<div class="empty">Nada por aqui.<br><span class="tiny">Toque no <b>+</b> para criar um lembrete.</span></div>`;
+  }
+  else{ // kanban
+    const cols=[["todo","Para fazer","doing"],["doing","Fazendo","done"],["done","Feito",null]];
+    body.innerHTML=`<div class="kan" style="margin-top:12px">${cols.map(([st,label,next])=>{
+      const items=all.filter(r=>r.status===st);
+      return `<div class="kcol"><div class="kh">${label}<span>${items.length}</span></div>
+        ${items.length?items.map(r=>`<div class="kcard"><span class="pri ${r.priority}"></span>
+            <button class="kt" data-remedit="${r.id}" style="background:none;border:none;text-align:left;padding:0;color:inherit;font:inherit">${esc(r.text)}${r.date?`<div class="tiny muted">${fmtDay(r.date)}</div>`:""}</button>
+            ${next?`<button class="mv" data-remmove="${r.id}" data-to="${next}" aria-label="Avançar"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>`
+                  :`<button class="mv" data-remmove="${r.id}" data-to="todo" aria-label="Reabrir"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>`}
+          </div>`).join(""):`<div class="kempty">${st==="todo"?"Nada para fazer":st==="doing"?"Nada em andamento":"Nada concluído ainda"}</div>`}
+      </div>`;}).join("")}</div>`;
+    $$("[data-remmove]").forEach(b=>b.onclick=()=>{
+      const r=DB.reminders.find(x=>x.id===b.dataset.remmove); if(!r) return;
+      const to=b.dataset.to;
+      if(to==="done") remToggle(r);
+      else if(r.status==="done"){ remToggle(r); r.status=to; save(); renderReminders(); }
+      else { r.status=to; save(); renderReminders(); }
+    });
+  }
+
+  $$("[data-remck]").forEach(ck=>ck.onchange=()=>{ const r=DB.reminders.find(x=>x.id===ck.dataset.remck); if(r) remToggle(r); });
+  $$("[data-remedit]").forEach(b=>b.onclick=()=>openRemSheet(DB.reminders.find(x=>x.id===b.dataset.remedit)));
+  $$("#remBody [data-cal]").forEach(b=>b.onclick=()=>{ remCursor.setMonth(remCursor.getMonth()+ +b.dataset.cal); renderReminders(); });
+  $$("#remBody [data-day]").forEach(b=>b.onclick=()=>{ remDay=b.dataset.day; remCursor=new Date(remDay+"T00:00:00"); remCursor.setDate(1); renderReminders(); });
+}
+
+function openRemSheet(existing, presetDate){
+  const r=existing||{text:"",priority:"med",date:presetDate||todayISO(),time:"",repeat:""};
+  sheet(`<h2>${existing?"Editar lembrete":"Novo lembrete"}</h2><p>${existing?"":"O que precisa ser feito?"}</p>`,`
+    <div class="field" style="margin-top:4px"><label>Lembrete</label>
+      <input id="rm-text" class="input" placeholder="ex: pagar a conta de luz" value="${esc(r.text)}"></div>
+    <div class="field"><label>Prioridade</label>
+      <div class="seg" id="rm-pri">${Object.entries(PRI).map(([k,v])=>`<button data-p="${k}" class="${k===r.priority?"on":""}">${v.label}</button>`).join("")}</div></div>
+    <div class="grid2" style="margin-top:15px">
+      <div class="field" style="margin:0"><label>Quando</label><input id="rm-date" type="date" class="input num" value="${r.date||""}"></div>
+      <div class="field" style="margin:0"><label>Hora (opcional)</label><input id="rm-time" type="time" class="input num" value="${r.time||""}"></div>
+    </div>
+    <div class="field"><label>Repetir</label>
+      <select id="rm-rep" class="input">${Object.entries(REPEATS).map(([k,v])=>`<option value="${k}" ${k===(r.repeat||"")?"selected":""}>${v}</option>`).join("")}</select></div>
+    <button class="btn" id="rm-save">${existing?"Salvar":"Criar lembrete"}</button>
+    ${existing?`<button class="btn ghost" id="rm-del" style="margin-top:10px;color:var(--neg)">Apagar lembrete</button>`:""}
+  `);
+  let pri=r.priority;
+  $$("#rm-pri button").forEach(b=>b.onclick=()=>{ pri=b.dataset.p; $$("#rm-pri button").forEach(x=>x.classList.toggle("on",x===b)); });
+  $("#rm-save").onclick=()=>{
+    const text=$("#rm-text").value.trim(); if(!text){ toast("Escreva o lembrete."); return; }
+    const data={text, priority:pri, date:$("#rm-date").value||null, time:$("#rm-time").value||null, repeat:$("#rm-rep").value||null};
+    if(existing) Object.assign(existing,data);
+    else DB.reminders.push({id:uid(), status:"todo", doneAt:null, createdAt:todayISO(), ...data});
+    if(data.date){ remDay=data.date; remCursor=new Date(data.date+"T00:00:00"); remCursor.setDate(1); }
+    save(); closeSheet(); renderReminders(); toast(existing?"Salvo ✓":"Lembrete criado ✓");
+  };
+  if(existing) $("#rm-del").onclick=()=>{ DB.reminders=DB.reminders.filter(x=>x.id!==existing.id); save(); closeSheet(); renderReminders(); toast("Apagado"); };
+  setTimeout(()=>$("#rm-text")?.focus(),250);
+}
+$$("#remSeg button").forEach(b=>b.onclick=()=>{ remSeg=b.dataset.seg; remFilter=null; renderReminders(); });
+$$("#remVsw button").forEach(b=>b.onclick=()=>{ remView=b.dataset.v; remFilter=null; renderReminders(); });
+$$("[data-remfilter]").forEach(b=>b.onclick=()=>{ remFilter=remFilter===b.dataset.remfilter?null:b.dataset.remfilter; remSeg="all"; renderReminders(); });
+
+/* ============================================================
+   HÁBITOS
+   ============================================================ */
+const HAB_SUGS=[["💧","Beber água",{qty:8,unit:"copos"}],["📖","Ler",{qty:20,unit:"min"}],["🧘","Meditar",{qty:10,unit:"min"}],
+  ["🚶","Caminhar",null],["🏋️","Treinar",null],["🌙","Dormir 8h",null],["📚","Estudar",{qty:30,unit:"min"}],["🍎","Comer fruta",null],["🧹","Arrumar a casa",null]];
+const HAB_ICONS=["💧","📖","🧘","🚶","🏋️","🌙","📚","🍎","💊","🎯","✍️","🎸","🧹","💰","🙏","☀️","🥗","🚭","🎨","🐶"];
+let habCursor=new Date(); habCursor.setDate(1);
+
+function habLog(iso){ return DB.habitLogs[iso]||{}; }
+function habVal(h,iso){ return habLog(iso)[h.id]||0; }
+function habGoal(h){ return h.goal?Math.max(1,h.goal.qty):1; }
+function habDone(h,iso){ return habVal(h,iso)>=habGoal(h); }
+function habSet(h,iso,v){
+  DB.habitLogs[iso]=DB.habitLogs[iso]||{};
+  if(v<=0) delete DB.habitLogs[iso][h.id]; else DB.habitLogs[iso][h.id]=v;
+  if(!Object.keys(DB.habitLogs[iso]).length) delete DB.habitLogs[iso];
+}
+function activeHabits(iso){ return DB.habits.filter(h=>!h.archived && h.createdAt<=iso); }
+/* fração de hábitos concluídos no dia; null se não havia hábito ativo */
+function dayPct(iso){ const hs=activeHabits(iso); if(!hs.length) return null; return hs.filter(h=>habDone(h,iso)).length/hs.length; }
+function habStreak(){
+  let n=0, d=todayISO();
+  const hoje=dayPct(d);
+  if(hoje!==null && hoje<1) d=addDays(d,-1);   // hoje ainda incompleto não quebra a sequência
+  for(let i=0;i<3650;i++){ const p=dayPct(d); if(p===null||p<1) break; n++; d=addDays(d,-1); }
+  return n;
+}
+function habRecord(){
+  const dias=Object.keys(DB.habitLogs).sort(); if(!dias.length) return 0;
+  let best=0, run=0, d=dias[0]; const fim=todayISO();
+  while(d<=fim){ const p=dayPct(d); if(p===1){ run++; best=Math.max(best,run); } else run=0; d=addDays(d,1); }
+  return best;
+}
+function habWeek(){  // últimos 7 dias
+  const out=[]; for(let i=6;i>=0;i--){ const iso=daysAgoISO(i); out.push({iso, pct:dayPct(iso)}); } return out;
+}
+function habWeekPct(){ const v=habWeek().filter(x=>x.pct!==null); return v.length? v.reduce((a,x)=>a+x.pct,0)/v.length : 0; }
+function habStreakOf(h){ let n=0, d=todayISO(); if(!habDone(h,d)) d=addDays(d,-1); while(habDone(h,d)){ n++; d=addDays(d,-1); } return n; }
+
+function renderHabits(){
+  const t=todayISO(), hs=activeHabits(t);
+  const feitos=hs.filter(h=>habDone(h,t)).length;
+  const streak=habStreak(), rec=habRecord(), wk=habWeekPct();
+  $("#habBanner").textContent = streak>0 ? `🔥 ${streak} ${streak===1?"dia seguido":"dias seguidos"}` : "✨ Comece sua sequência hoje!";
+  $("#habTodayCount").textContent = hs.length?`${feitos} de ${hs.length}`:"";
+
+  const pctHoje=hs.length?Math.round(feitos/hs.length*100):0;
+  const week=habWeek();
+  const heat={}; for(const iso of Object.keys(DB.habitLogs)){ const p=dayPct(iso); if(p) heat[iso]=p; }
+  $("#habCards").innerHTML=`
+    <div class="hcard">
+      <div class="row"><div><div class="k">Visão geral</div><h2 style="font-size:24px;margin-top:2px">Hoje</h2></div>
+        <div class="ring" style="--p:${pctHoje}"><b class="num">${pctHoje}%</b></div></div>
+      <div class="bar" style="margin-top:12px"><i style="width:${pctHoje}%"></i></div>
+      ${hs.length?"":`<p class="muted tiny" style="margin:10px 0 0">Adicione hábitos para começar.</p>`}
+      <div class="statline" style="margin-top:8px"><span class="muted">Concluídos hoje</span><b class="num">${feitos} de ${hs.length}</b></div>
+      <div class="statline"><span class="muted">Sequência atual</span><b class="num">${streak} ${streak===1?"dia":"dias"}</b></div>
+      <div class="statline"><span class="muted">Recorde pessoal</span><b class="num">${rec} ${rec===1?"dia":"dias"}</b></div>
+      <div class="statline"><span class="muted">Consistência semanal</span><b class="num">${Math.round(wk*100)}%</b></div>
+    </div>
+    <div class="hcard">
+      <div class="k">Consistência 7d</div>
+      <div style="text-align:center;margin-top:18px"><div class="num" style="font-size:44px;font-weight:700;line-height:1">${Math.round(wk*100)}%</div><div class="muted tiny">aproveitamento</div></div>
+      <div class="bars7">${week.map(x=>`<div><i style="height:${Math.round((x.pct||0)*100)}%"></i></div>`).join("")}</div>
+      <div class="bars7l">${week.map(x=>`<span>${WD[new Date(x.iso+"T00:00:00").getDay()]}</span>`).join("")}</div>
+    </div>
+    <div class="hcard"><div class="k">Calendário</div>
+      ${calHTML(habCursor, t, iso=>heat[iso]!=null?{heat:heat[iso]}:null)}
+    </div>`;
+  $$("#habCards [data-cal]").forEach(b=>b.onclick=()=>{ habCursor.setMonth(habCursor.getMonth()+ +b.dataset.cal); renderHabits(); });
+
+  $("#habList").innerHTML = hs.length ? `<div class="list">${hs.map(h=>{
+    const v=habVal(h,t), g=habGoal(h), done=v>=g, st=habStreakOf(h);
+    return `<div class="hab ${done?"done":""}">
+      <button class="em" data-habedit="${h.id}" style="background:${h.color}22">${h.icon}</button>
+      <button class="g" data-habedit="${h.id}"><div class="t">${esc(h.name)}</div>
+        <div class="s">${h.goal?`${v} de ${g} ${esc(h.goal.unit)}`:(done?"feito hoje":"ainda não")}${st>1?` · 🔥 ${st}`:""}</div></button>
+      ${h.goal?`<div class="qty"><button data-habdec="${h.id}" aria-label="Menos">−</button><b class="num">${v}/${g}</b><button data-habinc="${h.id}" aria-label="Mais">+</button></div>`
+              :`<button class="do" data-habdo="${h.id}" aria-label="Concluir"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></button>`}
+    </div>`;}).join("")}</div>`
+    : `<div class="empty">Nenhum hábito ainda.<br><span class="tiny">Escolha uma sugestão abaixo ou crie o seu.</span></div>`;
+  $$("[data-habdo]").forEach(b=>b.onclick=()=>{ const h=DB.habits.find(x=>x.id===b.dataset.habdo); habSet(h,t,habDone(h,t)?0:1); save(); renderHabits(); });
+  $$("[data-habinc]").forEach(b=>b.onclick=()=>{ const h=DB.habits.find(x=>x.id===b.dataset.habinc); habSet(h,t,habVal(h,t)+1); save(); renderHabits(); });
+  $$("[data-habdec]").forEach(b=>b.onclick=()=>{ const h=DB.habits.find(x=>x.id===b.dataset.habdec); habSet(h,t,Math.max(0,habVal(h,t)-1)); save(); renderHabits(); });
+  $$("[data-habedit]").forEach(b=>b.onclick=()=>openHabSheet(DB.habits.find(x=>x.id===b.dataset.habedit)));
+
+  const have=new Set(DB.habits.filter(h=>!h.archived).map(h=>norm(h.name)));
+  const sugs=HAB_SUGS.filter(s=>!have.has(norm(s[1])));
+  $("#habSugs").innerHTML = sugs.length ? sugs.map((s,i)=>`<button class="sug" data-sug="${i}"><div class="em">${s[0]}</div>${s[1]}</button>`).join("")
+    : `<p class="muted tiny" style="margin:0 2px">Você já usa todas as sugestões.</p>`;
+  $$("[data-sug]").forEach(b=>b.onclick=()=>{ const s=sugs[+b.dataset.sug]; openHabSheet(null,{icon:s[0],name:s[1],goal:s[2]}); });
+}
+
+function openHabSheet(existing, preset){
+  const h=existing||Object.assign({name:"",icon:HAB_ICONS[DB.habits.length%HAB_ICONS.length],color:PALETTE[DB.habits.length%PALETTE.length],goal:null},preset||{});
+  let icon=h.icon, color=h.color, quant=!!h.goal;
+  sheet(`<h2>${existing?"Editar hábito":"Novo hábito"}</h2>`,`
+    <div class="field" style="margin-top:4px"><label>Nome</label><input id="hb-name" class="input" placeholder="Ex: Ler, Beber água…" value="${esc(h.name)}"></div>
+    <div class="field"><label>Ícone</label><div class="emojis" id="hb-ic">${HAB_ICONS.map(e=>`<button data-e="${e}" class="${e===icon?"on":""}">${e}</button>`).join("")}</div></div>
+    <div class="field"><label>Cor</label><div class="swatches" id="hb-sw">${PALETTE.map(p=>`<button class="sw ${p===color?"on":""}" data-c="${p}" style="background:${p}"></button>`).join("")}</div></div>
+    <div class="toggle" id="hb-qt"><div><div class="tt">Meta quantitativa</div><div class="ts">Definir quantidade diária</div></div><button class="sw2 ${quant?"on":""}" id="hb-qtsw" aria-label="Alternar"></button></div>
+    <div id="hb-goal" class="${quant?"":"hidden"}"><div class="grid2" style="margin-top:12px">
+      <div class="field" style="margin:0"><label>Quantidade por dia</label><input id="hb-qty" class="input num" inputmode="numeric" value="${h.goal?h.goal.qty:8}"></div>
+      <div class="field" style="margin:0"><label>Unidade</label><input id="hb-unit" class="input" placeholder="copos, min, páginas" value="${esc(h.goal?h.goal.unit:"")}"></div></div></div>
+    <button class="btn" id="hb-save">${existing?"Salvar":"Criar hábito"}</button>
+    ${existing?`<div class="row" style="margin-top:14px"><button class="del" id="hb-del">Apagar</button><button class="btn-sm" id="hb-arch">${h.archived?"Reativar":"Pausar"}</button></div>`:""}
+  `);
+  $$("#hb-ic button").forEach(b=>b.onclick=()=>{ icon=b.dataset.e; $$("#hb-ic button").forEach(x=>x.classList.toggle("on",x===b)); });
+  $$("#hb-sw .sw").forEach(b=>b.onclick=()=>{ color=b.dataset.c; $$("#hb-sw .sw").forEach(x=>x.classList.toggle("on",x===b)); });
+  $("#hb-qt").onclick=()=>{ quant=!quant; $("#hb-qtsw").classList.toggle("on",quant); $("#hb-goal").classList.toggle("hidden",!quant); };
+  $("#hb-save").onclick=()=>{
+    const name=$("#hb-name").value.trim(); if(!name){ toast("Dê um nome ao hábito."); return; }
+    const goal=quant?{qty:Math.max(1,parseInt($("#hb-qty").value)||1), unit:$("#hb-unit").value.trim()||"vezes"}:null;
+    if(existing) Object.assign(existing,{name,icon,color,goal});
+    else DB.habits.push({id:uid(),name,icon,color,goal,createdAt:todayISO(),archived:false});
+    save(); closeSheet(); renderHabits(); toast(existing?"Salvo ✓":"Hábito criado ✓");
+  };
+  if(existing){
+    $("#hb-del").onclick=()=>{ if(!confirm(`Apagar "${existing.name}" e o histórico dele?`)) return;
+      DB.habits=DB.habits.filter(x=>x.id!==existing.id); for(const d of Object.keys(DB.habitLogs)){ delete DB.habitLogs[d][existing.id]; }
+      save(); closeSheet(); renderHabits(); toast("Apagado"); };
+    $("#hb-arch").onclick=()=>{ existing.archived=!existing.archived; save(); closeSheet(); renderHabits(); };
+  }
+  setTimeout(()=>$("#hb-name")?.focus(),250);
+}
+$("#addHabitBtn").onclick=()=>openHabSheet();
+
+/* ============================================================
+   DIETA
+   ============================================================ */
+/* alimentos comuns: kcal, proteína, carboidrato, gordura por porção */
+const FOODS=[
+["Arroz branco cozido",130,2.5,28,0.3,"100 g"],["Arroz integral cozido",124,2.6,26,1,"100 g"],
+["Feijão carioca cozido",76,4.8,13.6,0.5,"100 g"],["Feijão preto cozido",77,4.5,14,0.5,"100 g"],
+["Frango grelhado",165,31,0,3.6,"100 g"],["Carne bovina magra grelhada",219,32,0,9,"100 g"],
+["Peixe grelhado",128,26,0,2.6,"100 g"],["Salmão grelhado",208,20,0,13,"100 g"],["Atum em lata",116,26,0,1,"1 lata"],
+["Ovo cozido",78,6.3,0.6,5.3,"1 unidade"],["Ovo frito",90,6.3,0.4,7,"1 unidade"],["Omelete de 2 ovos",190,13,1,14,"1 unidade"],
+["Pão francês",135,4,26,1.5,"1 unidade"],["Pão de forma integral",70,3,12,1,"1 fatia"],["Pão de queijo",100,3,9,6,"1 unidade"],["Tapioca simples",130,0,32,0,"1 unidade"],
+["Cuscuz de milho",113,2.2,25,0.7,"100 g"],["Aveia em flocos",114,4,20,2.4,"30 g"],["Granola",150,4,25,5,"40 g"],
+["Banana",89,1.1,23,0.3,"1 unidade"],["Maçã",72,0.4,19,0.2,"1 unidade"],["Laranja",62,1.2,15,0.2,"1 unidade"],["Mamão",60,1,15,0.2,"1 fatia"],["Abacate",160,2,8.5,15,"100 g"],
+["Leite integral",122,6.4,9.4,6.6,"200 ml"],["Leite desnatado",70,6.8,10,0.4,"200 ml"],["Iogurte natural",104,6,8,5,"170 g"],["Whey protein",120,24,3,1.5,"1 dose"],
+["Queijo mussarela",80,6,0.5,6,"1 fatia"],["Queijo minas",66,4.4,0.8,5,"1 fatia"],["Requeijão",60,2,1,5,"1 colher"],
+["Batata cozida",87,1.9,20,0.1,"100 g"],["Batata doce cozida",77,0.6,18,0.1,"100 g"],["Mandioca cozida",125,0.6,30,0.3,"100 g"],["Macarrão cozido",158,5.8,31,0.9,"100 g"],
+["Salada de folhas",15,1,3,0,"1 prato"],["Legumes cozidos",40,2,8,0.3,"100 g"],["Azeite",90,0,0,10,"1 colher de sopa"],["Manteiga",72,0,0,8,"1 colher de chá"],
+["Café sem açúcar",2,0,0,0,"1 xícara"],["Café com açúcar",35,0,9,0,"1 xícara"],["Suco de laranja",112,1.7,26,0.5,"250 ml"],["Água de coco",46,0.5,11,0,"250 ml"],
+["Vitamina de banana",230,8,40,5,"300 ml"],["Refrigerante",139,0,37,0,"350 ml"],["Cerveja",147,1.6,13,0,"350 ml"],
+["Pizza",285,12,36,10,"1 fatia"],["Hambúrguer (sanduíche)",540,25,42,30,"1 unidade"],["Batata frita",312,3.4,41,15,"100 g"],["Pastel",290,7,28,17,"1 unidade"],["Coxinha",250,8,25,13,"1 unidade"],["Sushi",45,2,8,0.5,"1 peça"],
+["Chocolate ao leite",135,2,15,8,"25 g"],["Açaí na tigela",380,4,60,12,"300 ml"],["Sorvete",137,2.3,16,7,"1 bola"],["Bolo simples",280,4,40,12,"1 fatia"],["Brigadeiro",70,1,12,2.5,"1 unidade"],
+["Amendoim",170,7,5,14,"30 g"],["Castanha de caju",170,5,9,13,"30 g"],["Mel",64,0,17,0,"1 colher de sopa"],
+];
+for(const f of (DB.diet.custom||[])) if(Array.isArray(f)&&f.length>=6) FOODS.unshift(f);
+const MEALS_DEFAULT=[["☕","Café da manhã"],["🍽️","Almoço"],["🍪","Lanche da tarde"],["🌙","Jantar"]];
+let dietSeg="today", dietDay=todayISO(), dietStat=7;
+let dietCursor=new Date(); dietCursor.setDate(1);
+
+function dietMeals(){ if(!DB.diet.meals.length) DB.diet.meals=MEALS_DEFAULT.map(([icon,name])=>({id:uid(),icon,name})); return DB.diet.meals; }
+function dietItems(iso){ return DB.diet.log[iso]||[]; }
+function dietSum(items){ return items.reduce((a,i)=>({kcal:a.kcal+i.kcal*i.qty,p:a.p+i.p*i.qty,c:a.c+i.c*i.qty,f:a.f+i.f*i.qty}),{kcal:0,p:0,c:0,f:0}); }
+function dietAvg(days){
+  let n=0, tot={kcal:0,p:0,c:0,f:0};
+  for(let i=0;i<days;i++){ const it=dietItems(daysAgoISO(i)); if(!it.length) continue; n++; const s=dietSum(it); for(const k in tot) tot[k]+=s[k]; }
+  return {n, kcal:n?tot.kcal/n:0, p:n?tot.p/n:0, c:n?tot.c/n:0, f:n?tot.f/n:0};
+}
+const kcalTxt=n=>`${Math.round(n)} kcal`;
+function macroRow(label,v,goal,color){
+  const p=goal>0?Math.min(100,v/goal*100):0;
+  return `<div class="macro"><div class="r"><span>${label}</span><span><b class="num" style="color:${color}">${Math.round(v)}g</b> / ${goal}g</span></div><div class="bar"><i style="width:${p.toFixed(0)}%;background:${color}"></i></div></div>`;
+}
+
+function renderDiet(){
+  $$("#dietSeg button").forEach(b=>b.classList.toggle("on",b.dataset.seg===dietSeg));
+  const g=DB.diet.goal, body=$("#dietBody");
+  if(dietSeg==="today"){
+    const items=dietItems(todayISO()), s=dietSum(items);
+    const rest=g.kcal-s.kcal, pct=g.kcal>0?Math.min(100,s.kcal/g.kcal*100):0;
+    body.innerHTML=`
+      <div class="card" style="margin-top:14px">
+        <div class="row" style="align-items:flex-start">
+          <div class="ring big" style="--p:${pct.toFixed(0)}"><b class="num">${Math.round(s.kcal)}<small>kcal</small></b></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;color:${rest>=0?"var(--accent)":"var(--neg)"}">${rest>=0?`${Math.round(rest)} kcal restantes`:`${Math.round(-rest)} kcal acima da meta`}</div>
+            ${macroRow("Proteína",s.p,g.p,"#5b9cf0")}${macroRow("Carboidratos",s.c,g.c,"#e0a95c")}${macroRow("Gordura",s.f,g.f,"#f472b6")}
+          </div></div>
+        <button class="toggle" id="dietGoalBtn" style="margin-top:14px"><div><div class="tt">Meta: ${g.kcal} kcal</div><div class="ts">P ${g.p}g · C ${g.c}g · G ${g.f}g</div></div><span style="color:var(--accent);font-weight:600;font-size:13.5px">Editar ›</span></button>
+      </div>
+      <div class="inrow">
+        <button id="dietText"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 16 16.5 5.5a2 2 0 0 1 3 3L9 19l-4 1z"/></svg>Buscar alimento</button>
+        <button id="dietVoice" class="${SR?"":"hidden"}"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Por voz</button>
+      </div>
+      ${dietMeals().map(m=>{
+        const its=items.filter(i=>i.mealId===m.id), ms=dietSum(its);
+        return `<div class="meal"><div class="mh"><span>${m.icon} ${esc(m.name)}</span><span class="kc num">${its.length?kcalTxt(ms.kcal):""}</span></div>
+          ${its.map(i=>`<button class="fi" data-fooddel="${i.id}"><b>${esc(i.name)}${i.qty!==1?` × ${i.qty}`:""}</b><span class="num">${Math.round(i.kcal*i.qty)} kcal</span></button>`).join("")}
+          <button class="addf" data-mealadd="${m.id}">+ adicionar</button></div>`;}).join("")}
+      <button class="btn ghost" id="dietAddMeal" style="margin-top:12px">+ Adicionar refeição</button>`;
+    $("#dietGoalBtn").onclick=openDietGoal;
+    $("#dietText").onclick=()=>openFoodSheet(null);
+    if($("#dietVoice")) $("#dietVoice").onclick=()=>openFoodSheet(null,true);
+    $$("[data-mealadd]").forEach(b=>b.onclick=()=>openFoodSheet(b.dataset.mealadd));
+    $$("[data-fooddel]").forEach(b=>b.onclick=()=>{ const it=items.find(x=>x.id===b.dataset.fooddel); if(it&&confirm(`Remover "${it.name}"?`)){ DB.diet.log[todayISO()]=items.filter(x=>x!==it); save(); renderDiet(); } });
+    $("#dietAddMeal").onclick=()=>{ const n=prompt("Nome da refeição:","Ceia"); if(!n) return; DB.diet.meals.push({id:uid(),icon:"🍴",name:n.trim()}); save(); renderDiet(); };
+  }else{
+    const items=dietItems(dietDay), s=dietSum(items), avg=dietAvg(dietStat);
+    body.innerHTML=calHTML(dietCursor, dietDay, iso=>dietItems(iso).length?{dot:true}:null)
+      +`<div class="sec"><span class="t">${fmtDay(dietDay).toLowerCase()}</span></div>
+      <div class="card">${items.length?`<div class="row"><b class="num" style="font-size:20px">${kcalTxt(s.kcal)}</b><span class="muted tiny num">P ${Math.round(s.p)}g · C ${Math.round(s.c)}g · G ${Math.round(s.f)}g</span></div>
+        <div class="bar"><i style="width:${Math.min(100,g.kcal?s.kcal/g.kcal*100:0).toFixed(0)}%"></i></div>
+        <p class="muted tiny" style="margin:8px 0 0">${items.map(i=>esc(i.name)).join(", ")}</p>`:`<div class="empty tiny" style="padding:18px 0">Sem registros</div>`}</div>
+      <div class="sec"><span class="t">estatísticas</span></div>
+      <div class="card">
+        <div class="seg" id="dietStatSeg">${[7,15,30].map(n=>`<button data-n="${n}" class="${n===dietStat?"on":""}">${n} dias</button>`).join("")}</div>
+        <div class="statline" style="margin-top:10px"><span class="muted">⚡ Média calórica</span><b class="num">${Math.round(avg.kcal)} kcal/dia</b></div>
+        <div class="grid2" style="grid-template-columns:1fr 1fr 1fr;margin-top:10px">
+          <div class="card stat" style="padding:12px;text-align:center"><div class="v num" style="color:#5b9cf0;margin:0">${Math.round(avg.p)}g</div><div class="k" style="justify-content:center">Proteína</div></div>
+          <div class="card stat" style="padding:12px;text-align:center"><div class="v num" style="color:#e0a95c;margin:0">${Math.round(avg.c)}g</div><div class="k" style="justify-content:center">Carbos</div></div>
+          <div class="card stat" style="padding:12px;text-align:center"><div class="v num" style="color:#f472b6;margin:0">${Math.round(avg.f)}g</div><div class="k" style="justify-content:center">Gordura</div></div>
+        </div>
+        <p class="muted tiny" style="text-align:center;margin:10px 0 0">${avg.n} ${avg.n===1?"dia registrado":"dias registrados"} nos últimos ${dietStat} dias</p>
+      </div>`;
+    $$("#dietBody [data-cal]").forEach(b=>b.onclick=()=>{ dietCursor.setMonth(dietCursor.getMonth()+ +b.dataset.cal); renderDiet(); });
+    $$("#dietBody [data-day]").forEach(b=>b.onclick=()=>{ dietDay=b.dataset.day; renderDiet(); });
+    $$("#dietStatSeg button").forEach(b=>b.onclick=()=>{ dietStat=+b.dataset.n; renderDiet(); });
+  }
+}
+
+function openDietGoal(){
+  const g=DB.diet.goal;
+  sheet(`<h2>Sua meta diária</h2><p>Calorias e macros que você quer bater por dia.</p>`,`
+    <div class="field" style="margin-top:4px"><label>Calorias (kcal)</label><input id="dg-k" class="input num" inputmode="numeric" value="${g.kcal}"></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr;margin-top:15px">
+      <div class="field" style="margin:0"><label>Proteína g</label><input id="dg-p" class="input num" inputmode="numeric" value="${g.p}"></div>
+      <div class="field" style="margin:0"><label>Carbo g</label><input id="dg-c" class="input num" inputmode="numeric" value="${g.c}"></div>
+      <div class="field" style="margin:0"><label>Gordura g</label><input id="dg-f" class="input num" inputmode="numeric" value="${g.f}"></div></div>
+    <button class="btn" id="dg-save">Salvar meta</button>`);
+  $("#dg-save").onclick=()=>{
+    DB.diet.goal={kcal:Math.max(0,parseInt($("#dg-k").value)||0),p:Math.max(0,parseInt($("#dg-p").value)||0),c:Math.max(0,parseInt($("#dg-c").value)||0),f:Math.max(0,parseInt($("#dg-f").value)||0)};
+    save(); closeSheet(); renderDiet(); toast("Meta salva ✓");
+  };
+}
+
+function openFoodSheet(mealId, voice){
+  const meals=dietMeals();
+  const hora=new Date().getHours();
+  const padrao = mealId || (hora<10?meals[0]:hora<14?meals[1]:hora<18?meals[2]:meals[3]).id;
+  sheet(`<h2>Adicionar alimento</h2><p>Busque na lista ou cadastre o seu.</p>`,`
+    <div class="field" style="margin-top:4px"><label>Refeição</label><select id="fd-meal" class="input">${meals.map(m=>`<option value="${m.id}" ${m.id===padrao?"selected":""}>${m.icon} ${esc(m.name)}</option>`).join("")}</select></div>
+    <div class="search" style="margin-top:14px"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="fd-q" placeholder="ex: arroz, frango, banana" autocomplete="off">
+      <button class="mic" id="fd-mic" aria-label="Ditar" style="background:none;border:none;color:var(--ink-3);width:32px;height:32px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div>
+    <div class="foodres" id="fd-res"></div>
+    <button class="btn ghost" id="fd-custom" style="margin-top:12px">Não achei — cadastrar manualmente</button>`);
+  const q=$("#fd-q"), res=$("#fd-res");
+  const lista=()=>{
+    const t=norm(q.value);
+    const hits=(t?FOODS.filter(f=>norm(f[0]).includes(t)):FOODS.slice(0,12)).slice(0,30);
+    res.innerHTML=hits.map((f,i)=>`<button data-fi="${FOODS.indexOf(f)}"><span>${esc(f[0])}<br><small>${f[5]} · P ${f[2]}g C ${f[3]}g G ${f[4]}g</small></span><small class="num">${f[1]} kcal</small></button>`).join("")
+      || `<div class="empty tiny" style="padding:18px">Nada com esse nome. Cadastre manualmente abaixo.</div>`;
+    $$("#fd-res [data-fi]").forEach(b=>b.onclick=()=>{ const f=FOODS[+b.dataset.fi]; askQty({name:f[0],kcal:f[1],p:f[2],c:f[3],f:f[4],portion:f[5]}); });
+  };
+  q.oninput=lista; lista();
+  wireMic($("#fd-mic"), q);
+  if(voice && SR) setTimeout(()=>$("#fd-mic").click(),300); else setTimeout(()=>q.focus(),250);
+  $("#fd-custom").onclick=()=>{
+    const nome=q.value.trim();
+    sheet(`<h2>Alimento próprio</h2><p>Os valores são por porção — o app guarda para a próxima vez.</p>`,`
+      <div class="field" style="margin-top:4px"><label>Nome</label><input id="fc-n" class="input" value="${esc(nome)}"></div>
+      <div class="field"><label>Refeição</label><select id="fc-meal" class="input">${meals.map(m=>`<option value="${m.id}" ${m.id===padrao?"selected":""}>${m.icon} ${esc(m.name)}</option>`).join("")}</select></div>
+      <div class="grid2" style="margin-top:15px"><div class="field" style="margin:0"><label>Calorias</label><input id="fc-k" class="input num" inputmode="numeric" placeholder="kcal"></div>
+        <div class="field" style="margin:0"><label>Porção</label><input id="fc-por" class="input" placeholder="100 g, 1 unidade"></div></div>
+      <div class="grid2" style="grid-template-columns:1fr 1fr 1fr;margin-top:15px">
+        <div class="field" style="margin:0"><label>Prot. g</label><input id="fc-p" class="input num" inputmode="decimal" placeholder="0"></div>
+        <div class="field" style="margin:0"><label>Carbo g</label><input id="fc-c" class="input num" inputmode="decimal" placeholder="0"></div>
+        <div class="field" style="margin:0"><label>Gord. g</label><input id="fc-f" class="input num" inputmode="decimal" placeholder="0"></div></div>
+      <button class="btn" id="fc-save">Adicionar</button>`);
+    $("#fc-save").onclick=()=>{
+      const name=$("#fc-n").value.trim(), kcal=parseAmount($("#fc-k").value);
+      if(!name||kcal<=0){ toast("Nome e calorias são obrigatórios."); return; }
+      const f=[name,kcal,parseAmount($("#fc-p").value),parseAmount($("#fc-c").value),parseAmount($("#fc-f").value),$("#fc-por").value.trim()||"1 porção"];
+      FOODS.unshift(f); DB.diet.custom=DB.diet.custom||[]; DB.diet.custom.unshift(f);
+      addFood($("#fc-meal").value,{name:f[0],kcal:f[1],p:f[2],c:f[3],f:f[4]},1);
+    };
+    setTimeout(()=>$("#fc-k")?.focus(),250);
+  };
+  function askQty(f){
+    const mealSel=$("#fd-meal").value;
+    sheet(`<h2>${esc(f.name)}</h2><p>${f.kcal} kcal por ${f.portion}.</p>`,`
+      <div class="field" style="margin-top:4px"><label>Quantas porções?</label><input id="fq" class="input num" inputmode="decimal" value="1"></div>
+      <button class="btn" id="fq-ok">Adicionar</button>`);
+    $("#fq-ok").onclick=()=>{ const qty=parseAmount($("#fq").value)||1; addFood(mealSel,f,qty); };
+    setTimeout(()=>{ $("#fq").focus(); $("#fq").select(); },250);
+  }
+}
+function addFood(mealId,f,qty){
+  const iso=todayISO();
+  DB.diet.log[iso]=DB.diet.log[iso]||[];
+  DB.diet.log[iso].push({id:uid(),mealId,name:f.name,kcal:f.kcal,p:f.p,c:f.c,f:f.f,qty});
+  save(); closeSheet(); dietSeg="today"; renderDiet(); toast(`${f.name} adicionado ✓`);
+}
+$$("#dietSeg button").forEach(b=>b.onclick=()=>{ dietSeg=b.dataset.seg; renderDiet(); });
+
+/* ============================================================
+   DIÁRIO
+   ============================================================ */
+const MOODS={1:"😞",2:"😕",3:"😐",4:"🙂",5:"😄"};
+let jourMood=null;
+function tagsOf(text){ return [...new Set((String(text).match(/#[\p{L}\p{N}_]+/gu)||[]).map(t=>t.slice(1).toLowerCase()))]; }
+function fmtStamp(iso){ const d=new Date(iso); return isNaN(d)?"":d.toLocaleDateString("pt-BR",{weekday:"short",day:"numeric",month:"short"}).replace(".","")+" · "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}); }
+function withTags(text){ return esc(text).replace(/#([\p{L}\p{N}_]+)/gu,'<span class="tagc">#$1</span>'); }
+
+function renderJournal(){
+  const q=norm($("#jourSearch").value);
+  const list=[...DB.journal].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).filter(e=>!q||norm(e.text).includes(q));
+  $$("#jourMood button").forEach(b=>b.classList.toggle("on",+b.dataset.m===jourMood));
+  $("#jourList").innerHTML = list.length ? list.map(e=>`<button class="entry" data-jour="${e.id}">
+      <div class="eh"><span>${fmtStamp(e.createdAt)}</span><span>${e.mood?MOODS[e.mood]:""}</span></div>
+      <div class="et">${withTags(e.text)}</div></button>`).join("")
+    : `<div class="empty">${q?"Nada encontrado.":"Nenhum registro ainda.<br><span class='tiny'>Escreva como foi o seu dia — o Conselheiro acompanha seu humor.</span>"}</div>`;
+  $$("[data-jour]").forEach(b=>b.onclick=()=>openEntry("journal", DB.journal.find(x=>x.id===b.dataset.jour)));
+}
+function openEntry(kind, e){
+  const isJ=kind==="journal";
+  sheet(`<h2>${isJ?"Registro":"Ideia"}</h2><p>${fmtStamp(e.createdAt)}</p>`,`
+    <div class="composer" style="margin-top:4px"><textarea id="en-text" style="min-height:120px">${esc(e.text)}</textarea></div>
+    ${isJ?`<div class="moods" id="en-mood" style="margin-top:12px;justify-content:center">${Object.entries(MOODS).map(([k,v])=>`<button data-m="${k}" class="${+k===e.mood?"on":""}">${v}</button>`).join("")}</div>`
+        :`<div class="seg" id="en-st" style="margin-top:12px">${[["new","Nova"],["doing","Em andamento"],["done","Feita"]].map(([k,v])=>`<button data-s="${k}" class="${k===(e.status||"new")?"on":""}">${v}</button>`).join("")}</div>`}
+    <button class="btn" id="en-save">Salvar</button>
+    <button class="btn ghost" id="en-del" style="margin-top:10px;color:var(--neg)">Apagar</button>`);
+  let mood=e.mood||null, st=e.status||"new";
+  $$("#en-mood button").forEach(b=>b.onclick=()=>{ mood=+b.dataset.m===mood?null:+b.dataset.m; $$("#en-mood button").forEach(x=>x.classList.toggle("on",+x.dataset.m===mood)); });
+  $$("#en-st button").forEach(b=>b.onclick=()=>{ st=b.dataset.s; $$("#en-st button").forEach(x=>x.classList.toggle("on",x===b)); });
+  $("#en-save").onclick=()=>{
+    const text=$("#en-text").value.trim(); if(!text){ toast("O texto está vazio."); return; }
+    e.text=text; if(isJ) e.mood=mood; else { e.status=st; e.tags=tagsOf(text); }
+    save(); closeSheet(); isJ?renderJournal():renderIdeas(); toast("Salvo ✓");
+  };
+  $("#en-del").onclick=()=>{ if(!confirm("Apagar?")) return;
+    if(isJ) DB.journal=DB.journal.filter(x=>x.id!==e.id); else DB.ideas=DB.ideas.filter(x=>x.id!==e.id);
+    save(); closeSheet(); isJ?renderJournal():renderIdeas(); toast("Apagado"); };
+}
+$$("#jourMood button").forEach(b=>b.onclick=()=>{ jourMood=+b.dataset.m===jourMood?null:+b.dataset.m; $$("#jourMood button").forEach(x=>x.classList.toggle("on",+x.dataset.m===jourMood)); });
+$("#jourSend").onclick=()=>{
+  const text=$("#jourText").value.trim(); if(!text){ toast("Escreva algo primeiro."); return; }
+  DB.journal.push({id:uid(),text,mood:jourMood,createdAt:new Date().toISOString()});
+  $("#jourText").value=""; jourMood=null; save(); renderJournal(); toast("Registrado ✓");
+};
+$("#jourSearch").oninput=renderJournal;
+wireMic($("#jourMic"), $("#jourText"));
+
+/* ============================================================
+   IDEIAS
+   ============================================================ */
+let ideaTag=null;
+function renderIdeas(){
+  const all=[...DB.ideas].sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  const tags={}; for(const i of all) for(const t of (i.tags||[])) tags[t]=(tags[t]||0)+1;
+  const top=Object.entries(tags).sort((a,b)=>b[1]-a[1]).slice(0,12);
+  $("#ideaTags").innerHTML = top.length ? `<button class="pill ${ideaTag?"":"on"}" data-tag="">todas</button>`+top.map(([t,n])=>`<button class="pill ${ideaTag===t?"on":""}" data-tag="${esc(t)}">#${esc(t)} <span class="muted">${n}</span></button>`).join("") : "";
+  $$("#ideaTags [data-tag]").forEach(b=>b.onclick=()=>{ ideaTag=b.dataset.tag||null; renderIdeas(); });
+  const list=all.filter(i=>!ideaTag||(i.tags||[]).includes(ideaTag));
+  const stLabel={new:"",doing:"em andamento",done:"feita"};
+  $("#ideaList").innerHTML = list.length ? list.map(i=>`<button class="entry" data-idea="${i.id}" style="${i.status==="done"?"opacity:.55":""}">
+      <div class="eh"><span>${fmtStamp(i.createdAt)}</span><span>${stLabel[i.status||"new"]}</span></div>
+      <div class="et">${withTags(i.text)}</div></button>`).join("")
+    : `<div class="empty">Nenhuma ideia registrada.<br><span class="tiny">Escreva com #tags — ex: "app de treino #projeto #app".</span></div>`;
+  $$("[data-idea]").forEach(b=>b.onclick=()=>openEntry("idea", DB.ideas.find(x=>x.id===b.dataset.idea)));
+}
+$("#ideaSend").onclick=()=>{
+  const text=$("#ideaText").value.trim(); if(!text){ toast("Escreva algo primeiro."); return; }
+  DB.ideas.push({id:uid(),text,tags:tagsOf(text),status:"new",createdAt:new Date().toISOString()});
+  $("#ideaText").value=""; save(); renderIdeas(); toast("Ideia guardada ✓");
+};
+wireMic($("#ideaMic"), $("#ideaText"));
+
+/* ============================================================
+   CONSELHEIRO — só regras e contas sobre os seus dados
+   Nada sai do aparelho: não há IA, API nem servidor.
+   ============================================================ */
+function firstName(){ return (DB.profile.name||"").trim().split(/\s+/)[0]||""; }
+function pct(a,b){ return b>0?a/b*100:0; }
+function prevMonth(){ const d=new Date(cursor.getFullYear(),cursor.getMonth()-1,1); return monthData(d.getFullYear(),d.getMonth()); }
+function nowMonth(){ const d=new Date(); return monthData(d.getFullYear(),d.getMonth()); }
+function daysLeftInMonth(){ const d=new Date(); return new Date(d.getFullYear(),d.getMonth()+1,0).getDate()-d.getDate()+1; }
+
+/* cada insight: {mod, kind:'warn'|'good'|'info', h, text, go?:{mod,tab}} */
+function advisorInsights(){
+  const out=[], t=todayISO(), hora=new Date().getHours();
+  const m=nowMonth(), p=prevMonth();
+
+  /* ---- finanças ---- */
+  if(m.income>0){
+    const taxa=pct(m.balance,m.income);
+    if(taxa<0) out.push({mod:"fin",kind:"warn",h:"Mês no vermelho",text:`Você já gastou ${money(-m.balance)} a mais do que entrou este mês. Segure os supérfluos até virar o mês.`,go:{mod:"fin",tab:"resumo"}});
+    else if(taxa<10) out.push({mod:"fin",kind:"warn",h:"Poupança baixa",text:`Sobrou só ${taxa.toFixed(0)}% do que entrou (${money(m.balance)}). Uma meta realista é guardar 20% — seriam ${money(m.income*0.2)}.`});
+    else if(taxa>=20) out.push({mod:"fin",kind:"good",h:"Bom ritmo",text:`Você guardou ${taxa.toFixed(0)}% do que entrou este mês (${money(m.balance)}). Acima da meta de 20%.`});
+  }
+  const kt=m.byKind.essential+m.byKind.superfluous+m.byKind.investment;
+  if(kt>0 && pct(m.byKind.superfluous,kt)>30)
+    out.push({mod:"fin",kind:"warn",h:"Supérfluo pesado",text:`${pct(m.byKind.superfluous,kt).toFixed(0)}% dos gastos do mês foram supérfluos (${money(m.byKind.superfluous)}). Cortar um terço disso liberaria ${money(m.byKind.superfluous/3)}.`,go:{mod:"fin",tab:"resumo"}});
+  if(p.expense>0){
+    let worst=null;
+    for(const [id,v] of Object.entries(m.byCat)){ const antes=p.byCat[id]||0; if(antes>=100 && v>=antes*1.3 && v-antes>=100 && (!worst||v-antes>worst.d)) worst={id,d:v-antes,v,antes}; }
+    if(worst) out.push({mod:"fin",kind:"warn",h:"Categoria disparou",text:`${catById(worst.id)?.name||"Uma categoria"} subiu de ${money(worst.antes)} para ${money(worst.v)} em relação ao mês passado (+${money(worst.d)}).`});
+  }
+  const ta=totalsAccounts();
+  if(m.income>0 && ta.fatura>m.income*0.4)
+    out.push({mod:"fin",kind:"warn",h:"Fatura alta",text:`As faturas em aberto somam ${money(ta.fatura)} — ${pct(ta.fatura,m.income).toFixed(0)}% da sua renda do mês. Evite parcelar mais nada até quitar.`,go:{mod:"fin",tab:"accounts"}});
+  const neg=DB.accounts.filter(a=>a.type!=="credit"&&accBalance(a)<0);
+  if(neg.length) out.push({mod:"fin",kind:"warn",h:"Conta negativa",text:`${neg.map(a=>a.name).join(", ")} ${neg.length>1?"estão":"está"} no negativo. Cheque-especial custa caro: cubra antes de qualquer outra coisa.`,go:{mod:"fin",tab:"accounts"}});
+  const fx=DB.fixed.filter(f=>f.active!==false&&f.type==="expense").reduce((a,f)=>a+f.amount,0);
+  if(m.income>0 && fx>m.income*0.5) out.push({mod:"fin",kind:"warn",h:"Fixos comprometem demais",text:`Seus gastos fixos são ${money(fx)}/mês — ${pct(fx,m.income).toFixed(0)}% da renda. Acima de 50%, qualquer imprevisto vira dívida.`,go:{mod:"fin",tab:"fixed"}});
+  const st=savedTotals(), custo=essentialMonthlyCost();
+  if(custo>0){
+    const base=st.emergency>0?st.emergency:st.amount, meses=base/custo;
+    if(base<=0) out.push({mod:"fin",kind:"warn",h:"Sem reserva",text:`Você ainda não tem reserva de emergência. Um mês de vida essencial custa ${money(custo)}; comece com esse valor.`,go:{mod:"fin",tab:"saved"}});
+    else if(meses<3) out.push({mod:"fin",kind:"warn",h:"Reserva curta",text:`Sua reserva cobre ${num(meses)} ${meses<2?"mês":"meses"} de gastos essenciais. O mínimo confortável é 3 (${money(custo*3)}); faltam ${money(Math.max(0,custo*3-base))}.`,go:{mod:"fin",tab:"saved"}});
+    else if(meses>=6) out.push({mod:"fin",kind:"good",h:"Reserva sólida",text:`Sua reserva cobre ${num(meses,0)} meses de gastos essenciais. Daqui pra frente, o que sobrar pode buscar rendimento maior.`});
+  }
+  const parado=DB.reserves.filter(r=>r.yType==="none"&&r.amount>500).reduce((a,r)=>a+r.amount,0);
+  if(parado>0){ const cdi=DB.settings.cdi||0; out.push({mod:"fin",kind:"info",h:"Dinheiro parado",text:`${money(parado)} está guardado sem render. A 100% do CDI (${num(cdi)}% a.a.) isso daria uns ${money(parado*cdi/100*0.8/12)} por mês, já com IR.`,go:{mod:"fin",tab:"saved"}}); }
+
+  /* ---- lembretes ---- */
+  const rs=remStats();
+  if(rs.late) out.push({mod:"rem",kind:"warn",h:"Lembretes atrasados",text:`${rs.late} ${rs.late===1?"lembrete passou":"lembretes passaram"} da data: ${DB.reminders.filter(remIsLate).slice(0,3).map(r=>r.text).join(", ")}${rs.late>3?"…":""}.`,go:{mod:"rem"}});
+  if(rs.today) out.push({mod:"rem",kind:"info",h:"Para hoje",text:`${rs.today} ${rs.today===1?"lembrete":"lembretes"} para hoje: ${DB.reminders.filter(r=>r.status!=="done"&&r.date===t).slice(0,3).map(r=>r.text+(r.time?" às "+r.time:"")).join(", ")}.`,go:{mod:"rem"}});
+
+  /* ---- hábitos ---- */
+  const hs=activeHabits(t);
+  if(hs.length){
+    const pend=hs.filter(h=>!habDone(h,t));
+    const streak=habStreak();
+    if(pend.length && hora>=18 && streak>0) out.push({mod:"hab",kind:"warn",h:"Sequência em risco",text:`Você está há ${streak} ${streak===1?"dia":"dias"} sem falhar e ainda ${pend.length===1?"falta":"faltam"} ${pend.length} hoje: ${pend.map(h=>h.icon+" "+h.name).join(", ")}.`,go:{mod:"hab"}});
+    else if(pend.length) out.push({mod:"hab",kind:"info",h:"Hábitos de hoje",text:`${pend.length===1?"Falta":"Faltam"} ${pend.length} de ${hs.length}: ${pend.map(h=>h.icon+" "+h.name).join(", ")}.`,go:{mod:"hab"}});
+    else out.push({mod:"hab",kind:"good",h:"Dia completo",text:`Todos os ${hs.length} hábitos feitos hoje. ${streak>1?`São ${streak} dias seguidos.`:"Amanhã tem mais."}`});
+    const wk=habWeekPct();
+    if(wk<0.4 && Object.keys(DB.habitLogs).length>=3) out.push({mod:"hab",kind:"warn",h:"Semana fraca",text:`Consistência de ${Math.round(wk*100)}% nos últimos 7 dias. Melhor manter 2 hábitos todo dia do que 6 pela metade.`,go:{mod:"hab"}});
+  }
+
+  /* ---- dieta ---- */
+  const g=DB.diet.goal, dh=dietSum(dietItems(t));
+  if(dietItems(t).length){
+    if(dh.kcal>g.kcal*1.1) out.push({mod:"diet",kind:"warn",h:"Passou da meta",text:`Hoje já são ${Math.round(dh.kcal)} kcal, ${Math.round(dh.kcal-g.kcal)} acima da meta de ${g.kcal}.`,go:{mod:"diet"}});
+    else if(hora>=18 && dh.p<g.p*0.5) out.push({mod:"diet",kind:"info",h:"Proteína baixa",text:`Só ${Math.round(dh.p)}g de proteína até agora, de uma meta de ${g.p}g. O jantar é a hora de compensar.`,go:{mod:"diet"}});
+  }
+  const avg=dietAvg(7);
+  if(avg.n>=3 && avg.kcal>g.kcal*1.1) out.push({mod:"diet",kind:"warn",h:"Média da semana acima",text:`Média de ${Math.round(avg.kcal)} kcal/dia nos últimos 7 dias, contra uma meta de ${g.kcal}.`,go:{mod:"diet"}});
+
+  /* ---- diário ---- */
+  if(DB.journal.length){
+    const last=[...DB.journal].sort((a,b)=>b.createdAt.localeCompare(a.createdAt))[0];
+    const dias=Math.floor((Date.now()-new Date(last.createdAt))/86400000);
+    if(dias>=3) out.push({mod:"jour",kind:"info",h:"Diário parado",text:`Faz ${dias} dias que você não escreve. Duas linhas já bastam.`,go:{mod:"jour"}});
+    const sem=DB.journal.filter(e=>e.mood && Date.now()-new Date(e.createdAt)<7*86400000);
+    if(sem.length>=3){ const mm=sem.reduce((a,e)=>a+e.mood,0)/sem.length; if(mm<=2.3) out.push({mod:"jour",kind:"warn",h:"Semana pesada",text:`Seu humor médio nos registros da semana ficou em ${MOODS[Math.round(mm)]}. Vale olhar o que se repete nos textos.`,go:{mod:"jour"}}); }
+  }
+  if(!DB.transactions.length && !DB.accounts.length) out.push({mod:"fin",kind:"info",h:"Comece pelas contas",text:"Cadastre seus bancos e lance os gastos da semana. Com uns dias de dados eu consigo dizer onde o dinheiro vai.",go:{mod:"fin",tab:"accounts"}});
+  return out;
+}
+
+/* perguntas rápidas: [texto, fn -> resposta] */
+const ADV_QS=[
+  ["Quanto posso gastar por dia?",()=>{ const m=nowMonth(); const d=daysLeftInMonth(); const sobra=m.balance;
+    return sobra<=0?`Nada, na real: o mês já está ${money(-sobra)} no negativo. Só o essencial até dia 1.`:`Sobraram ${money(sobra)} e faltam ${d} dias: dá ${money(sobra/d)} por dia sem entrar no vermelho. Se quiser guardar 20% da renda, o limite cai para ${money(Math.max(0,sobra-m.income*0.2)/d)}.`; }],
+  ["Onde mais gastei este mês?",()=>{ const m=nowMonth(); const top=Object.entries(m.byCat).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    return top.length?`Top 3 do mês:\n${top.map(([id,v],i)=>`${i+1}. ${catById(id)?.name||"—"} — ${money(v)} (${pct(v,m.expense).toFixed(0)}%)`).join("\n")}`:"Ainda não tem gasto lançado este mês."; }],
+  ["Quanto foi supérfluo?",()=>{ const m=nowMonth(); const kt=m.byKind.essential+m.byKind.superfluous+m.byKind.investment;
+    return kt?`${money(m.byKind.superfluous)} em supérfluo — ${pct(m.byKind.superfluous,kt).toFixed(0)}% do que saiu. Essencial ficou em ${money(m.byKind.essential)} e investimento em ${money(m.byKind.investment)}.`:"Sem gastos este mês ainda."; }],
+  ["Como estou vs. mês passado?",()=>{ const m=nowMonth(), p=prevMonth(); if(!p.expense&&!p.income) return "Não tenho o mês passado para comparar.";
+    const dg=m.expense-p.expense, di=m.income-p.income;
+    return `Gastos: ${money(m.expense)} agora contra ${money(p.expense)} antes (${dg>=0?"+":"−"}${money(Math.abs(dg))}).\nRenda: ${money(m.income)} contra ${money(p.income)} (${di>=0?"+":"−"}${money(Math.abs(di))}).\n${dg>0&&p.expense>0?`Se o mês fechar assim, você gasta ${pct(dg,p.expense).toFixed(0)}% a mais.`:"Por enquanto está gastando menos."}`; }],
+  ["Quanto falta pra reserva?",()=>{ const st=savedTotals(), c=essentialMonthlyCost(); if(!c) return "Lance seus gastos essenciais ou fixos primeiro — preciso saber quanto custa o seu mês.";
+    const base=st.emergency>0?st.emergency:st.amount, alvo=c*(DB.settings.emergencyMonths||6);
+    return base>=alvo?`Reserva completa: ${money(base)} cobre ${num(base/c,0)} meses. Meta era ${money(alvo)}.`:`Faltam ${money(alvo-base)} para ${DB.settings.emergencyMonths||6} meses de segurança (${money(alvo)}). Hoje cobre ${num(base/c)} ${base/c<2?"mês":"meses"}.`; }],
+  ["Quanto meu guardado rende?",()=>{ const st=savedTotals(); if(!st.amount) return "Você ainda não cadastrou nada em Guardado.";
+    return st.perMonth>0?`${money(st.amount)} guardados rendem ~${money(st.perMonth)} por mês líquido (${num(st.effRate)}% a.a., ${num(st.cdiPct,0)}% do CDI). Em 12 meses: ${money(st.perYear)}.`:`${money(st.amount)} guardados, mas nenhuma reserva tem rendimento cadastrado.`; }],
+  ["O que tenho pra hoje?",()=>{ const t=todayISO(); const rs=DB.reminders.filter(r=>r.status!=="done"&&r.date===t); const hs=activeHabits(t).filter(h=>!habDone(h,t));
+    const parts=[]; if(rs.length) parts.push(`Lembretes (${rs.length}): ${rs.map(r=>r.text+(r.time?" às "+r.time:"")).join(", ")}`); if(hs.length) parts.push(`Hábitos pendentes: ${hs.map(h=>h.icon+" "+h.name).join(", ")}`);
+    const late=remStats().late; if(late) parts.push(`E ${late} ${late===1?"lembrete atrasado":"lembretes atrasados"}.`);
+    return parts.length?parts.join("\n"):"Nada pendente pra hoje. Dia livre."; }],
+  ["Como está minha dieta hoje?",()=>{ const g=DB.diet.goal, s=dietSum(dietItems(todayISO())); if(!dietItems(todayISO()).length) return "Nada registrado hoje ainda.";
+    return `${Math.round(s.kcal)} de ${g.kcal} kcal (${g.kcal-s.kcal>=0?`faltam ${Math.round(g.kcal-s.kcal)}`:`${Math.round(s.kcal-g.kcal)} acima`}).\nProteína ${Math.round(s.p)}/${g.p}g · Carbo ${Math.round(s.c)}/${g.c}g · Gordura ${Math.round(s.f)}/${g.f}g.`; }],
+  ["Como foi minha semana?",()=>{ const wk=habWeekPct(); const sem=DB.journal.filter(e=>Date.now()-new Date(e.createdAt)<7*86400000);
+    const mood=sem.filter(e=>e.mood); const mm=mood.length?mood.reduce((a,e)=>a+e.mood,0)/mood.length:null;
+    let gasto=0; for(let i=0;i<7;i++){ const iso=daysAgoISO(i); gasto+=DB.transactions.filter(x=>x.type==="expense"&&x.date===iso).reduce((a,x)=>a+x.amount,0); }
+    const done=DB.reminders.filter(r=>r.doneAt&&r.doneAt>=daysAgoISO(6)).length;
+    return `Últimos 7 dias:\n• Hábitos: ${Math.round(wk*100)}% de consistência\n• Gastos lançados: ${money(gasto)}\n• Lembretes concluídos: ${done}\n• Diário: ${sem.length} ${sem.length===1?"registro":"registros"}${mm?`, humor médio ${MOODS[Math.round(mm)]}`:""}`; }],
+];
+
+let advLog=[];   // conversa desta visita (não persiste)
+function advBubble(kind,h,text,go){
+  return `<div class="bub adv ${kind||""}">${h?`<div class="h">${esc(h)}</div>`:""}${esc(text)}${go?`<br><button class="go" data-advgo="${go.mod}" data-advtab="${go.tab||""}">abrir →</button>`:""}</div>`;
+}
+function renderAdvisor(){
+  const nome=firstName();
+  $("#advHelloK").textContent = nome?`Olá, ${nome}`:"Olá";
+  const ins=advisorInsights();
+  const chat=$("#advChat");
+  chat.innerHTML = advBubble("", "", ins.length?`Olhei seus dados. ${ins.filter(i=>i.kind==="warn").length?`Tenho ${ins.filter(i=>i.kind==="warn").length} ${ins.filter(i=>i.kind==="warn").length===1?"alerta":"alertas"} e `:"Tenho "}${ins.length} ${ins.length===1?"observação":"observações"}:`:"Ainda não tenho dados suficientes para observar. Lance alguns gastos, crie lembretes ou hábitos e volte aqui.")
+    + ins.map(i=>advBubble(i.kind,i.h,i.text,i.go)).join("")
+    + advLog.map(x=>`<div class="bub me">${esc(x.q)}</div>`+advBubble("","",x.a)).join("");
+  $("#advQs").innerHTML=ADV_QS.map((q,i)=>`<button data-q="${i}">${q[0]}</button>`).join("");
+  $$("#advQs [data-q]").forEach(b=>b.onclick=()=>{ const q=ADV_QS[+b.dataset.q]; let a; try{ a=q[1](); }catch(e){ a="Não consegui calcular isso com os dados que tenho."; } advLog.push({q:q[0],a}); renderAdvisor(); window.scrollTo(0,document.body.scrollHeight); });
+  $$("[data-advgo]").forEach(b=>b.onclick=()=>{ openModule(b.dataset.advgo); if(b.dataset.advtab) go(b.dataset.advtab); });
+}
+
+/* ============================================================
+   CASCA: menu lateral, barra superior, módulos, botão +
+   ============================================================ */
+const MODULES={ fin:"Finanças", rem:"Lembretes", hab:"Hábitos", diet:"Dieta", jour:"Diário", ideas:"Ideias", adv:"Conselheiro", acct:"Minha conta" };
+const FAB_ACTIONS={ fin:()=>openTxSheet(), rem:()=>openRemSheet(null, todayISO()), hab:()=>openHabSheet(), diet:()=>openFoodSheet(null) };
+const RENDER={ fin:()=>go(finTab), rem:renderReminders, hab:renderHabits, diet:renderDiet, jour:renderJournal, ideas:renderIdeas, adv:renderAdvisor, acct:renderAccount };
+let curMod="fin", finTab="resumo";
+const EYE_ON='<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>';
+const EYE_OFF='<path d="M3 3l18 18M10.6 10.6A3 3 0 0 0 13.4 13.4M9.9 5.1A10.7 10.7 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A16.9 16.9 0 0 0 2 12s3.5 7 10 7a10.5 10.5 0 0 0 4.4-.9"/>';
+
+function openModule(m, silent){
+  if(!MODULES[m]) m="fin";
+  curMod=m;
+  $$(".mod").forEach(x=>x.classList.toggle("active",x.id==="mod-"+m));
+  $$("#drawer [data-mod]").forEach(b=>b.classList.toggle("on",b.dataset.mod===m));
+  $("#barTitle").textContent=MODULES[m];
+  $("#tabs").classList.toggle("hidden", m!=="fin");
+  $("#app").classList.toggle("notabs", m!=="fin");
+  $("#fab").classList.toggle("hidden", !FAB_ACTIONS[m]);
+  const act=$("#barAction");
+  if(m==="fin"){ act.classList.remove("ghost"); $("#barActionIcon").innerHTML=DB.settings.hide?EYE_OFF:EYE_ON; act.setAttribute("aria-label", DB.settings.hide?"Mostrar valores":"Esconder valores"); }
+  else act.classList.add("ghost");
+  closeDrawer();
+  try{ localStorage.setItem("cfin:mod", m); }catch(e){}
+  if(!silent){ RENDER[m](); window.scrollTo(0,0); }
+}
+function openDrawer(){ $("#drawer").classList.add("show"); $("#dscrim").classList.add("show"); }
+function closeDrawer(){ $("#drawer").classList.remove("show"); $("#dscrim").classList.remove("show"); }
+$("#menuBtn").onclick=openDrawer;
+$("#dscrim").onclick=closeDrawer;
+$$("#drawer [data-mod]").forEach(b=>b.onclick=()=>openModule(b.dataset.mod));
+$("#fab").onclick=()=>{ const f=FAB_ACTIONS[curMod]; if(f) f(); };
+$("#barAction").onclick=()=>{
+  if(curMod!=="fin") return;
+  DB.settings.hide=!DB.settings.hide; save();
+  $("#barActionIcon").innerHTML=DB.settings.hide?EYE_OFF:EYE_ON;
+  renderAll(); toast(DB.settings.hide?"Valores escondidos":"Valores visíveis");
+};
+
+/* ---------- minha conta ---------- */
+function renderProfile(){
+  const n=(DB.profile.name||"").trim();
+  $("#dName").textContent=n||"Seu nome";
+  $("#dAva").textContent=n?n[0].toUpperCase():"?";
+}
+function renderAccount(){
+  $("#acctName").value=DB.profile.name||"";
+  renderThemeSeg();
+}
+$("#acctName").oninput=()=>{ DB.profile.name=$("#acctName").value; save(); renderProfile(); };
+$("#resetAll").onclick=()=>{
+  if(!confirm("Apagar TUDO — finanças, lembretes, hábitos, dieta, diário e ideias — e recomeçar do zero?")) return;
+  if(!confirm("Última chance: você exportou uma cópia? Isso não tem volta.")) return;
+  try{ localStorage.removeItem(KEY); localStorage.removeItem(OLD_KEY); localStorage.removeItem("cfin:mod"); }catch(e){}
+  location.reload();
+};
+
+/* ---------- finanças: abas de baixo e sub-telas ---------- */
+const SUBVIEWS = { cat:"resumo", fixed:"more", ofx:"more", report:"more", set:"more" };
 function go(tab){
   const view=$("#view-"+tab);
   if(!view) return;
-  $$(".view").forEach(v=>v.classList.remove("active"));
+  if(curMod!=="fin") openModule("fin", true);
+  finTab=tab;
+  $$("#mod-fin .view").forEach(v=>v.classList.remove("active"));
   view.classList.add("active");
-  const nav = SUBVIEWS[tab] || tab;
-  $$("#tabs button").forEach(b=>b.classList.toggle("on", b.dataset.tab===nav));
+  const nav=SUBVIEWS[tab]||tab;
+  $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===nav));
   window.scrollTo(0,0);
   if(tab==="resumo")   renderResumo();
   if(tab==="accounts") renderAccounts();
@@ -2342,20 +3474,17 @@ function go(tab){
 $$("#tabs button").forEach(b=>b.onclick=()=>go(b.dataset.tab));
 $$("[data-back]").forEach(b=>b.onclick=()=>go(b.dataset.back));
 $$("[data-goto]").forEach(b=>b.onclick=()=>go(b.dataset.goto));
+$$("[data-openmod]").forEach(b=>b.onclick=()=>openModule(b.dataset.openmod));
 
 function renderMore(){
   const f=DB.fixed.filter(x=>x.active!==false);
   const exp=f.filter(x=>x.type==="expense").reduce((a,x)=>a+x.amount,0);
-  $("#moreFixedSub").textContent = f.length
-    ? `${f.length} ${f.length===1?"item":"itens"} · ${money(exp)}/mês de gastos`
-    : "Nenhum cadastrado ainda";
-  $("#moreOfxSub").textContent = DB.imported.length
-    ? `${DB.imported.length} lançamentos já importados`
-    : "Arquivo OFX, lido no aparelho";
+  $("#moreFixedSub").textContent = f.length ? `${f.length} ${f.length===1?"item":"itens"} · ${money(exp)}/mês de gastos` : "Nenhum cadastrado ainda";
+  $("#moreOfxSub").textContent = DB.imported.length ? `${DB.imported.length} lançamentos já importados` : "Arquivo OFX, lido no aparelho";
   $("#moreSetSub").textContent = `${DB.categories.length} categorias`;
 }
 
-/* sheet — aceita (cabeçalho, corpo) ou só o corpo */
+/* ---------- sheet e toast ---------- */
 function sheet(head, body){
   const dois = body!==undefined;
   $("#sheetBody").innerHTML =
@@ -2369,13 +3498,11 @@ function sheet(head, body){
 }
 function closeSheet(){ $("#scrim").classList.remove("show"); $("#sheet").classList.remove("show"); }
 $("#scrim").onclick=closeSheet;
-document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeSheet(); });
-
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeSheet(); closeDrawer(); } });
 let toastT;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),1700); }
 
-/* ---------- botões ---------- */
-$("#fab").onclick=()=>openTxSheet();
+/* ---------- botões de finanças ---------- */
 $("#prevM").onclick=()=>{ cursor.setMonth(cursor.getMonth()-1); renderResumo(); };
 $("#nextM").onclick=()=>{ cursor.setMonth(cursor.getMonth()+1); renderResumo(); };
 $("#goAccounts").onclick=()=>go("accounts");
@@ -2385,22 +3512,16 @@ $("#addReserve").onclick=()=>openReserveSheet();
 $("#addFixedExp").onclick=()=>openFixedSheet("expense");
 $("#addFixedInc").onclick=()=>openFixedSheet("income");
 $("#addCat").onclick=()=>openCatSheet();
-
 $("#saveIdx").onclick=()=>{
   const cdi=parseRate($("#set-cdi").value), ipca=parseRate($("#set-ipca").value);
   if(cdi<=0){ toast("Informe o CDI."); return; }
-  DB.settings.cdi=cdi; DB.settings.ipca=ipca;
-  save(); renderSaved(); toast("Indexadores salvos ✓");
+  DB.settings.cdi=cdi; DB.settings.ipca=ipca; save(); renderSaved(); toast("Indexadores salvos ✓");
 };
-
 $("#exportBtn").onclick=exportData;
 $("#importBtn").onclick=importData;
 $("#wipeTx").onclick=()=>{
-  if(confirm("Apagar TODAS as transações lançadas? Contas, categorias, fixos e o guardado permanecem.")){
-    DB.transactions=[]; save(); renderAll(); toast("Transações apagadas");
-  }
+  if(confirm("Apagar TODAS as transações lançadas? Contas, categorias, fixos e o guardado permanecem.")){ DB.transactions=[]; save(); renderAll(); toast("Transações apagadas"); }
 };
-
 $("#genRep").onclick=()=>{ $("#repOut").value=buildReport(+$("#repRange").value); toast("Relatório gerado ✓"); };
 $("#copyRep").onclick=async()=>{
   const v=$("#repOut").value; if(!v){ toast("Gere o relatório primeiro."); return; }
@@ -2415,12 +3536,13 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 
 /* ---------- início ---------- */
 function renderAll(){
-  applyTheme(false);
+  applyTheme(false); renderProfile();
   renderResumo(); renderAccounts(); renderSaved(); renderCats(); renderFixed(); renderMore();
+  if(curMod!=="fin" && RENDER[curMod]) RENDER[curMod]();
 }
 save();
 renderAll();
-go("resumo");
+(function(){ let m="fin"; try{ m=localStorage.getItem("cfin:mod")||"fin"; }catch(e){} openModule(MODULES[m]?m:"fin"); })();
 </script>
 </body>
 </html>

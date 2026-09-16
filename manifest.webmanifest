@@ -1,7 +1,7 @@
 {
   "name": "Controle Financeiro",
   "short_name": "Financeiro",
-  "description": "Gestão & Planejamento — controle de gastos, essencial × supérfluo e patrimônio guardado. Funciona offline.",
+  "description": "Gestão & Planejamento — finanças, lembretes, hábitos, dieta, diário e ideias, com um conselheiro que analisa seus dados offline.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
