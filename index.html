@@ -2432,7 +2432,7 @@ function goalRow(g){
     <span style="font-size:22px;flex:none;margin-top:1px">${g.icon}</span>
     <div class="grow"><div class="row"><span class="t1">${esc(g.name)}</span><b class="num" style="font-size:13px;${c.done?"color:var(--pos)":""}">${c.pct.toFixed(0)}%</b></div>
       <div class="bar" style="margin-top:6px"><i style="width:${c.pct.toFixed(0)}%;background:${c.done?"var(--pos)":"var(--accent)"}"></i></div>
-      <div class="t2" style="margin-top:5px">${money(c.cur,true)} de ${money(g.target,true)} · ${sub}</div></div></button>`;
+      <div class="t2" style="margin-top:5px;white-space:normal">${money(c.cur,true)} de ${money(g.target,true)} · ${sub}</div></div></button>`;
 }
 function renderGoals(){
   const gs=[...DB.goals].sort((a,b)=>(goalCalc(a).done?1:0)-(goalCalc(b).done?1:0)||(a.deadline||"9999").localeCompare(b.deadline||"9999"));
