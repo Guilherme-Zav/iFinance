@@ -534,6 +534,9 @@
   <button class="mi" data-mod="jour">
     <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h6v18H6a2 2 0 0 1-2-2z"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></svg>Diário
   </button>
+  <button class="mi" data-mod="crm">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M15 15.5a5 5 0 0 1 6.5 4.5"/></svg>Pessoas
+  </button>
   <button class="mi" data-mod="ideas">
     <svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>Ideias
   </button>
@@ -685,6 +688,10 @@
         <div class="grow"><div class="t1">Guardado</div><div class="t2" id="moreSavedSub">Reservas e quanto rendem</div></div>
         <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
+      <button class="item" data-goto="goals">
+        <div class="grow"><div class="t1">Metas</div><div class="t2" id="moreGoalsSub">Juntar quanto, até quando</div></div>
+        <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
       <button class="item" data-goto="next">
         <div class="grow"><div class="t1">Próximos meses</div><div class="t2">Fixos, parcelas e lançamentos futuros</div></div>
         <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
@@ -752,6 +759,15 @@
     <div class="backbar"><button data-back="more"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Mais</button></div>
     <div class="vhead" style="padding-top:8px"><h1>Próximos meses</h1><p>Contas fixas, parcelas do cartão e o que já está lançado pra frente.</p></div>
     <div id="nextBody"></div>
+  </section>
+
+  <!-- ============ METAS ============ -->
+  <section id="view-goals" class="view">
+    <div class="backbar"><button data-back="more"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Mais</button></div>
+    <div class="vhead" style="padding-top:8px"><h1>Metas</h1><p>Juntar quanto, até quando — e quanto isso custa por mês.</p></div>
+    <div id="goalsTop"></div>
+    <div class="sec"><span class="t">suas metas</span><button id="addGoal">adicionar</button></div>
+    <div id="goalsList"></div>
   </section>
 
   <!-- ============ CATEGORIA (drill-down) ============ -->
@@ -908,6 +924,15 @@
   <div id="ideaList"></div>
 </div>
 
+<!-- ================= PESSOAS (CRM) ================= -->
+<div class="mod" id="mod-crm">
+  <div id="crmTop"></div>
+  <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="crmSearch" placeholder="Buscar pessoa, etiqueta ou nota"></div>
+  <div class="pills" id="crmTags" style="margin-top:12px"></div>
+  <div id="crmList"></div>
+  <p class="muted tiny" style="margin:18px 2px 0">A lista fica ordenada por quem precisa de atenção: contato atrasado, aniversário chegando ou ação pendente.</p>
+</div>
+
 <!-- ================= CONSELHEIRO ================= -->
 <div class="mod" id="mod-adv">
   <div class="hello"><div class="k" id="advHelloK">Olá</div><h2>Como posso te ajudar?</h2></div>
@@ -1057,6 +1082,8 @@ function seed(){
     diet:{ goal:{kcal:2000,p:150,c:200,f:67}, meals:[], log:{}, custom:[] },
     journal:[],        // {id,text,mood,createdAt}
     ideas:[],          // {id,text,tags,status,createdAt}
+    goals:[],          // {id,name,icon,target,deadline,reserveId,saved,createdAt}
+    people:[],         // CRM pessoal: {id,name,tags,phone,birthday:'MM-DD',freq,notes,color,interactions[],next}
   };
 }
 
@@ -1087,6 +1114,8 @@ function normalize(d){
   d.habitLogs    = (d.habitLogs && typeof d.habitLogs==="object") ? d.habitLogs : {};
   d.journal      = Array.isArray(d.journal)   ? d.journal   : [];
   d.ideas        = Array.isArray(d.ideas)     ? d.ideas     : [];
+  d.goals        = Array.isArray(d.goals)     ? d.goals     : [];
+  d.people       = (Array.isArray(d.people)   ? d.people    : []).map(x=>Object.assign({tags:[],interactions:[],next:null,freq:0,color:PALETTE[0]},x));
   const dd = (d.diet && typeof d.diet==="object") ? d.diet : {};
   d.diet = { goal:Object.assign({}, s.diet.goal, dd.goal||{}), meals:Array.isArray(dd.meals)?dd.meals:[],
              log:(dd.log&&typeof dd.log==="object")?dd.log:{}, custom:Array.isArray(dd.custom)?dd.custom:[] };
@@ -1793,6 +1822,8 @@ function renderDash(){
       ${barsHTML(rows,[{v:aportes,color:"var(--accent)"}],dashSel)}
       <p class="muted tiny" style="margin:10px 2px 0">Aportes = gastos na categoria Investimento de cada mês.</p>
     </div>
+    ${DB.goals.length?`<div class="sec"><span class="t">metas</span><button data-goto="goals">ver todas</button></div>
+    <div class="card">${DB.goals.filter(g=>!goalCalc(g).done).slice(0,3).map(g=>{const c=goalCalc(g);return `<div class="catrow"><div class="row"><div class="l">${g.icon} ${esc(g.name)}</div><div class="r num">${c.pct.toFixed(0)}%</div></div><div class="bar"><i style="width:${c.pct.toFixed(0)}%"></i></div><div class="pct num">${money(c.cur,true)} de ${money(g.target,true)}${c.porMes?` · ${money(c.porMes,true)}/mês`:""}</div></div>`;}).join("")||`<p class="muted tiny" style="margin:0">Todas as metas batidas.</p>`}</div>`:""}
     <div class="sec"><span class="t">essencial × supérfluo em ${S.label}</span></div>
     <div class="card">${(()=>{const k=S.d.byKind, tot=k.essential+k.superfluous+k.investment; if(!tot) return `<p class="muted tiny" style="margin:0">Sem gastos.</p>`;
       return `<div class="stack">${[["essential","var(--pos)"],["superfluous","var(--neg)"],["investment","var(--accent)"]].map(([kk,col])=>`<i style="width:${(k[kk]/tot*100).toFixed(1)}%;background:${col}"></i>`).join("")}</div>
@@ -2379,6 +2410,84 @@ function openReserveBalance(r){
   };
   setTimeout(()=>$("#bl-amt")?.focus(),250);
 }
+
+
+/* ============================================================
+   METAS: juntar X até uma data
+   ============================================================ */
+const GOAL_ICONS=["🎯","✈️","🏠","🚗","💻","🎓","💍","🏖️","🛡️","🎁","🏍️","👶"];
+function goalCur(g){ if(g.reserveId){ const r=DB.reserves.find(x=>x.id===g.reserveId); if(r) return r.amount; } return g.saved||0; }
+function monthsUntil(iso){ if(!iso) return null; const a=new Date(), b=new Date(iso+"T00:00:00"); const m=(b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth())+(b.getDate()>=a.getDate()?0:-1)+1; return Math.max(0,m); }
+function goalCalc(g){
+  const cur=goalCur(g), falta=Math.max(0,g.target-cur), pctv=g.target>0?Math.min(100,cur/g.target*100):0;
+  const meses=monthsUntil(g.deadline);
+  const porMes = meses===null?null: meses>0? falta/meses : falta;
+  const idade=Math.max(1,monthsUntil(todayISO())- (monthsUntil(g.createdAt)||0)+1);
+  return {cur,falta,pct:pctv,meses,porMes,done:cur>=g.target};
+}
+function goalRow(g){
+  const c=goalCalc(g);
+  const sub = c.done ? "meta batida ✓" : c.meses===null ? `faltam ${money(c.falta)}` : c.meses===0 ? `prazo hoje · faltam ${money(c.falta)}` : `${money(c.porMes,true)}/mês por ${c.meses} ${c.meses===1?"mês":"meses"} · ${dmy(g.deadline)}/${g.deadline.slice(2,4)}`;
+  return `<button class="item" data-goal="${g.id}" style="align-items:flex-start">
+    <span style="font-size:22px;flex:none;margin-top:1px">${g.icon}</span>
+    <div class="grow"><div class="row"><span class="t1">${esc(g.name)}</span><b class="num" style="font-size:13px;${c.done?"color:var(--pos)":""}">${c.pct.toFixed(0)}%</b></div>
+      <div class="bar" style="margin-top:6px"><i style="width:${c.pct.toFixed(0)}%;background:${c.done?"var(--pos)":"var(--accent)"}"></i></div>
+      <div class="t2" style="margin-top:5px">${money(c.cur,true)} de ${money(g.target,true)} · ${sub}</div></div></button>`;
+}
+function renderGoals(){
+  const gs=[...DB.goals].sort((a,b)=>(goalCalc(a).done?1:0)-(goalCalc(b).done?1:0)||(a.deadline||"9999").localeCompare(b.deadline||"9999"));
+  const need=gs.filter(g=>!goalCalc(g).done&&goalCalc(g).porMes).reduce((a,g)=>a+goalCalc(g).porMes,0);
+  $("#goalsTop").innerHTML = gs.length ? `<div class="total" style="padding-top:4px"><div class="v num">${money(need,true)}</div><div class="k">por mês para bater todas as metas no prazo</div></div>` : "";
+  $("#goalsList").innerHTML = gs.length ? `<div class="list">${gs.map(goalRow).join("")}</div>`
+    : `<div class="empty">Nenhuma meta ainda.<br><span class="tiny">Ex: viagem em julho, entrada do carro, reserva de 6 meses.</span></div>`;
+  $$("#goalsList [data-goal]").forEach(b=>b.onclick=()=>openGoalDetail(DB.goals.find(g=>g.id===b.dataset.goal)));
+}
+function openGoalSheet(existing){
+  const g=existing||{name:"",icon:GOAL_ICONS[DB.goals.length%GOAL_ICONS.length],target:0,deadline:addMonthsISO(todayISO(),6),reserveId:"",saved:0};
+  let icon=g.icon;
+  sheet(`<h2>${existing?"Editar meta":"Nova meta"}</h2><p>Quanto, até quando, e onde o dinheiro fica.</p>`,`
+    <div class="field" style="margin-top:4px"><label>Nome</label><input id="g-name" class="input" placeholder="ex: Viagem pro Chile" value="${esc(g.name)}"></div>
+    <div class="field"><label>Ícone</label><div class="emojis" id="g-ic">${GOAL_ICONS.map(e=>`<button data-e="${e}" class="${e===icon?"on":""}">${e}</button>`).join("")}</div></div>
+    <div class="grid2" style="margin-top:15px">
+      <div class="field" style="margin:0"><label>Valor da meta</label><input id="g-target" class="input num" inputmode="decimal" placeholder="0,00" value="${g.target?String(g.target).replace(".",","):""}"></div>
+      <div class="field" style="margin:0"><label>Até quando</label><input id="g-date" class="input num" type="date" value="${g.deadline||""}"></div></div>
+    <div class="field"><label>Onde o dinheiro fica</label>
+      <select id="g-res" class="input"><option value="">— controlo manualmente —</option>${DB.reserves.map(r=>`<option value="${r.id}" ${r.id===g.reserveId?"selected":""}>${esc(r.name)} · ${money(r.amount,true)}</option>`).join("")}</select>
+      <p class="muted tiny" style="margin:8px 2px 0">Vinculada a uma reserva do Guardado, a meta acompanha o saldo dela sozinha.</p></div>
+    <div class="field" id="g-savedwrap" style="${g.reserveId?"display:none":""}"><label>Já guardado para esta meta</label><input id="g-saved" class="input num" inputmode="decimal" placeholder="0,00" value="${g.saved?String(g.saved).replace(".",","):""}"></div>
+    <button class="btn" id="g-save">${existing?"Salvar":"Criar meta"}</button>
+    ${existing?`<button class="btn ghost" id="g-del" style="margin-top:10px;color:var(--neg)">Apagar meta</button>`:""}`);
+  $$("#g-ic button").forEach(b=>b.onclick=()=>{ icon=b.dataset.e; $$("#g-ic button").forEach(x=>x.classList.toggle("on",x===b)); });
+  $("#g-res").onchange=()=>{ $("#g-savedwrap").style.display=$("#g-res").value?"none":""; };
+  $("#g-save").onclick=()=>{
+    const name=$("#g-name").value.trim(), target=parseAmount($("#g-target").value);
+    if(!name||target<=0){ toast("Nome e valor são obrigatórios."); return; }
+    const data={name,icon,target,deadline:$("#g-date").value||null,reserveId:$("#g-res").value||null,saved:parseAmount($("#g-saved").value)};
+    if(existing) Object.assign(existing,data); else DB.goals.push({id:uid(),createdAt:todayISO(),...data});
+    save(); closeSheet(); renderGoals(); toast(existing?"Salvo ✓":"Meta criada ✓");
+  };
+  if(existing) $("#g-del").onclick=()=>{ if(!confirm("Apagar esta meta?")) return; DB.goals=DB.goals.filter(x=>x.id!==existing.id); save(); closeSheet(); renderGoals(); toast("Apagada"); };
+  setTimeout(()=>$("#g-name")?.focus(),250);
+}
+function openGoalDetail(g){
+  const c=goalCalc(g), r=g.reserveId?DB.reserves.find(x=>x.id===g.reserveId):null;
+  const line=(k,v,col)=>`<div class="statline"><span class="muted">${k}</span><b class="num" ${col?`style="color:${col}"`:""}>${v}</b></div>`;
+  sheet(`<h2>${g.icon} ${esc(g.name)}</h2><p>${c.done?"Meta batida.":g.deadline?`até ${dmy(g.deadline)}/${g.deadline.slice(0,4)}`:"sem prazo"}</p>`,`
+    <div class="bar" style="height:10px;margin-top:6px"><i style="width:${c.pct.toFixed(0)}%;background:${c.done?"var(--pos)":"var(--accent)"}"></i></div>
+    <p class="muted tiny" style="margin:8px 2px 12px">${c.pct.toFixed(0)}% · ${money(c.cur)} de ${money(g.target)}</p>
+    ${line("Falta", money(c.falta), c.falta>0?"":"var(--pos)")}
+    ${c.meses!==null?line("Meses até o prazo", c.meses):""}
+    ${c.porMes!==null&&!c.done?line("Guardar por mês", money(c.porMes), "var(--accent)"):""}
+    ${r?line("Vinculada a", esc(r.name)):line("Controle","manual")}
+    ${!r&&!c.done?`<div class="split" style="margin-top:16px"><button class="btn ghost" style="margin:0" id="gd-in">+ Guardei</button><button class="btn ghost" style="margin:0" id="gd-out">− Retirei</button></div>`:""}
+    <div class="row" style="margin-top:16px"><button class="del" id="gd-del">Apagar</button><button class="btn-sm" id="gd-edit">Editar</button></div>`);
+  $("#gd-edit").onclick=()=>openGoalSheet(g);
+  $("#gd-del").onclick=()=>{ if(!confirm("Apagar esta meta?")) return; DB.goals=DB.goals.filter(x=>x.id!==g.id); save(); closeSheet(); renderGoals(); toast("Apagada"); };
+  const mv=sign=>()=>{ const v=parseAmount(prompt(sign>0?"Quanto você guardou?":"Quanto retirou?","")); if(v>0){ g.saved=Math.max(0,(g.saved||0)+sign*v); save(); closeSheet(); renderGoals(); toast("Atualizado ✓"); } };
+  if($("#gd-in")) $("#gd-in").onclick=mv(1);
+  if($("#gd-out")) $("#gd-out").onclick=mv(-1);
+}
+$("#addGoal").onclick=()=>openGoalSheet();
 
 /* ============================================================
    EXTRATO — importação de arquivo OFX do banco
@@ -3497,6 +3606,119 @@ $("#ideaSend").onclick=()=>{
 };
 wireMic($("#ideaMic"), $("#ideaText"));
 
+
+/* ============================================================
+   PESSOAS — CRM pessoal
+   ============================================================ */
+const CRM_TAGS=["família","amigos","trabalho","clientes","networking","saúde","serviços"];
+const CRM_TYPES={call:"📞 Ligação",msg:"💬 Mensagem",meet:"🤝 Encontro",gift:"🎁 Presente",note:"📝 Nota"};
+let crmQuery="", crmTag=null;
+
+function crmLast(p){ return p.interactions.length ? p.interactions.map(i=>i.date).sort().slice(-1)[0] : null; }
+function crmDaysSince(p){ const l=crmLast(p); return l ? Math.floor((new Date(todayISO()+"T00:00:00")-new Date(l+"T00:00:00"))/86400000) : null; }
+function crmOverdue(p){ const d=crmDaysSince(p); return p.freq>0 && (d===null || d>=p.freq); }
+function crmBirthdayIn(p){
+  if(!p.birthday) return null;
+  const [mm,dd]=p.birthday.split("-").map(Number); const t=new Date(todayISO()+"T00:00:00");
+  let b=new Date(t.getFullYear(),mm-1,dd); if(b<t) b=new Date(t.getFullYear()+1,mm-1,dd);
+  return Math.round((b-t)/86400000);
+}
+function crmScore(p){ // quem precisa de atenção primeiro
+  const bd=crmBirthdayIn(p), d=crmDaysSince(p);
+  let s=0; if(crmOverdue(p)) s+=100+(d===null?50:Math.min(50,d-p.freq)); if(bd!==null&&bd<=7) s+=80-bd; if(p.next?.date&&p.next.date<=todayISO()) s+=90;
+  return s;
+}
+function crmRow(p){
+  const d=crmDaysSince(p), bd=crmBirthdayIn(p), late=crmOverdue(p);
+  const bits=[]; if(bd!==null&&bd<=30) bits.push(bd===0?"🎂 hoje!":`🎂 em ${bd} d`);
+  if(p.next?.text) bits.push(`→ ${p.next.text}${p.next.date?" · "+dmy(p.next.date):""}`);
+  const ult = d===null?"nunca falaram":d===0?"hoje":`há ${d} d`;
+  return `<button class="item" data-person="${p.id}">
+    <span class="ava" style="width:40px;height:40px;border-radius:50%;background:${p.color}33;color:${p.color};display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">${esc((p.name||"?")[0].toUpperCase())}</span>
+    <div class="grow"><div class="t1">${esc(p.name)}${late?` <span class="tag" style="background:#2b1815;color:var(--neg)">atenção</span>`:""}</div>
+      <div class="t2">${[p.tags.join(", "), ult, ...bits].filter(Boolean).join(" · ")}</div></div>
+    <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>`;
+}
+function renderCrm(){
+  const q=norm(crmQuery);
+  const all=DB.people.filter(p=>(!crmTag||p.tags.includes(crmTag))&&(!q||norm(p.name+" "+p.tags.join(" ")+" "+(p.notes||"")).includes(q)));
+  const tags={}; for(const p of DB.people) for(const t of p.tags) tags[t]=(tags[t]||0)+1;
+  $("#crmTags").innerHTML=`<button class="pill ${crmTag?"":"on"}" data-ctag="">todos ${DB.people.length}</button>`+Object.entries(tags).sort((a,b)=>b[1]-a[1]).map(([t,n])=>`<button class="pill ${crmTag===t?"on":""}" data-ctag="${esc(t)}">${esc(t)} ${n}</button>`).join("");
+  $$("#crmTags [data-ctag]").forEach(b=>b.onclick=()=>{ crmTag=b.dataset.ctag||null; renderCrm(); });
+  const att=DB.people.filter(p=>crmScore(p)>0).sort((a,b)=>crmScore(b)-crmScore(a));
+  const bds=DB.people.filter(p=>{const b=crmBirthdayIn(p);return b!==null&&b<=30;}).sort((a,b)=>crmBirthdayIn(a)-crmBirthdayIn(b));
+  $("#crmTop").innerHTML=`<div class="tiles" style="margin-top:14px">
+    <button class="tile red" data-cfocus="att"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg></div><span class="n">${att.length}</span><div class="l">Precisam de atenção</div></button>
+    <button class="tile blue" data-cfocus="bd"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 21h16M5 21V11h14v10M12 11V7M9 7h6"/></svg></div><span class="n">${bds.length}</span><div class="l">Aniversários em 30 d</div></button></div>`;
+  $$("[data-cfocus]").forEach(b=>b.onclick=()=>{ crmFocus=crmFocus===b.dataset.cfocus?null:b.dataset.cfocus; renderCrm(); });
+  let list=all;
+  if(crmFocus==="att") list=att.filter(p=>all.includes(p)); if(crmFocus==="bd") list=bds.filter(p=>all.includes(p));
+  else if(!crmFocus) list=[...all].sort((a,b)=>crmScore(b)-crmScore(a)||a.name.localeCompare(b.name));
+  $("#crmList").innerHTML = list.length ? `<div class="list" style="margin-top:12px">${list.map(crmRow).join("")}</div>`
+    : `<div class="empty">${DB.people.length?"Ninguém com esse filtro.":"Ninguém cadastrado ainda.<br><span class='tiny'>Toque no <b>+</b>: pessoas com quem você quer manter contato de verdade.</span>"}</div>`;
+  $$("#crmList [data-person]").forEach(b=>b.onclick=()=>openPersonDetail(DB.people.find(p=>p.id===b.dataset.person)));
+}
+let crmFocus=null;
+function openPersonSheet(existing){
+  const p=existing||{name:"",tags:[],phone:"",birthday:"",freq:30,notes:"",color:PALETTE[DB.people.length%PALETTE.length]};
+  let tags=new Set(p.tags);
+  sheet(`<h2>${existing?"Editar pessoa":"Nova pessoa"}</h2><p>Quem é, e de quanto em quanto tempo você quer dar notícias.</p>`,`
+    <div class="field" style="margin-top:4px"><label>Nome</label><input id="ps-name" class="input" placeholder="ex: Ana Souza" value="${esc(p.name)}"></div>
+    <div class="field"><label>Etiquetas</label><div class="picks" id="ps-tags">${CRM_TAGS.map(t=>`<button class="pick ${tags.has(t)?"on":""}" data-t="${t}">${t}</button>`).join("")}</div>
+      <input id="ps-tagx" class="input" placeholder="outra etiqueta (opcional)" style="margin-top:8px" value="${esc(p.tags.filter(t=>!CRM_TAGS.includes(t)).join(", "))}"></div>
+    <div class="grid2" style="margin-top:15px">
+      <div class="field" style="margin:0"><label>Falar a cada</label><div class="suffix"><input id="ps-freq" class="input num" inputmode="numeric" value="${p.freq||""}" placeholder="30"><span>dias</span></div></div>
+      <div class="field" style="margin:0"><label>Aniversário</label><input id="ps-bd" class="input num" placeholder="DD/MM" inputmode="numeric" value="${p.birthday?p.birthday.slice(3,5)+"/"+p.birthday.slice(0,2):""}"></div></div>
+    <div class="field"><label>Telefone / contato (opcional)</label><input id="ps-phone" class="input" placeholder="WhatsApp, e-mail…" value="${esc(p.phone||"")}"></div>
+    <div class="field"><label>Notas</label><div class="composer"><textarea id="ps-notes" placeholder="Como conheceu, o que gosta, filhos, assuntos pra puxar…">${esc(p.notes||"")}</textarea></div></div>
+    <button class="btn" id="ps-save">${existing?"Salvar":"Adicionar"}</button>`);
+  $$("#ps-tags [data-t]").forEach(b=>b.onclick=()=>{ const t=b.dataset.t; tags.has(t)?tags.delete(t):tags.add(t); b.classList.toggle("on",tags.has(t)); });
+  $("#ps-save").onclick=()=>{
+    const name=$("#ps-name").value.trim(); if(!name){ toast("Dê um nome."); return; }
+    const extra=$("#ps-tagx").value.split(",").map(s=>s.trim().toLowerCase().replace(/\s+/g,"-")).filter(Boolean);
+    const bdRaw=$("#ps-bd").value.trim(); let birthday="";
+    const m=bdRaw.match(/^(\d{1,2})\/(\d{1,2})$/); if(m) birthday=`${pad(+m[2])}-${pad(+m[1])}`; else if(bdRaw){ toast("Aniversário no formato DD/MM."); return; }
+    const data={name,tags:[...tags,...extra],phone:$("#ps-phone").value.trim(),birthday,freq:Math.max(0,parseInt($("#ps-freq").value)||0),notes:$("#ps-notes").value.trim(),color:p.color};
+    if(existing) Object.assign(existing,data); else DB.people.push({id:uid(),createdAt:todayISO(),interactions:[],next:null,...data});
+    save(); closeSheet(); renderCrm(); toast(existing?"Salvo ✓":"Pessoa adicionada ✓");
+  };
+  setTimeout(()=>$("#ps-name")?.focus(),250);
+}
+function openPersonDetail(p){
+  const d=crmDaysSince(p), bd=crmBirthdayIn(p);
+  const hist=[...p.interactions].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
+  sheet(`<h2>${esc(p.name)}</h2><p>${[p.tags.join(", "), p.phone].filter(Boolean).map(esc).join(" · ")||"sem etiquetas"}</p>`,`
+    <div class="statline"><span class="muted">Último contato</span><b>${d===null?"nunca":d===0?"hoje":`há ${d} ${d===1?"dia":"dias"}`}${p.freq?` <span class="muted tiny">(meta: a cada ${p.freq})</span>`:""}</b></div>
+    ${bd!==null?`<div class="statline"><span class="muted">Aniversário</span><b>${p.birthday.slice(3,5)}/${p.birthday.slice(0,2)}${bd<=30?` · ${bd===0?"é hoje 🎂":`em ${bd} dias`}`:""}</b></div>`:""}
+    ${p.next?.text?`<div class="statline"><span class="muted">Próxima ação</span><b>${esc(p.next.text)}${p.next.date?` · ${dmy(p.next.date)}`:""}</b></div>`:""}
+    ${p.notes?`<p class="tiny" style="margin:12px 2px 0;white-space:pre-wrap;color:var(--ink-2)">${esc(p.notes)}</p>`:""}
+    <div class="sec" style="margin:16px 2px 8px"><span class="t">registrar contato</span></div>
+    <div class="picks">${Object.entries(CRM_TYPES).map(([k,v])=>`<button class="pick" data-int="${k}">${v}</button>`).join("")}</div>
+    <div class="field"><label>Próxima ação (vira um lembrete)</label>
+      <div class="grid2"><input id="pd-next" class="input" placeholder="ex: mandar parabéns" value="${esc(p.next?.text||"")}"><input id="pd-nextd" class="input num" type="date" value="${p.next?.date||""}"></div>
+      <button class="btn-sm" id="pd-nextsave" style="margin-top:10px">Salvar próxima ação</button></div>
+    ${hist.length?`<div class="sec" style="margin:16px 2px 8px"><span class="t">histórico</span></div><div class="list">${hist.map(i=>`<div class="item" style="padding:10px 14px"><div class="grow"><div class="t1">${CRM_TYPES[i.type]||i.type}${i.note?` — ${esc(i.note)}`:""}</div><div class="t2">${fmtDay(i.date)}</div></div></div>`).join("")}</div>`:""}
+    <div class="row" style="margin-top:16px"><button class="del" id="pd-del">Apagar</button><button class="btn-sm" id="pd-edit">Editar</button></div>`);
+  $$("[data-int]").forEach(b=>b.onclick=()=>{
+    const note=prompt(`${CRM_TYPES[b.dataset.int]} com ${p.name} — sobre o quê? (opcional)`,"");
+    if(note===null) return;
+    p.interactions.push({id:uid(),type:b.dataset.int,date:todayISO(),note:note.trim()});
+    if(p.next?.date && p.next.date<=todayISO()) p.next=null;
+    save(); closeSheet(); renderCrm(); toast("Contato registrado ✓");
+  });
+  $("#pd-nextsave").onclick=()=>{
+    const text=$("#pd-next").value.trim(), date=$("#pd-nextd").value||null;
+    p.next=text?{text,date}:null;
+    if(text&&date&&!DB.reminders.some(r=>r.text===`${text} (${p.name})`&&r.status!=="done")){
+      DB.reminders.push({id:uid(),text:`${text} (${p.name})`,priority:"med",date,time:null,repeat:null,status:"todo",doneAt:null,createdAt:todayISO()});
+    }
+    save(); closeSheet(); renderCrm(); toast(text?"Próxima ação salva ✓":"Próxima ação removida");
+  };
+  $("#pd-edit").onclick=()=>openPersonSheet(p);
+  $("#pd-del").onclick=()=>{ if(!confirm(`Apagar ${p.name}?`)) return; DB.people=DB.people.filter(x=>x.id!==p.id); save(); closeSheet(); renderCrm(); toast("Apagado"); };
+}
+$("#crmSearch").oninput=()=>{ crmQuery=$("#crmSearch").value; renderCrm(); };
+
 /* ============================================================
    CONSELHEIRO — só regras e contas sobre os seus dados
    Nada sai do aparelho: não há IA, API nem servidor.
@@ -3554,6 +3776,22 @@ function advisorInsights(){
   }
   const parado=DB.reserves.filter(r=>r.yType==="none"&&r.amount>500).reduce((a,r)=>a+r.amount,0);
   if(parado>0){ const cdi=DB.settings.cdi||0; out.push({mod:"fin",kind:"info",h:"Dinheiro parado",text:`${money(parado)} está guardado sem render. A 100% do CDI (${num(cdi)}% a.a.) isso daria uns ${money(parado*cdi/100*0.8/12)} por mês, já com IR.`,go:{mod:"fin",tab:"saved"}}); }
+
+  /* ---- metas ---- */
+  for(const g of DB.goals){
+    const c=goalCalc(g); if(c.done||c.meses===null) continue;
+    if(c.meses===0 && c.falta>0) out.push({mod:"fin",kind:"warn",h:"Meta no prazo",text:`${g.icon} ${g.name} vence agora e ainda faltam ${money(c.falta)}. Ou reforça este mês, ou empurra a data.`,go:{mod:"fin",tab:"goals"}});
+    else if(m.income>0 && c.porMes>m.income*0.3) out.push({mod:"fin",kind:"warn",h:"Meta apertada",text:`Para bater ${g.name} até ${dmy(g.deadline)} precisa guardar ${money(c.porMes,true)}/mês — ${pct(c.porMes,m.income).toFixed(0)}% da renda. Pense em esticar o prazo.`,go:{mod:"fin",tab:"goals"}});
+  }
+  /* ---- pessoas ---- */
+  if(DB.people.length){
+    const bds=DB.people.filter(p=>{const b=crmBirthdayIn(p);return b!==null&&b<=7;}).sort((a,b)=>crmBirthdayIn(a)-crmBirthdayIn(b));
+    if(bds.length) out.push({mod:"crm",kind:"info",h:"Aniversário chegando",text:bds.map(p=>`${p.name} ${crmBirthdayIn(p)===0?"faz aniversário hoje 🎂":`em ${crmBirthdayIn(p)} ${crmBirthdayIn(p)===1?"dia":"dias"}`}`).join("; ")+".",go:{mod:"crm"}});
+    const late=DB.people.filter(crmOverdue).sort((a,b)=>crmScore(b)-crmScore(a));
+    if(late.length) out.push({mod:"crm",kind:"warn",h:"Gente esperando notícia",text:`${late.length} ${late.length===1?"pessoa passou":"pessoas passaram"} do tempo combinado sem contato: ${late.slice(0,3).map(p=>p.name).join(", ")}${late.length>3?"…":""}. Uma mensagem já resolve.`,go:{mod:"crm"}});
+    const acts=DB.people.filter(p=>p.next?.date&&p.next.date<=t);
+    if(acts.length) out.push({mod:"crm",kind:"info",h:"Ações combinadas",text:acts.map(p=>`${p.next.text} (${p.name})`).join("; ")+".",go:{mod:"crm"}});
+  }
 
   /* ---- lembretes ---- */
   const rs=remStats();
@@ -3615,6 +3853,11 @@ const ADV_QS=[
     return parts.length?parts.join("\n"):"Nada pendente pra hoje. Dia livre."; }],
   ["Como está minha dieta hoje?",()=>{ const g=DB.diet.goal, s=dietSum(dietItems(todayISO())); if(!dietItems(todayISO()).length) return "Nada registrado hoje ainda.";
     return `${Math.round(s.kcal)} de ${g.kcal} kcal (${g.kcal-s.kcal>=0?`faltam ${Math.round(g.kcal-s.kcal)}`:`${Math.round(s.kcal-g.kcal)} acima`}).\nProteína ${Math.round(s.p)}/${g.p}g · Carbo ${Math.round(s.c)}/${g.c}g · Gordura ${Math.round(s.f)}/${g.f}g.`; }],
+  ["Como estão minhas metas?",()=>{ if(!DB.goals.length) return "Você ainda não criou metas. Em Finanças → Mais → Metas.";
+    return DB.goals.map(g=>{const c=goalCalc(g); return `${g.icon} ${g.name}: ${c.pct.toFixed(0)}%${c.done?" — batida ✓":c.porMes!==null?` — ${money(c.porMes,true)}/mês até ${dmy(g.deadline)}`:` — faltam ${money(c.falta)}`}`;}).join("\n"); }],
+  ["Com quem devo falar?",()=>{ if(!DB.people.length) return "Cadastre pessoas em Pessoas, com a frequência de contato que você quer manter.";
+    const l=DB.people.filter(p=>crmScore(p)>0).sort((a,b)=>crmScore(b)-crmScore(a)).slice(0,5);
+    return l.length?l.map(p=>{const d=crmDaysSince(p),b=crmBirthdayIn(p);return `• ${p.name} — ${b!==null&&b<=7?(b===0?"aniversário hoje":`aniversário em ${b} d`):d===null?"nunca registrou contato":`há ${d} dias sem contato (meta ${p.freq})`}`;}).join("\n"):"Todo mundo em dia. Ninguém esperando notícia.";}],
   ["Como foi minha semana?",()=>{ const wk=habWeekPct(); const sem=DB.journal.filter(e=>Date.now()-new Date(e.createdAt)<7*86400000);
     const mood=sem.filter(e=>e.mood); const mm=mood.length?mood.reduce((a,e)=>a+e.mood,0)/mood.length:null;
     let gasto=0; for(let i=0;i<7;i++){ const iso=daysAgoISO(i); gasto+=DB.transactions.filter(x=>x.type==="expense"&&x.date===iso).reduce((a,x)=>a+x.amount,0); }
@@ -3642,9 +3885,9 @@ function renderAdvisor(){
 /* ============================================================
    CASCA: menu lateral, barra superior, módulos, botão +
    ============================================================ */
-const MODULES={ fin:"Finanças", rem:"Lembretes", hab:"Hábitos", diet:"Dieta", jour:"Diário", ideas:"Ideias", adv:"Conselheiro", acct:"Minha conta" };
-const FAB_ACTIONS={ fin:()=>openTxSheet(), rem:()=>openRemSheet(null, todayISO()), hab:()=>openHabSheet(), diet:()=>openFoodSheet(null) };
-const RENDER={ fin:()=>go(finTab), rem:renderReminders, hab:renderHabits, diet:renderDiet, jour:renderJournal, ideas:renderIdeas, adv:renderAdvisor, acct:renderAccount };
+const MODULES={ fin:"Finanças", rem:"Lembretes", hab:"Hábitos", diet:"Dieta", jour:"Diário", ideas:"Ideias", crm:"Pessoas", adv:"Conselheiro", acct:"Minha conta" };
+const FAB_ACTIONS={ fin:()=>openTxSheet(), rem:()=>openRemSheet(null, todayISO()), hab:()=>openHabSheet(), diet:()=>openFoodSheet(null), crm:()=>openPersonSheet() };
+const RENDER={ fin:()=>go(finTab), rem:renderReminders, hab:renderHabits, diet:renderDiet, jour:renderJournal, ideas:renderIdeas, crm:renderCrm, adv:renderAdvisor, acct:renderAccount };
 let curMod="fin", finTab="resumo";
 const EYE_ON='<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>';
 const EYE_OFF='<path d="M3 3l18 18M10.6 10.6A3 3 0 0 0 13.4 13.4M9.9 5.1A10.7 10.7 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A16.9 16.9 0 0 0 2 12s3.5 7 10 7a10.5 10.5 0 0 0 4.4-.9"/>';
@@ -3697,7 +3940,7 @@ $("#resetAll").onclick=()=>{
 };
 
 /* ---------- finanças: abas de baixo e sub-telas ---------- */
-const SUBVIEWS = { cat:"resumo", fixed:"more", ofx:"more", report:"more", set:"more", saved:"more", next:"more" };
+const SUBVIEWS = { cat:"resumo", fixed:"more", ofx:"more", report:"more", set:"more", saved:"more", next:"more", goals:"more" };
 function go(tab){
   const view=$("#view-"+tab);
   if(!view) return;
@@ -3714,6 +3957,7 @@ function go(tab){
   if(tab==="txs")      renderTxs();
   if(tab==="dash")     renderDash();
   if(tab==="next")     renderNext();
+  if(tab==="goals")    renderGoals();
   if(tab==="more")     renderMore();
   if(tab==="cat")      renderCat();
   if(tab==="fixed")    renderFixed();
@@ -3731,6 +3975,7 @@ function renderMore(){
   $("#moreFixedSub").textContent = f.length ? `${f.length} ${f.length===1?"item":"itens"} · ${money(exp)}/mês de gastos` : "Nenhum cadastrado ainda";
   $("#moreOfxSub").textContent = DB.imported.length ? `${DB.imported.length} lançamentos já importados` : "Arquivo OFX, lido no aparelho";
   $("#moreSetSub").textContent = `${DB.categories.length} categorias`;
+  $("#moreGoalsSub").textContent = DB.goals.length ? `${DB.goals.filter(g=>!goalCalc(g).done).length} em andamento · ${DB.goals.filter(g=>goalCalc(g).done).length} batidas` : "Juntar quanto, até quando";
   const st=savedTotals();
   $("#moreSavedSub").textContent = DB.reserves.length ? `${money(st.amount,true)} guardados${st.perMonth>0?` · rende ${money(st.perMonth,true)}/mês`:""}` : "Reservas e quanto rendem";
 }
