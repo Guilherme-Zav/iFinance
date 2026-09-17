@@ -494,6 +494,19 @@
   .legend i{width:9px;height:9px;border-radius:50%}
   .stack{display:flex;height:10px;border-radius:6px;overflow:hidden;gap:2px;background:var(--line)}
   .stack i{display:block;height:100%}
+
+  /* ---------- capitalização: primeira letra maiúscula nos rótulos ---------- */
+  .sec .t,.sec button,.acc .f,.legend span,.cal .hd b{display:inline-block}
+  .sec .t::first-letter,.sec button::first-letter,.total .k::first-letter,.acc .f::first-letter,.t2::first-letter,.pct::first-letter,
+  .legend span::first-letter,.hab .s::first-letter,.rem .m .when::first-letter,.meal .mh .kc::first-letter,.item .t2::first-letter{text-transform:uppercase}
+  .rem .m .when{display:inline-block}
+
+  /* ---------- fotos ---------- */
+  .thumb{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none;background:var(--field);border:none;padding:0}
+  .photofull{width:100%;border-radius:14px;margin-top:6px}
+  .photopick{display:flex;align-items:center;gap:12px;margin-top:8px}
+  .photopick img{width:72px;height:72px;border-radius:12px;object-fit:cover;background:var(--field)}
+  .filebtn.small{margin:0;padding:11px 14px;font-size:14px;flex:1}
 </style>
 </head>
 <body>
@@ -519,6 +532,9 @@
   <div class="grp">Produtividade</div>
   <button class="mi" data-mod="rem">
     <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>Lembretes
+  </button>
+  <button class="mi" data-mod="week">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 15h3M13 15h3"/></svg>Semana
   </button>
   <button class="mi" data-mod="hab">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/></svg>Hábitos
@@ -558,23 +574,23 @@
 
     <div class="total">
       <div class="v num" id="netTotal">R$ 0,00</div>
-      <div class="k">saldo em todas as contas</div>
+      <div class="k">Saldo em todas as contas</div>
     </div>
 
     <div class="grid2" style="margin-top:14px">
       <div class="card stat in">
-        <div class="k"><svg viewBox="0 0 24 24"><polyline points="4 17 10 11 14 15 20 8"/><polyline points="20 13 20 8 15 8"/></svg>entradas</div>
+        <div class="k"><svg viewBox="0 0 24 24"><polyline points="4 17 10 11 14 15 20 8"/><polyline points="20 13 20 8 15 8"/></svg>Entradas</div>
         <div class="v num" id="income">R$ 0,00</div>
       </div>
       <div class="card stat out">
-        <div class="k"><svg viewBox="0 0 24 24"><polyline points="4 8 10 14 14 10 20 16"/><polyline points="20 11 20 16 15 16"/></svg>saídas</div>
+        <div class="k"><svg viewBox="0 0 24 24"><polyline points="4 8 10 14 14 10 20 16"/><polyline points="20 11 20 16 15 16"/></svg>Saídas</div>
         <div class="v num" id="expense">R$ 0,00</div>
       </div>
     </div>
 
     <div class="card" id="leftCard" style="margin-top:11px">
       <div class="row">
-        <span class="muted" style="font-size:13.5px">sobrou no mês</span>
+        <span class="muted" style="font-size:13.5px">Sobrou no mês</span>
         <b class="num" id="balance" style="font-size:18px">R$ 0,00</b>
       </div>
       <div class="bar"><i id="saveBar" style="width:0%"></i></div>
@@ -585,7 +601,7 @@
     <div class="accs" id="accStrip"></div>
 
     <div class="card row gold" id="savedLine" style="margin-top:14px;display:none;cursor:pointer">
-      <span class="muted" style="font-size:13.5px">guardado</span>
+      <span class="muted" style="font-size:13.5px">Guardado</span>
       <span style="text-align:right">
         <b class="num" id="savedVal">R$ 0</b>
         <span class="tiny num" id="savedYield" style="margin-left:6px;color:var(--pos)"></span>
@@ -611,7 +627,7 @@
 
     <div class="total" style="padding-top:4px">
       <div class="v num" id="acc-total">R$ 0,00</div>
-      <div class="k">saldo somando as contas</div>
+      <div class="k">Saldo somando as contas</div>
     </div>
 
     <div class="sec"><span class="t">contas e carteiras</span><button id="addAccount">adicionar</button></div>
@@ -641,11 +657,11 @@
 
     <div class="grid2" style="margin-top:14px">
       <div class="card stat">
-        <div class="k">rende por mês</div>
+        <div class="k">Rende por mês</div>
         <div class="v num" id="sv-month" style="color:var(--pos)">R$ 0</div>
       </div>
       <div class="card stat">
-        <div class="k">em 12 meses</div>
+        <div class="k">Em 12 meses</div>
         <div class="v num" id="sv-year" style="color:var(--pos)">R$ 0</div>
       </div>
     </div>
@@ -692,6 +708,10 @@
         <div class="grow"><div class="t1">Metas</div><div class="t2" id="moreGoalsSub">Juntar quanto, até quando</div></div>
         <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
+      <button class="item" data-goto="debts">
+        <div class="grow"><div class="t1">Cobranças</div><div class="t2" id="moreDebtsSub">Quem te deve e a quem você deve</div></div>
+        <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
       <button class="item" data-goto="next">
         <div class="grow"><div class="t1">Próximos meses</div><div class="t2">Fixos, parcelas e lançamentos futuros</div></div>
         <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
@@ -706,6 +726,10 @@
       </button>
       <button class="item" data-goto="ofx">
         <div class="grow"><div class="t1">Importar extrato do banco</div><div class="t2" id="moreOfxSub">Arquivo OFX, lido no aparelho</div></div>
+        <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="item" id="moreCsv">
+        <div class="grow"><div class="t1">Exportar CSV</div><div class="t2">Transações por período, para planilha</div></div>
         <svg class="chev" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
       <button class="item" data-goto="report">
@@ -768,6 +792,14 @@
     <div id="goalsTop"></div>
     <div class="sec"><span class="t">suas metas</span><button id="addGoal">adicionar</button></div>
     <div id="goalsList"></div>
+  </section>
+
+  <!-- ============ COBRANÇAS ============ -->
+  <section id="view-debts" class="view">
+    <div class="backbar"><button data-back="more"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Mais</button></div>
+    <div class="vhead" style="padding-top:8px"><h1>Cobranças</h1><p>Quem te deve e a quem você deve. Ao quitar, pode virar lançamento.</p></div>
+    <div class="row" style="margin:0 0 6px"><span></span><button class="btn-sm" id="addDebt">+ Nova cobrança</button></div>
+    <div id="debtsBody"></div>
   </section>
 
   <!-- ============ CATEGORIA (drill-down) ============ -->
@@ -933,6 +965,11 @@
   <p class="muted tiny" style="margin:18px 2px 0">A lista fica ordenada por quem precisa de atenção: contato atrasado, aniversário chegando ou ação pendente.</p>
 </div>
 
+<!-- ================= SEMANA ================= -->
+<div class="mod" id="mod-week">
+  <div id="weekBody"></div>
+</div>
+
 <!-- ================= CONSELHEIRO ================= -->
 <div class="mod" id="mod-adv">
   <div class="hello"><div class="k" id="advHelloK">Olá</div><h2>Como posso te ajudar?</h2></div>
@@ -1083,6 +1120,8 @@ function seed(){
     journal:[],        // {id,text,mood,createdAt}
     ideas:[],          // {id,text,tags,status,createdAt}
     goals:[],          // {id,name,icon,target,deadline,reserveId,saved,createdAt}
+    debts:[],          // cobranças: {id,dir:'owed'|'owe',personId,who,amount,note,date,due,paid,paidAt}
+    weekly:{},         // revisão semanal por segunda-feira: {good,improve}
     people:[],         // CRM pessoal: {id,name,tags,phone,birthday:'MM-DD',freq,notes,color,interactions[],next}
   };
 }
@@ -1115,6 +1154,8 @@ function normalize(d){
   d.journal      = Array.isArray(d.journal)   ? d.journal   : [];
   d.ideas        = Array.isArray(d.ideas)     ? d.ideas     : [];
   d.goals        = Array.isArray(d.goals)     ? d.goals     : [];
+  d.debts        = Array.isArray(d.debts)     ? d.debts     : [];
+  d.weekly       = (d.weekly && typeof d.weekly==="object") ? d.weekly : {};
   d.people       = (Array.isArray(d.people)   ? d.people    : []).map(x=>Object.assign({tags:[],interactions:[],next:null,freq:0,color:PALETTE[0]},x));
   const dd = (d.diet && typeof d.diet==="object") ? d.diet : {};
   d.diet = { goal:Object.assign({}, s.diet.goal, dd.goal||{}), meals:Array.isArray(dd.meals)?dd.meals:[],
@@ -3022,6 +3063,37 @@ sysDark().addEventListener("change",()=>{ if(themeMode==="auto") applyTheme(true
 
 
 
+
+/* ============================================================
+   ARQUIVOS (fotos) — IndexedDB, porque o localStorage é pequeno
+   ============================================================ */
+const IDB={ db:null,
+  open(){ if(this.db) return Promise.resolve(this.db); return new Promise((res,rej)=>{ if(!window.indexedDB) return rej(new Error("sem IndexedDB"));
+    const r=indexedDB.open("cfin-files",1); r.onupgradeneeded=()=>r.result.createObjectStore("files"); r.onsuccess=()=>{ this.db=r.result; res(this.db); }; r.onerror=()=>rej(r.error); }); },
+  put(id,blob){ return this.open().then(db=>new Promise((res,rej)=>{ const t=db.transaction("files","readwrite"); t.objectStore("files").put(blob,id); t.oncomplete=()=>res(id); t.onerror=()=>rej(t.error); })); },
+  get(id){ return this.open().then(db=>new Promise((res,rej)=>{ const r=db.transaction("files").objectStore("files").get(id); r.onsuccess=()=>res(r.result||null); r.onerror=()=>rej(r.error); })).catch(()=>null); },
+  del(id){ return this.open().then(db=>new Promise(res=>{ const t=db.transaction("files","readwrite"); t.objectStore("files").delete(id); t.oncomplete=res; t.onerror=res; })).catch(()=>{}); },
+};
+/* reduz a foto (máx. 1280px, JPEG) antes de guardar */
+function shrinkImage(file, max=1280){
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file), img=new Image();
+    img.onload=()=>{ const s=Math.min(1,max/Math.max(img.width,img.height)); const c=document.createElement("canvas");
+      c.width=Math.round(img.width*s); c.height=Math.round(img.height*s); c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url); c.toBlob(b=>b?res(b):rej(new Error("falhou")),"image/jpeg",0.78); };
+    img.onerror=()=>{ URL.revokeObjectURL(url); rej(new Error("imagem inválida")); };
+    img.src=url;
+  });
+}
+/* preenche <img data-photo="id"> depois do render */
+function loadPhotos(root){
+  $$("[data-photo]",root||document).forEach(async el=>{ const b=await IDB.get(el.dataset.photo); if(b){ el.src=URL.createObjectURL(b); el.classList.remove("hidden"); } });
+}
+function openPhotoSheet(id, title, sub){
+  sheet(`<h2>${esc(title||"Foto")}</h2>${sub?`<p>${esc(sub)}</p>`:""}`,`<img data-photo="${id}" class="photofull hidden" alt="">`);
+  loadPhotos($("#sheetBody"));
+}
+
 /* ============================================================
    UTILIDADES COMPARTILHADAS (calendário, datas, voz)
    ============================================================ */
@@ -3111,7 +3183,7 @@ function remToggle(r){
   else{
     r.status="done"; r.doneAt=todayISO();
     if(r.repeat){   // recorrente: a próxima ocorrência já nasce pendente
-      DB.reminders.push({...r, id:uid(), status:"todo", doneAt:null,
+      DB.reminders.push({...r, id:uid(), status:"todo", doneAt:null, photoId:null,
         date: nextOccurrence(r.date||todayISO(), r.repeat), createdAt:todayISO()});
     }
   }
@@ -3122,6 +3194,7 @@ function remRow(r){
   const when=r.date?`${fmtDay(r.date)}${r.time?" · "+r.time:""}`:"sem data";
   return `<div class="rem ${r.status==="done"?"done":""} ${late?"late":""}">
     <input type="checkbox" class="ck" data-remck="${r.id}" ${r.status==="done"?"checked":""} aria-label="Concluir">
+    ${r.photoId?`<button class="thumb" data-remphoto="${r.id}" aria-label="Ver foto"><img class="thumb hidden" data-photo="${r.photoId}" alt=""></button>`:""}
     <button class="g" data-remedit="${r.id}">
       <div class="t">${esc(r.text)}</div>
       <div class="m"><span class="pri ${r.priority}"></span><span class="when">${when}</span>
@@ -3194,6 +3267,8 @@ function renderReminders(){
     });
   }
 
+  $$("[data-remphoto]").forEach(b=>b.onclick=()=>{ const r=DB.reminders.find(x=>x.id===b.dataset.remphoto); if(r) openPhotoSheet(r.photoId, r.text, r.date?fmtDay(r.date)+(r.time?" · "+r.time:""):""); });
+  loadPhotos($("#remBody"));
   $$("[data-remck]").forEach(ck=>ck.onchange=()=>{ const r=DB.reminders.find(x=>x.id===ck.dataset.remck); if(r) remToggle(r); });
   $$("[data-remedit]").forEach(b=>b.onclick=()=>openRemSheet(DB.reminders.find(x=>x.id===b.dataset.remedit)));
   $$("#remBody [data-cal]").forEach(b=>b.onclick=()=>{ remCursor.setMonth(remCursor.getMonth()+ +b.dataset.cal); renderReminders(); });
@@ -3213,20 +3288,33 @@ function openRemSheet(existing, presetDate){
     </div>
     <div class="field"><label>Repetir</label>
       <select id="rm-rep" class="input">${Object.entries(REPEATS).map(([k,v])=>`<option value="${k}" ${k===(r.repeat||"")?"selected":""}>${v}</option>`).join("")}</select></div>
+    <div class="field"><label>Foto (opcional)</label>
+      <div class="photopick"><img id="rm-thumb" class="${r.photoId?"":"hidden"}" ${r.photoId?`data-photo="${r.photoId}"`:""} alt="">
+        <label class="filebtn small">${r.photoId?"Trocar foto":"Anexar foto"}<input type="file" id="rm-photo" accept="image/*"></label>
+        <button class="btn-sm ${r.photoId?"":"hidden"}" id="rm-photodel" type="button">Remover</button></div>
+      <p class="muted tiny" style="margin:8px 2px 0">Convite, ingresso, print do evento. Fica só no aparelho; o backup em texto não inclui fotos.</p></div>
     <button class="btn" id="rm-save">${existing?"Salvar":"Criar lembrete"}</button>
     ${existing?`<button class="btn ghost" id="rm-del" style="margin-top:10px;color:var(--neg)">Apagar lembrete</button>`:""}
   `);
-  let pri=r.priority;
+  let pri=r.priority, photoId=r.photoId||null, photoBlob=null, photoRemoved=false;
+  loadPhotos($("#sheetBody"));
+  $("#rm-photo").onchange=async e=>{ const f=e.target.files&&e.target.files[0]; if(!f) return;
+    try{ photoBlob=await shrinkImage(f); photoRemoved=false; const img=$("#rm-thumb"); img.src=URL.createObjectURL(photoBlob); img.classList.remove("hidden"); $("#rm-photodel").classList.remove("hidden"); }
+    catch(err){ toast("Não consegui ler a imagem."); } };
+  $("#rm-photodel").onclick=()=>{ photoBlob=null; photoRemoved=true; $("#rm-thumb").classList.add("hidden"); $("#rm-photodel").classList.add("hidden"); };
   $$("#rm-pri button").forEach(b=>b.onclick=()=>{ pri=b.dataset.p; $$("#rm-pri button").forEach(x=>x.classList.toggle("on",x===b)); });
   $("#rm-save").onclick=()=>{
     const text=$("#rm-text").value.trim(); if(!text){ toast("Escreva o lembrete."); return; }
     const data={text, priority:pri, date:$("#rm-date").value||null, time:$("#rm-time").value||null, repeat:$("#rm-rep").value||null};
+    if(photoRemoved && photoId){ IDB.del(photoId); photoId=null; }
+    if(photoBlob){ if(photoId) IDB.del(photoId); photoId=uid(); IDB.put(photoId, photoBlob).catch(()=>toast("A foto não pôde ser guardada.")); }
+    data.photoId=photoId;
     if(existing) Object.assign(existing,data);
     else DB.reminders.push({id:uid(), status:"todo", doneAt:null, createdAt:todayISO(), ...data});
     if(data.date){ remDay=data.date; remCursor=new Date(data.date+"T00:00:00"); remCursor.setDate(1); }
     save(); closeSheet(); renderReminders(); toast(existing?"Salvo ✓":"Lembrete criado ✓");
   };
-  if(existing) $("#rm-del").onclick=()=>{ DB.reminders=DB.reminders.filter(x=>x.id!==existing.id); save(); closeSheet(); renderReminders(); toast("Apagado"); };
+  if(existing) $("#rm-del").onclick=()=>{ if(existing.photoId) IDB.del(existing.photoId); DB.reminders=DB.reminders.filter(x=>x.id!==existing.id); save(); closeSheet(); renderReminders(); toast("Apagado"); };
   setTimeout(()=>$("#rm-text")?.focus(),250);
 }
 $$("#remSeg button").forEach(b=>b.onclick=()=>{ remSeg=b.dataset.seg; remFilter=null; renderReminders(); });
@@ -3691,6 +3779,7 @@ function openPersonDetail(p){
     <div class="statline"><span class="muted">Último contato</span><b>${d===null?"nunca":d===0?"hoje":`há ${d} ${d===1?"dia":"dias"}`}${p.freq?` <span class="muted tiny">(meta: a cada ${p.freq})</span>`:""}</b></div>
     ${bd!==null?`<div class="statline"><span class="muted">Aniversário</span><b>${p.birthday.slice(3,5)}/${p.birthday.slice(0,2)}${bd<=30?` · ${bd===0?"é hoje 🎂":`em ${bd} dias`}`:""}</b></div>`:""}
     ${p.next?.text?`<div class="statline"><span class="muted">Próxima ação</span><b>${esc(p.next.text)}${p.next.date?` · ${dmy(p.next.date)}`:""}</b></div>`:""}
+    ${(()=>{const ds=DB.debts.filter(d=>d.personId===p.id&&!d.paid); return ds.length?ds.map(d=>`<div class="statline"><span class="muted">${d.dir==="owed"?"Te deve":"Você deve"}${d.note?` · ${esc(d.note)}`:""}</span><b class="num" style="color:${d.dir==="owed"?"var(--pos)":"var(--neg)"}">${money(d.amount)}</b></div>`).join(""):"";})()}
     ${p.notes?`<p class="tiny" style="margin:12px 2px 0;white-space:pre-wrap;color:var(--ink-2)">${esc(p.notes)}</p>`:""}
     <div class="sec" style="margin:16px 2px 8px"><span class="t">registrar contato</span></div>
     <div class="picks">${Object.entries(CRM_TYPES).map(([k,v])=>`<button class="pick" data-int="${k}">${v}</button>`).join("")}</div>
@@ -3698,7 +3787,9 @@ function openPersonDetail(p){
       <div class="grid2"><input id="pd-next" class="input" placeholder="ex: mandar parabéns" value="${esc(p.next?.text||"")}"><input id="pd-nextd" class="input num" type="date" value="${p.next?.date||""}"></div>
       <button class="btn-sm" id="pd-nextsave" style="margin-top:10px">Salvar próxima ação</button></div>
     ${hist.length?`<div class="sec" style="margin:16px 2px 8px"><span class="t">histórico</span></div><div class="list">${hist.map(i=>`<div class="item" style="padding:10px 14px"><div class="grow"><div class="t1">${CRM_TYPES[i.type]||i.type}${i.note?` — ${esc(i.note)}`:""}</div><div class="t2">${fmtDay(i.date)}</div></div></div>`).join("")}</div>`:""}
+    <button class="btn ghost" id="pd-debt" style="margin-top:14px">+ Cobrança com ${esc(p.name.split(" ")[0])}</button>
     <div class="row" style="margin-top:16px"><button class="del" id="pd-del">Apagar</button><button class="btn-sm" id="pd-edit">Editar</button></div>`);
+  $("#pd-debt").onclick=()=>openDebtSheet(null,{personId:p.id});
   $$("[data-int]").forEach(b=>b.onclick=()=>{
     const note=prompt(`${CRM_TYPES[b.dataset.int]} com ${p.name} — sobre o quê? (opcional)`,"");
     if(note===null) return;
@@ -3718,6 +3809,152 @@ function openPersonDetail(p){
   $("#pd-del").onclick=()=>{ if(!confirm(`Apagar ${p.name}?`)) return; DB.people=DB.people.filter(x=>x.id!==p.id); save(); closeSheet(); renderCrm(); toast("Apagado"); };
 }
 $("#crmSearch").oninput=()=>{ crmQuery=$("#crmSearch").value; renderCrm(); };
+
+
+/* ============================================================
+   SEMANA — revisão semanal
+   ============================================================ */
+function weekKey(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); return isoOf(x); }   // segunda-feira
+function weekStats(offset){ // 0 = últimos 7 dias, 1 = os 7 anteriores
+  const from=daysAgoISO(6+offset*7), to=daysAgoISO(offset*7);
+  const inR=iso=>iso>=from&&iso<=to;
+  const tx=DB.transactions.filter(t=>inR(t.date));
+  const gasto=tx.filter(t=>t.type==="expense").reduce((a,t)=>a+t.amount,0), renda=tx.filter(t=>t.type==="income").reduce((a,t)=>a+t.amount,0);
+  const sup=tx.filter(t=>t.type==="expense"&&catById(t.categoryId)?.kind==="superfluous").reduce((a,t)=>a+t.amount,0);
+  const byCat={}; for(const t of tx) if(t.type==="expense") byCat[t.categoryId]=(byCat[t.categoryId]||0)+t.amount;
+  const top=Object.entries(byCat).sort((a,b)=>b[1]-a[1])[0];
+  let hp=[]; for(let i=0;i<7;i++){ const p=dayPct(addDays(from,i)); if(p!==null) hp.push(p); }
+  const hab=hp.length?hp.reduce((a,b)=>a+b,0)/hp.length:null;
+  const jr=DB.journal.filter(e=>inR(e.createdAt.slice(0,10))); const moods=jr.filter(e=>e.mood);
+  const mood=moods.length?moods.reduce((a,e)=>a+e.mood,0)/moods.length:null;
+  const remDone=DB.reminders.filter(r=>r.doneAt&&inR(r.doneAt)).length;
+  const people=new Set(); for(const p of DB.people) for(const i of p.interactions) if(inR(i.date)) people.add(p.id);
+  let kc=0,kn=0; for(let i=0;i<7;i++){ const it=dietItems(addDays(from,i)); if(it.length){ kn++; kc+=dietSum(it).kcal; } }
+  return {from,to,gasto,renda,sup,top,hab,mood,jr:jr.length,remDone,people:people.size,kcal:kn?kc/kn:null,kn};
+}
+function renderWeek(){
+  const a=weekStats(0), b=weekStats(1);
+  const delta=(x,y,inv)=>{ if(y==null||x==null||!y) return ""; const d=(x-y)/y*100; if(Math.abs(d)<1) return ""; const good=inv?d<0:d>0; return `<span class="tiny" style="color:${good?"var(--pos)":"var(--neg)"}">${d>0?"+":""}${d.toFixed(0)}%</span>`; };
+  const key=weekKey(new Date()); const rev=DB.weekly[key]||{good:"",improve:""};
+  const line=(k,v,d)=>`<div class="statline"><span class="muted">${k}</span><b class="num">${v} ${d||""}</b></div>`;
+  $("#weekBody").innerHTML=`
+    <div class="total" style="padding-top:8px"><div class="v num" style="font-size:30px">${dmy(a.from)} – ${dmy(a.to)}</div><div class="k">Últimos 7 dias, comparados com os 7 anteriores</div></div>
+    <div class="sec"><span class="t">Dinheiro</span></div>
+    <div class="card">
+      ${line("Gastos", money(a.gasto), delta(a.gasto,b.gasto,true))}
+      ${line("Entradas", money(a.renda), delta(a.renda,b.renda))}
+      ${line("Supérfluo", money(a.sup), delta(a.sup,b.sup,true))}
+      ${a.top?line("Maior gasto", `${catById(a.top[0])?.name||"—"} · ${money(a.top[1])}`):""}
+    </div>
+    <div class="sec"><span class="t">Rotina</span></div>
+    <div class="card">
+      ${line("Hábitos", a.hab===null?"—":`${Math.round(a.hab*100)}%`, a.hab!==null&&b.hab!==null?delta(a.hab,b.hab):"")}
+      ${line("Lembretes concluídos", a.remDone, delta(a.remDone,b.remDone))}
+      ${line("Pessoas contatadas", a.people, delta(a.people,b.people))}
+      ${line("Diário", `${a.jr} ${a.jr===1?"registro":"registros"}${a.mood?` · humor ${MOODS[Math.round(a.mood)]}`:""}`)}
+      ${a.kn?line("Dieta", `${Math.round(a.kcal)} kcal/dia em ${a.kn} ${a.kn===1?"dia":"dias"}`, delta(a.kcal,b.kcal,true)):""}
+    </div>
+    <div class="sec"><span class="t">Revisão da semana</span><span class="t tiny">${rev.good||rev.improve?"salva":""}</span></div>
+    <div class="card">
+      <div class="field" style="margin:0"><label>O que foi bem</label><div class="composer"><textarea id="wk-good" style="min-height:60px" placeholder="Duas ou três coisas que valem repetir">${esc(rev.good)}</textarea></div></div>
+      <div class="field"><label>O que melhorar</label><div class="composer"><textarea id="wk-imp" style="min-height:60px" placeholder="Uma coisa concreta pra semana que vem">${esc(rev.improve)}</textarea></div></div>
+      <button class="btn-sm" id="wk-save" style="margin-top:12px">Salvar revisão</button>
+    </div>
+    ${Object.keys(DB.weekly).filter(k=>k!==key).length?`<div class="sec"><span class="t">Semanas anteriores</span></div>
+      ${Object.keys(DB.weekly).filter(k=>k!==key).sort().reverse().slice(0,6).map(k=>`<div class="entry"><div class="eh"><span>Semana de ${dmy(k)}</span></div><div class="et">${DB.weekly[k].good?`<b>Bem:</b> ${esc(DB.weekly[k].good)}`:""}${DB.weekly[k].improve?`<br><b>Melhorar:</b> ${esc(DB.weekly[k].improve)}`:""}</div></div>`).join("")}`:""}`;
+  $("#wk-save").onclick=()=>{ DB.weekly[key]={good:$("#wk-good").value.trim(),improve:$("#wk-imp").value.trim()}; if(!DB.weekly[key].good&&!DB.weekly[key].improve) delete DB.weekly[key]; save(); renderWeek(); toast("Revisão salva ✓"); };
+}
+
+/* ============================================================
+   COBRANÇAS — quem te deve e a quem você deve
+   ============================================================ */
+function debtWho(d){ const p=d.personId?DB.people.find(x=>x.id===d.personId):null; return p?p.name:(d.who||"—"); }
+function debtLate(d){ return !d.paid && d.due && d.due<todayISO(); }
+function renderDebts(){
+  const open=DB.debts.filter(d=>!d.paid), paid=DB.debts.filter(d=>d.paid).sort((a,b)=>(b.paidAt||"").localeCompare(a.paidAt||"")).slice(0,10);
+  const owed=open.filter(d=>d.dir==="owed"), owe=open.filter(d=>d.dir==="owe");
+  const sum=l=>l.reduce((a,d)=>a+d.amount,0);
+  const row=d=>`<button class="item" data-debt="${d.id}"><div class="grow"><div class="t1">${esc(debtWho(d))}${d.note?` — ${esc(d.note)}`:""}</div>
+      <div class="t2" style="${debtLate(d)?"color:var(--neg)":""}">${d.paid?`pago em ${dmy(d.paidAt)}`:d.due?`${debtLate(d)?"venceu":"vence"} ${dmy(d.due)}`:"sem vencimento"}</div></div>
+      <div class="val num ${d.dir==="owed"?"pos":"neg"}" style="${d.paid?"opacity:.5":""}">${d.dir==="owed"?"+":"−"}${money(d.amount)}</div></button>`;
+  $("#debtsBody").innerHTML=`
+    <div class="grid2" style="margin-top:6px">
+      <div class="card stat"><div class="k">Te devem</div><div class="v num" style="color:var(--pos)">${money(sum(owed))}</div></div>
+      <div class="card stat"><div class="k">Você deve</div><div class="v num" style="color:var(--neg)">${money(sum(owe))}</div></div></div>
+    <div class="sec"><span class="t">Te devem</span><span class="t num">${owed.length}</span></div>
+    ${owed.length?`<div class="list">${owed.map(row).join("")}</div>`:`<div class="empty tiny">Ninguém te deve nada.</div>`}
+    <div class="sec"><span class="t">Você deve</span><span class="t num">${owe.length}</span></div>
+    ${owe.length?`<div class="list">${owe.map(row).join("")}</div>`:`<div class="empty tiny">Você não deve nada. Bom sinal.</div>`}
+    ${paid.length?`<div class="sec"><span class="t">Quitadas</span></div><div class="list">${paid.map(row).join("")}</div>`:""}`;
+  $$("#debtsBody [data-debt]").forEach(b=>b.onclick=()=>openDebtDetail(DB.debts.find(d=>d.id===b.dataset.debt)));
+}
+function openDebtSheet(existing, preset){
+  const d=existing||Object.assign({dir:"owed",personId:"",who:"",amount:0,note:"",date:todayISO(),due:""},preset||{});
+  let dir=d.dir;
+  sheet(`<h2>${existing?"Editar cobrança":"Nova cobrança"}</h2><p>Dinheiro emprestado, vaquinha, conta dividida.</p>`,`
+    <div class="seg" id="db-dir" style="margin-top:4px"><button data-d="owed" class="${dir==="owed"?"on":""}">Me devem</button><button data-d="owe" class="${dir==="owe"?"on":""}">Eu devo</button></div>
+    <div class="field"><label>Quem</label>
+      <select id="db-person" class="input"><option value="">— digitar o nome —</option>${DB.people.map(p=>`<option value="${p.id}" ${p.id===d.personId?"selected":""}>${esc(p.name)}</option>`).join("")}</select>
+      <input id="db-who" class="input" placeholder="Nome" style="margin-top:8px;${d.personId?"display:none":""}" value="${esc(d.who||"")}"></div>
+    <div class="grid2" style="margin-top:15px">
+      <div class="field" style="margin:0"><label>Valor</label><input id="db-amt" class="input num" inputmode="decimal" placeholder="0,00" value="${d.amount?String(d.amount).replace(".",","):""}"></div>
+      <div class="field" style="margin:0"><label>Vence em (opcional)</label><input id="db-due" class="input num" type="date" value="${d.due||""}"></div></div>
+    <div class="field"><label>Do que se trata</label><input id="db-note" class="input" placeholder="ex: jantar de sábado, empréstimo" value="${esc(d.note||"")}"></div>
+    <button class="btn" id="db-save">${existing?"Salvar":"Registrar"}</button>`);
+  $$("#db-dir button").forEach(b=>b.onclick=()=>{ dir=b.dataset.d; $$("#db-dir button").forEach(x=>x.classList.toggle("on",x===b)); });
+  $("#db-person").onchange=()=>{ $("#db-who").style.display=$("#db-person").value?"none":""; };
+  $("#db-save").onclick=()=>{
+    const amount=parseAmount($("#db-amt").value), personId=$("#db-person").value||null, who=$("#db-who").value.trim();
+    if(amount<=0){ toast("Digite o valor."); return; } if(!personId&&!who){ toast("Diga quem."); return; }
+    const data={dir,personId,who,amount,note:$("#db-note").value.trim(),due:$("#db-due").value||null};
+    if(existing) Object.assign(existing,data); else DB.debts.push({id:uid(),date:todayISO(),paid:false,paidAt:null,...data});
+    save(); closeSheet(); renderDebts(); toast("Salvo ✓");
+  };
+}
+function openDebtDetail(d){
+  const contas=DB.accounts.filter(a=>a.type!=="credit");
+  sheet(`<h2>${esc(debtWho(d))}</h2><p>${d.dir==="owed"?"te deve":"você deve"} ${money(d.amount)}${d.note?` · ${esc(d.note)}`:""}</p>`,`
+    <div class="statline"><span class="muted">Registrado em</span><b>${dmy(d.date)}</b></div>
+    ${d.due?`<div class="statline"><span class="muted">Vencimento</span><b style="${debtLate(d)?"color:var(--neg)":""}">${dmy(d.due)}${debtLate(d)?" · atrasado":""}</b></div>`:""}
+    ${d.paid?`<div class="statline"><span class="muted">Quitada em</span><b>${dmy(d.paidAt)}</b></div>`:`
+    <div class="field"><label>Ao quitar, lançar em Finanças?</label>
+      <select id="dd-acc" class="input"><option value="">Não lançar</option>${contas.map(a=>`<option value="${a.id}">${d.dir==="owed"?"Entrada em":"Saída de"} ${esc(a.name)}</option>`).join("")}</select></div>
+    <button class="btn" id="dd-paid">Marcar como ${d.dir==="owed"?"recebido":"pago"}</button>`}
+    <div class="row" style="margin-top:16px"><button class="del" id="dd-del">Apagar</button>${d.paid?"":`<button class="btn-sm" id="dd-edit">Editar</button>`}</div>`);
+  if($("#dd-paid")) $("#dd-paid").onclick=()=>{
+    d.paid=true; d.paidAt=todayISO();
+    const acc=$("#dd-acc").value;
+    if(acc){ const cat=d.dir==="owed"?null:(DB.categories.find(c=>c.kind==="essential")?.id||DB.categories[0]?.id);
+      DB.transactions.push({id:uid(),type:d.dir==="owed"?"income":"expense",amount:d.amount,categoryId:cat,date:todayISO(),note:`${d.dir==="owed"?"Recebido de":"Pago a"} ${debtWho(d)}${d.note?" — "+d.note:""}`,obs:"",accountId:acc,pay:"pix"}); }
+    save(); closeSheet(); renderDebts(); renderAll(); toast(d.dir==="owed"?"Recebido ✓":"Pago ✓");
+  };
+  if($("#dd-edit")) $("#dd-edit").onclick=()=>openDebtSheet(d);
+  $("#dd-del").onclick=()=>{ if(!confirm("Apagar esta cobrança?")) return; DB.debts=DB.debts.filter(x=>x.id!==d.id); save(); closeSheet(); renderDebts(); toast("Apagada"); };
+}
+$("#addDebt").onclick=()=>openDebtSheet();
+
+/* ============================================================
+   EXPORTAR CSV
+   ============================================================ */
+function csvOf(months){
+  const now=new Date(); const from=months?`${new Date(now.getFullYear(),now.getMonth()-months+1,1).toISOString().slice(0,7)}-01`:"0000";
+  const rows=DB.transactions.filter(t=>t.date>=from).sort((a,b)=>a.date.localeCompare(b.date));
+  const q=s=>`"${String(s??"").replace(/"/g,'""')}"`;
+  const head=["data","tipo","valor","descricao","categoria","tipo_categoria","conta","conta_destino","pagamento","parcela","observacao"];
+  const tipo={income:"entrada",expense:"saida",transfer:"transferencia"};
+  return [head.join(";"),...rows.map(t=>[t.date,tipo[t.type]||t.type,String(t.amount).replace(".",","),txTitle(t),catById(t.categoryId)?.name||"",KINDS[catById(t.categoryId)?.kind]?.label||"",accById(t.accountId)?.name||"",accById(t.toAccountId)?.name||"",PAYS[t.pay]?.label||"",t.installment?`${t.installment.k}/${t.installment.n}`:"",t.obs||""].map(q).join(";"))].join("\n");
+}
+function openCsvSheet(){
+  sheet(`<h2>Exportar CSV</h2><p>Abre no Excel, Numbers ou Google Planilhas. Separado por ponto e vírgula, como o Excel em português espera.</p>`,`
+    <div class="field" style="margin-top:4px"><label>Período</label><select id="csv-range" class="input"><option value="1">Este mês</option><option value="3" selected>Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option value="12">Últimos 12 meses</option><option value="0">Tudo</option></select></div>
+    <button class="btn" id="csv-copy">Copiar CSV</button>
+    <button class="btn ghost" id="csv-file" style="margin-top:10px">Baixar arquivo .csv</button>
+    <p class="muted tiny" id="csv-info" style="margin:12px 2px 0"></p>`);
+  const info=()=>{ const n=csvOf(+$("#csv-range").value).split("\n").length-1; $("#csv-info").textContent=`${n} ${n===1?"transação":"transações"} no período.`; };
+  $("#csv-range").onchange=info; info();
+  $("#csv-copy").onclick=async()=>{ const c=csvOf(+$("#csv-range").value); try{ await navigator.clipboard.writeText(c); toast("CSV copiado ✓"); }catch(e){ toast("Não consegui copiar."); } };
+  $("#csv-file").onclick=()=>{ const blob=new Blob(["﻿"+csvOf(+$("#csv-range").value)],{type:"text/csv;charset=utf-8"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`transacoes-${todayISO()}.csv`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); };
+}
 
 /* ============================================================
    CONSELHEIRO — só regras e contas sobre os seus dados
@@ -3782,6 +4019,13 @@ function advisorInsights(){
     const c=goalCalc(g); if(c.done||c.meses===null) continue;
     if(c.meses===0 && c.falta>0) out.push({mod:"fin",kind:"warn",h:"Meta no prazo",text:`${g.icon} ${g.name} vence agora e ainda faltam ${money(c.falta)}. Ou reforça este mês, ou empurra a data.`,go:{mod:"fin",tab:"goals"}});
     else if(m.income>0 && c.porMes>m.income*0.3) out.push({mod:"fin",kind:"warn",h:"Meta apertada",text:`Para bater ${g.name} até ${dmy(g.deadline)} precisa guardar ${money(c.porMes,true)}/mês — ${pct(c.porMes,m.income).toFixed(0)}% da renda. Pense em esticar o prazo.`,go:{mod:"fin",tab:"goals"}});
+  }
+  /* ---- cobranças ---- */
+  {
+    const late=DB.debts.filter(debtLate);
+    if(late.length) out.push({mod:"fin",kind:"warn",h:"Cobrança vencida",text:late.map(d=>`${debtWho(d)} ${d.dir==="owed"?"te deve":"— você deve"} ${money(d.amount)} (venceu ${dmy(d.due)})`).join("; ")+".",go:{mod:"fin",tab:"debts"}});
+    const owed=DB.debts.filter(d=>!d.paid&&d.dir==="owed").reduce((a,d)=>a+d.amount,0);
+    if(owed>=200 && !late.length) out.push({mod:"fin",kind:"info",h:"Dinheiro a receber",text:`Têm ${money(owed)} pra entrar de gente que te deve. Vale um lembrete gentil.`,go:{mod:"fin",tab:"debts"}});
   }
   /* ---- pessoas ---- */
   if(DB.people.length){
@@ -3885,9 +4129,9 @@ function renderAdvisor(){
 /* ============================================================
    CASCA: menu lateral, barra superior, módulos, botão +
    ============================================================ */
-const MODULES={ fin:"Finanças", rem:"Lembretes", hab:"Hábitos", diet:"Dieta", jour:"Diário", ideas:"Ideias", crm:"Pessoas", adv:"Conselheiro", acct:"Minha conta" };
+const MODULES={ fin:"Finanças", rem:"Lembretes", hab:"Hábitos", diet:"Dieta", jour:"Diário", ideas:"Ideias", crm:"Pessoas", week:"Semana", adv:"Conselheiro", acct:"Minha conta" };
 const FAB_ACTIONS={ fin:()=>openTxSheet(), rem:()=>openRemSheet(null, todayISO()), hab:()=>openHabSheet(), diet:()=>openFoodSheet(null), crm:()=>openPersonSheet() };
-const RENDER={ fin:()=>go(finTab), rem:renderReminders, hab:renderHabits, diet:renderDiet, jour:renderJournal, ideas:renderIdeas, crm:renderCrm, adv:renderAdvisor, acct:renderAccount };
+const RENDER={ fin:()=>go(finTab), rem:renderReminders, hab:renderHabits, diet:renderDiet, jour:renderJournal, ideas:renderIdeas, crm:renderCrm, week:renderWeek, adv:renderAdvisor, acct:renderAccount };
 let curMod="fin", finTab="resumo";
 const EYE_ON='<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>';
 const EYE_OFF='<path d="M3 3l18 18M10.6 10.6A3 3 0 0 0 13.4 13.4M9.9 5.1A10.7 10.7 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A16.9 16.9 0 0 0 2 12s3.5 7 10 7a10.5 10.5 0 0 0 4.4-.9"/>';
@@ -3940,7 +4184,7 @@ $("#resetAll").onclick=()=>{
 };
 
 /* ---------- finanças: abas de baixo e sub-telas ---------- */
-const SUBVIEWS = { cat:"resumo", fixed:"more", ofx:"more", report:"more", set:"more", saved:"more", next:"more", goals:"more" };
+const SUBVIEWS = { cat:"resumo", fixed:"more", ofx:"more", report:"more", set:"more", saved:"more", next:"more", goals:"more", debts:"more" };
 function go(tab){
   const view=$("#view-"+tab);
   if(!view) return;
@@ -3958,6 +4202,7 @@ function go(tab){
   if(tab==="dash")     renderDash();
   if(tab==="next")     renderNext();
   if(tab==="goals")    renderGoals();
+  if(tab==="debts")    renderDebts();
   if(tab==="more")     renderMore();
   if(tab==="cat")      renderCat();
   if(tab==="fixed")    renderFixed();
@@ -3975,6 +4220,8 @@ function renderMore(){
   $("#moreFixedSub").textContent = f.length ? `${f.length} ${f.length===1?"item":"itens"} · ${money(exp)}/mês de gastos` : "Nenhum cadastrado ainda";
   $("#moreOfxSub").textContent = DB.imported.length ? `${DB.imported.length} lançamentos já importados` : "Arquivo OFX, lido no aparelho";
   $("#moreSetSub").textContent = `${DB.categories.length} categorias`;
+  { const o=DB.debts.filter(d=>!d.paid); const owed=o.filter(d=>d.dir==="owed").reduce((a,d)=>a+d.amount,0), owe=o.filter(d=>d.dir==="owe").reduce((a,d)=>a+d.amount,0);
+    $("#moreDebtsSub").textContent = o.length ? `${owed?`te devem ${money(owed,true)}`:""}${owed&&owe?" · ":""}${owe?`você deve ${money(owe,true)}`:""}` : "Quem te deve e a quem você deve"; }
   $("#moreGoalsSub").textContent = DB.goals.length ? `${DB.goals.filter(g=>!goalCalc(g).done).length} em andamento · ${DB.goals.filter(g=>goalCalc(g).done).length} batidas` : "Juntar quanto, até quando";
   const st=savedTotals();
   $("#moreSavedSub").textContent = DB.reserves.length ? `${money(st.amount,true)} guardados${st.perMonth>0?` · rende ${money(st.perMonth,true)}/mês`:""}` : "Reservas e quanto rendem";
@@ -4014,6 +4261,7 @@ $("#saveIdx").onclick=()=>{
   DB.settings.cdi=cdi; DB.settings.ipca=ipca; save(); renderSaved(); toast("Indexadores salvos ✓");
 };
 $("#exportBtn").onclick=exportData;
+$("#moreCsv").onclick=openCsvSheet;
 $("#importBtn").onclick=importData;
 $("#wipeTx").onclick=()=>{
   if(confirm("Apagar TODAS as transações lançadas? Contas, categorias, fixos e o guardado permanecem.")){ DB.transactions=[]; save(); renderAll(); toast("Transações apagadas"); }
