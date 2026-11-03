@@ -526,6 +526,7 @@
   .vhead h1{font-size:22px}
   .sec{margin-top:24px}
   .sec .t.tiny{font-size:12px;color:var(--ink-3)}
+  .cap{display:inline-block}.cap::first-letter{text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -772,7 +773,7 @@
 
   <!-- ============ DASHBOARD ============ -->
   <section id="view-dash" class="view">
-    <div class="vhead"><h1>Dashboard</h1><p>Seis meses de uma olhada. Toque numa barra para ver o mês.</p></div>
+    <div class="vhead"><h1>Dashboard</h1><p>Patrimônio, o mês em revisão e seus orçamentos.</p></div>
     <div id="dashBody"></div>
   </section>
 
@@ -1914,7 +1915,7 @@ function renderDash(){
     <div class="sec"><span class="t">Mês em revisão</span>
       <span style="display:inline-flex;gap:2px"><button class="btn-sm" data-dm="-1" style="padding:5px 10px">‹</button><button class="btn-sm" data-dm="1" style="padding:5px 10px">›</button></span></div>
     <div class="card">
-      <div class="row" style="margin-bottom:8px"><b style="text-transform:capitalize">${monthName(y,m)}</b></div>
+      <div class="row" style="margin-bottom:8px"><b class="cap">${monthName(y,m)}</b></div>
       ${line("Gastou", money(S.expense)+delta(S.expense,P.expense,true))}
       ${line("Entrou", money(S.income)+delta(S.income,P.income))}
       ${line(S.balance>=0?"Guardou":"Faltou", money(Math.abs(S.balance))+(S.income?` <span class="tiny muted">${pct(Math.abs(S.balance),S.income).toFixed(0)}% da renda</span>`:""), S.balance<0?"var(--neg)":"")}
